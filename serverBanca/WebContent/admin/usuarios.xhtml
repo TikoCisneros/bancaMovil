@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Usuarios</title>
+</h:head> 
+<body> 
+	<h:form id="form1">
+		<p:growl id="msj1" showDetail="true"/>
+		<p:panel id="panel1" header="Nuevo usuario">
+			<p:panelGrid columns="2">
+				<h:outputText value="Apellidos*"/>
+				<p:inputText required="true" id="apellidos" value="#{usuarioBean.apellido}" 
+				requiredMessage="Campo Apellidos Requerido" validatorMessage="El Apellido debe contener solo letras">
+					<f:validateRegex pattern="[a-zA-Z ñíóúéáÑÁÉÍÓÚ]+" />
+				</p:inputText>
+				<h:outputText value="Nombres*"/>
+				<p:inputText required="true" id="nombres" value="#{usuarioBean.nombre}" 
+				requiredMessage="Campo Nombres Requerido" validatorMessage="El Nombre debe contener solo letras">
+					<f:validateRegex pattern="[a-zA-Z ñíóúéáÑÁÉÍÓÚ]+" />
+				</p:inputText>
+				<h:outputText value="Alias*"/>
+				<p:inputText required="true" id="alias" value="#{usuarioBean.alias}" requiredMessage="Campo alias Requerido"
+				validatorMessage="Alias debe contener solo letras y un tamanio menor a 5">
+					<f:validateRegex pattern="[a-zA-Z]+" />
+					<f:validateLength minimum="5"/>
+				</p:inputText>
+				<h:outputText value="Contraseña*"/>
+				<p:password required="true" id="pass" value="#{usuarioBean.pass}"	requiredMessage="Campo contrasenia Requerido"
+				 validatorMessage="Password contiene caracteres no permitidos o un tamaño menor a 7">
+					<f:validateRegex pattern="[a-zA-Z0-9.]+" />
+					<f:validateLength minimum="7"/>
+				</p:password>
+				<h:outputText value="Seleccione tipo*" />
+				<p:selectOneMenu value="#{usuarioBean.idTipoUsr}" >
+					<f:selectItem itemLabel="Seleccionar..." itemValue="-1"/>
+					<f:selectItems value="#{usuarioBean.listaTipoUsrSI()}"  />
+				</p:selectOneMenu>
+				<p:commandButton value="Guardar" action="#{usuarioBean.ingresarUsuario()}" update=":form1"/>
+				<p:commandButton type="reset" value="Limpiar"/>		
+			</p:panelGrid>
+		</p:panel>
+	</h:form>
+	<br/><br/>
+	<h:form id="form2">
+		<p:growl id="msj2" showDetail="true"/>
+		<p:panel id="panel2" header="Usuarios existentes">
+			<p:dataTable id="dt" value="#{usuarioBean.listado}" rows="8" var="reg" paginator="true" emptyMessage="No existen datos"
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+	            <p:column filterBy="#{reg.apellido}"  headerText="APELLIDOS">
+					<h:outputText value="#{reg.apellido}"></h:outputText>
+				</p:column>			
+				<p:column filterBy="#{reg.nombre}" headerText="NOMBRES">
+					<h:outputText value="#{reg.nombre}"></h:outputText>
+				</p:column>
+				<p:column  headerText="ESTADO">
+					<h:outputText value="#{reg.estadousr.estado}"></h:outputText>
+				</p:column>
+				<p:column headerText="OPCIONES">
+					<p:commandButton id="trackcambio" icon="ui-icon-refresh" action="#{usuarioBean.cambiarEstadoUSR(reg)}" update=":form2:panel2 :form2:msj2">
+						<p:tooltip for="trackcambio" value="Cambiar el Estado de Usuario" trackMouse="true" />
+					</p:commandButton>
+					<p:commandButton  icon="ui-icon-pencil" id="track" action="#{usuarioBean.cargarDatosUSR(reg)}" 
+					oncomplete="PF('dlg1').show();" update=":form3 :form2:msj2">
+						<p:tooltip for="track" value="Editar Usuario" trackMouse="true" />
+					</p:commandButton>	
+				</p:column>
+            </p:dataTable>	
+		</p:panel>
+	</h:form>
+	<p:dialog widgetVar="dlg1">
+		<h:form id="form3">
+		<p:panel id="panel3" header="Editar usuario">
+			<p:panelGrid columns="2">
+				<h:outputText value="Apellidos*"/>
+				<h:outputText  value="#{usuarioBean.apellido}"/>
+				<h:outputText value="Nombres*"/>
+				<h:outputText value="#{usuarioBean.nombre}" />
+				<h:outputText value="Alias*"/>
+				<h:outputText  value="#{usuarioBean.alias}"/>
+				<h:outputText value="Contraseña*"/>
+				<p:password required="true" id="pass" value="#{usuarioBean.pass}"	requiredMessage="Campo contrasenia Requerido"
+				 validatorMessage="Password contiene caracteres no permitidos o un tamaño menor a 7">
+					<f:validateRegex pattern="[a-zA-Z0-9.]+" />
+					<f:validateLength minimum="7"/>
+				</p:password>
+				<h:outputText value="Seleccione tipo*" />
+				<p:selectOneMenu value="#{usuarioBean.idTipoUsr}" >
+					<f:selectItem itemLabel="#{usuarioBean.tipousr.tipo}" itemValue="-1"/>
+					<f:selectItems value="#{usuarioBean.listaTipoUsrSI()}"  />
+				</p:selectOneMenu>
+				<p:commandButton value="Modificar" action="#{usuarioBean.modificarUSR()}" update=":form3 :form2"/>
+				<p:commandButton value="Cancelar" action="#{usuarioBean.cancelarModificarUSR()}" update=":form3 :form2"/>	
+			</p:panelGrid>
+		</p:panel>
+	</h:form>
+	</p:dialog>
+</body> 
+</html>

@@ -268,25 +268,6 @@ CREATE SEQUENCE public.sec_preguntas
 ALTER TABLE preguntas
    ALTER COLUMN id_preg SET DEFAULT nextval('sec_preguntas');
    
-CREATE SEQUENCE public.sec_respuestas
-   INCREMENT 1
-   START 1;
-
-ALTER TABLE respuestas
-   ALTER COLUMN id_cli SET DEFAULT nextval('sec_respuestas');
-ALTER TABLE respuestas
-  DROP CONSTRAINT fk_respuest_reference_cliente;
-ALTER TABLE respuestas
-  DROP CONSTRAINT fk_respuest_reference_pregunta;
-ALTER TABLE respuestas
-  ADD CONSTRAINT fk_respuest_reference_cliente FOREIGN KEY (id_cli)
-      REFERENCES cliente (id_cli) MATCH SIMPLE
-      ON UPDATE RESTRICT ON DELETE RESTRICT;
-ALTER TABLE respuestas
-  ADD CONSTRAINT fk_respuest_reference_pregunta FOREIGN KEY (id_preg)
-      REFERENCES preguntas (id_preg) MATCH SIMPLE
-      ON UPDATE RESTRICT ON DELETE RESTRICT;
-
 CREATE SEQUENCE public.sec_tipocuenta
    INCREMENT 1
    START 1;

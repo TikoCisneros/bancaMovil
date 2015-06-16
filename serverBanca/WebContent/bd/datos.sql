@@ -1,5 +1,5 @@
-insert into tipousr values (1,'Administrador');
-insert into tipousr values (2,'Operador');
+insert into tipousr values (default,'Administrador');
+insert into tipousr values (default,'Operador');
 
-insert into estadousr values (1,'Activado');
-insert into estadousr values (2,'Desactivado');
+insert into estadousr values (default,'Activado');
+insert into estadousr values (default,'Desactivado');
