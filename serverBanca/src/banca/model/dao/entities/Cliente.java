@@ -69,9 +69,8 @@ public class Cliente implements Serializable {
 	private String ultmIp;
 
 	//bi-directional many-to-one association to Cuenta
-	@ManyToOne
-	@JoinColumn(name="nro_cuenta")
-	private Cuenta cuenta;
+	@OneToMany(mappedBy="cliente")
+	private List<Cuenta> cuentas;
 
 	//bi-directional many-to-one association to Respuestas
 	@OneToMany(mappedBy="cliente")
@@ -240,12 +239,26 @@ public class Cliente implements Serializable {
 		this.ultmIp = ultmIp;
 	}
 
-	public Cuenta getCuenta() {
-		return this.cuenta;
+	public List<Cuenta> getCuentas() {
+		return this.cuentas;
 	}
 
-	public void setCuenta(Cuenta cuenta) {
-		this.cuenta = cuenta;
+	public void setCuentas(List<Cuenta> cuentas) {
+		this.cuentas = cuentas;
+	}
+
+	public Cuenta addCuenta(Cuenta cuenta) {
+		getCuentas().add(cuenta);
+		cuenta.setCliente(this);
+
+		return cuenta;
+	}
+
+	public Cuenta removeCuenta(Cuenta cuenta) {
+		getCuentas().remove(cuenta);
+		cuenta.setCliente(null);
+
+		return cuenta;
 	}
 
 	public List<Respuestas> getRespuestas() {

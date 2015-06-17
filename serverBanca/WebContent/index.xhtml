@@ -1,12 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pl="http://xmlns.jcp.org/jsf/passthrough">
+<h:head>
+	<title>Bienvenidos</title>
+	<h:outputStylesheet library="css" name="style.css" />
+</h:head> 
+<body> 
+	<div class="login">
+		<div class="login-screen">
+			<div class="app-title">
+				<h2>Ingreso al Sistema</h2>
+			</div>
 
-	<h:head>
-	</h:head>
-	<h:body>
-	sdajsfdkjsdfkfsdkjbfsd
-	</h:body>
+			<div class="login-form">
+				<div class="control-group">
+				<h:inputText value="#{sessionBean.alias}"  pl:placeholder="alias" id="login-name" styleClass="login-field"/>
+				<label class="login-field-icon fui-user" for="login-name"></label>
+				</div>
+
+				<div class="control-group">
+				<h:inputSecret value="#{sessionBean.pass}"  pl:placeholder="password" id="login-name" styleClass="login-field"/>
+				<label class="login-field-icon fui-lock" for="login-pass"></label>
+				</div>
+				<h:commandButton action="#{sessionBean.login()}" value="Iniciar sesi&oacute;n" styleClass="btn btn-primary btn-large btn-block"/>
+			</div>
+		</div>
+	</div>
+</body>
 </html>

@@ -1,5 +1,6 @@
 package banca.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +16,10 @@ import banca.model.manager.ManagerAdmin;
 
 @ViewScoped
 @ManagedBean
-public class UsuarioBean {
+public class UsuarioBean implements Serializable {
 	
+	private static final long serialVersionUID = 2754642436496780620L;
+
 	private ManagerAdmin mngAdmin;
 	
 	private Integer idUsr;
@@ -24,6 +27,7 @@ public class UsuarioBean {
 	private String apellido;
 	private String nombre;
 	private String pass;
+	private String passtmp;
 	private Tipousr tipousr;
 	private Integer idTipoUsr;
 	private List<Usuario> listado;
@@ -88,6 +92,20 @@ public class UsuarioBean {
 		this.nombre = nombre;
 	}
 
+	/**
+	 * @return the pass
+	 */
+	public String getPasstmp() {
+		return passtmp;
+	}
+
+	/**
+	 * @param pass the pass to set
+	 */
+	public void setPasstmp(String passtmp) {
+		this.passtmp = passtmp;
+	}
+	
 	/**
 	 * @return the pass
 	 */
@@ -174,7 +192,7 @@ public class UsuarioBean {
     
     /**
      * Permite ingresar un nuevo usuario
-     * @return vacio
+     * @return ""
      */
     public String ingresarUsuario(){
     	try {
@@ -190,7 +208,7 @@ public class UsuarioBean {
     			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Usuario ingresado correctamente",null));
     		}
 		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al ingresar usuario",null));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al ingresar usuario",e.getMessage()));
 		}
     	return "";
     }
@@ -202,18 +220,18 @@ public class UsuarioBean {
      */
     public String cargarDatosUSR(Usuario usr){
     	setIdUsr(usr.getIdUsr());setNombre(usr.getNombre());setApellido(usr.getApellido());setAlias(usr.getAlias());
-    	setPass(usr.getPass());setTipousr(usr.getTipousr());setIdTipoUsr(usr.getTipousr().getIdTipo());
+    	setPass("password");setPasstmp(usr.getPass());setTipousr(usr.getTipousr());setIdTipoUsr(usr.getTipousr().getIdTipo());
     	return "";
     }
 	
     /**
-     * Cancela la modificación de usuario
+     * Cancela la modificación de un usuario
      * @return ""
      */
     public String cancelarModificarUSR(){
     	setIdUsr(null);setNombre("");setApellido("");setAlias("");
-    	setPass("");setIdTipoUsr(-1);setTipousr(null);
-    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Se ha cancelado la modificacion del usuario","SI"));
+    	setPass("");setPasstmp("");setIdTipoUsr(-1);setTipousr(null);
+    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Modificacion cancelada",null));
     	return "";
     }
 	
@@ -223,17 +241,28 @@ public class UsuarioBean {
      */
     public String modificarUSR(){
     	try {
+    		//Bandera
+    		boolean bandera = false;
     		//Si se ha seleccionado de la lista
 			if(idTipoUsr != -1){
 				setTipousr(mngAdmin.findTipoUSRByID(getIdTipoUsr()));
+				bandera = true;
+			}
+			//si se cambia el password
+			if(!getPass().equals("password")){
+				setPasstmp(getPass());
+				bandera = true;
 			}
 			//Modificar usuario
-			mngAdmin.modificarUsuario(getIdUsr(), getPass(), getTipousr());
+			if(bandera){
+				mngAdmin.modificarUsuario(getIdUsr(), getPasstmp(), getTipousr());
+			}
 			//Borrar Valores
 			setIdUsr(null);setNombre("");setApellido("");setAlias("");
 	    	setPass("");setIdTipoUsr(-1);setTipousr(null);
+	    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Modificacion correcta","Datos de usuario cambiados"));
 		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al modificar usuario",null));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al modificar usuario",e.getMessage()));
 		}
     	return "";
     }
@@ -248,7 +277,7 @@ public class UsuarioBean {
     		mngAdmin.cambiarEstadoUSR(usr.getIdUsr());
     		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Cambio de estado correcto", null));
 		} catch (Exception e) {
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al camiar de estado", null));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al camiar de estado", e.getMessage()));
 		}
     	return "";
     }

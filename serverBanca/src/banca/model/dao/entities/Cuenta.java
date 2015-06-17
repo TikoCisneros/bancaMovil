@@ -3,7 +3,6 @@ package banca.model.dao.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.List;
 
 
 /**
@@ -22,8 +21,9 @@ public class Cuenta implements Serializable {
 	private BigDecimal saldo;
 
 	//bi-directional many-to-one association to Cliente
-	@OneToMany(mappedBy="cuenta")
-	private List<Cliente> clientes;
+	@ManyToOne
+	@JoinColumn(name="id_cli")
+	private Cliente cliente;
 
 	//bi-directional many-to-one association to Tipocuenta
 	@ManyToOne
@@ -49,26 +49,12 @@ public class Cuenta implements Serializable {
 		this.saldo = saldo;
 	}
 
-	public List<Cliente> getClientes() {
-		return this.clientes;
+	public Cliente getCliente() {
+		return this.cliente;
 	}
 
-	public void setClientes(List<Cliente> clientes) {
-		this.clientes = clientes;
-	}
-
-	public Cliente addCliente(Cliente cliente) {
-		getClientes().add(cliente);
-		cliente.setCuenta(this);
-
-		return cliente;
-	}
-
-	public Cliente removeCliente(Cliente cliente) {
-		getClientes().remove(cliente);
-		cliente.setCuenta(null);
-
-		return cliente;
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 	public Tipocuenta getTipocuenta() {

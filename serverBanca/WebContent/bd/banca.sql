@@ -1,4 +1,4 @@
-/*==============================================================*/
+﻿/*==============================================================*/
 /* DBMS name:      PostgreSQL 8                                 */
 /* Created on:     14/06/2015 16:31:53                          */
 /*==============================================================*/
@@ -8,7 +8,6 @@
 /*==============================================================*/
 create table CLIENTE (
    ID_CLI               INT4                 not null,
-   NRO_CUENTA           TEXT                 null,
    NOMBRE               TEXT                 null,
    APELLIDO             TEXT                 null,
    CI_RUC               VARCHAR(10)          null,
@@ -31,11 +30,22 @@ create table CLIENTE (
 );
 
 /*==============================================================*/
+/* Table: CONTADOR                                              */
+/*==============================================================*/
+create table CONTADOR (
+   ID_CONTADOR          INT4                 not null,
+   CONTADOR             TEXT                 null,
+   VALOR                NUMERIC              null,
+   constraint PK_CONTADOR primary key (ID_CONTADOR)
+);
+
+/*==============================================================*/
 /* Table: CUENTA                                                */
 /*==============================================================*/
 create table CUENTA (
    NRO_CUENTA           TEXT                 not null,
    ID_TIPO              INT4                 null,
+   ID_CLI               INT4                 null,
    SALDO                NUMERIC(15,2)        null,
    constraint PK_CUENTA primary key (NRO_CUENTA)
 );
@@ -169,9 +179,9 @@ create table USUARIO (
    constraint PK_USUARIO primary key (ID_USR)
 );
 
-alter table CLIENTE
-   add constraint FK_CLIENTE_REFERENCE_CUENTA foreign key (NRO_CUENTA)
-      references CUENTA (NRO_CUENTA)
+alter table CUENTA
+   add constraint FK_CUENTA_REFERENCE_CLIENTE foreign key (ID_CLI)
+      references CLIENTE (ID_CLI)
       on delete restrict on update restrict;
 
 alter table CUENTA
@@ -223,6 +233,7 @@ alter table USUARIO
    add constraint FK_USUARIO_REFERENCE_ESTADOUS foreign key (ID_ESTADO)
       references ESTADOUSR (ID_ESTADO)
       on delete restrict on update restrict;
+
 /*==============================================================*/
 /* SECUENCIAS                                                   */
 /*==============================================================*/
@@ -233,12 +244,6 @@ CREATE SEQUENCE public.sec_cliente
 
 ALTER TABLE cliente
    ALTER COLUMN id_cli SET DEFAULT nextval('sec_cliente');
-ALTER TABLE cliente
-  DROP CONSTRAINT fk_cliente_reference_cuenta;
-ALTER TABLE cliente
-  ADD CONSTRAINT fk_cliente_reference_cuenta FOREIGN KEY (nro_cuenta)
-      REFERENCES cuenta (nro_cuenta) MATCH SIMPLE
-      ON UPDATE RESTRICT ON DELETE RESTRICT;
    
 CREATE SEQUENCE public.sec_estadotrans
    INCREMENT 1
@@ -351,3 +356,7 @@ ALTER TABLE usuario
   ADD CONSTRAINT fk_usuario_reference_tipousr FOREIGN KEY (id_tipo)
       REFERENCES tipousr (id_tipo) MATCH SIMPLE
       ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+/*****CONTADOR****/
+insert into contador values (1,'nrocc',1);
+insert into contador values (2,'nroca',1);

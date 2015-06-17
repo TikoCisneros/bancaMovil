@@ -40,7 +40,7 @@
 					<f:selectItem itemLabel="Seleccionar..." itemValue="-1"/>
 					<f:selectItems value="#{usuarioBean.listaTipoUsrSI()}"  />
 				</p:selectOneMenu>
-				<p:commandButton value="Guardar" action="#{usuarioBean.ingresarUsuario()}" update=":form1"/>
+				<p:commandButton value="Guardar" action="#{usuarioBean.ingresarUsuario()}" update=":form1 :form2:panel2"/>
 				<p:commandButton type="reset" value="Limpiar"/>		
 			</p:panelGrid>
 		</p:panel>
@@ -72,9 +72,8 @@
             </p:dataTable>	
 		</p:panel>
 	</h:form>
-	<p:dialog widgetVar="dlg1">
+	<p:dialog widgetVar="dlg1" modal="true" header="Editar usuario">
 		<h:form id="form3">
-		<p:panel id="panel3" header="Editar usuario">
 			<p:panelGrid columns="2">
 				<h:outputText value="Apellidos*"/>
 				<h:outputText  value="#{usuarioBean.apellido}"/>
@@ -83,21 +82,20 @@
 				<h:outputText value="Alias*"/>
 				<h:outputText  value="#{usuarioBean.alias}"/>
 				<h:outputText value="Contraseña*"/>
-				<p:password required="true" id="pass" value="#{usuarioBean.pass}"	requiredMessage="Campo contrasenia Requerido"
+				<p:inputText required="true" id="pass" value="#{usuarioBean.pass}"	requiredMessage="Campo contrasenia Requerido"
 				 validatorMessage="Password contiene caracteres no permitidos o un tamaño menor a 7">
 					<f:validateRegex pattern="[a-zA-Z0-9.]+" />
 					<f:validateLength minimum="7"/>
-				</p:password>
+				</p:inputText>
 				<h:outputText value="Seleccione tipo*" />
 				<p:selectOneMenu value="#{usuarioBean.idTipoUsr}" >
 					<f:selectItem itemLabel="#{usuarioBean.tipousr.tipo}" itemValue="-1"/>
 					<f:selectItems value="#{usuarioBean.listaTipoUsrSI()}"  />
 				</p:selectOneMenu>
-				<p:commandButton value="Modificar" action="#{usuarioBean.modificarUSR()}" update=":form3 :form2"/>
-				<p:commandButton value="Cancelar" action="#{usuarioBean.cancelarModificarUSR()}" update=":form3 :form2"/>	
+				<p:commandButton value="Modificar" action="#{usuarioBean.modificarUSR()}" update=":form3 :form2" onclick="PF('dlg1').close();"/>
+				<p:commandButton value="Cancelar" action="#{usuarioBean.cancelarModificarUSR()}" update=":form3 :form2" onclick="PF('dlg1').close();"/>	
 			</p:panelGrid>
-		</p:panel>
-	</h:form>
+		</h:form>
 	</p:dialog>
 </body> 
 </html>
