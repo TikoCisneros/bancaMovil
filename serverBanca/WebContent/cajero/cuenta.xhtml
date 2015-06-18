@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Cuentas</title>
+</h:head> 
+<body>  
+	<h:form id="form1">
+	  <p:growl id="msj1" showDetail="true"/>
+	  <p:panel id="panel1" header="Nueva Cuenta">
+		<p:panelGrid columns="2">
+			<h:outputText value="Seleccionar Cliente*" />
+			<p:commandButton value="Buscar" type="button" icon="ui-icon-search" onclick="PF('dlg1').show();" />
+			<h:outputText value="Datos Cliente" style="font-weight: bold;"/><span>&nbsp;&nbsp;</span>
+			<h:outputText value="&nbsp;&nbsp;C&eacute;dula:" />
+			<h:outputText value="#{cuentaBean.ci}" />
+			<h:outputText value="&nbsp;&nbsp;Nombre:" />
+			<h:outputText value="#{cuentaBean.nombre}" />
+			<h:outputText value="&nbsp;&nbsp;Apellido:" />
+			<h:outputText value="#{cuentaBean.apellido}" />
+			<h:outputText value="Datos de Cuenta" style="font-weight: bold;"/><span>&nbsp;&nbsp;</span>
+			<h:outputText value="&nbsp;&nbsp;Tipo de cuenta:*" />
+			<p:selectOneMenu value="#{cuentaBean.idTipocuenta}" >
+				<f:selectItem itemLabel="Seleccionar..." itemValue="-1"/>
+				<f:selectItems value="#{cuentaBean.listaTipoCuentaSI()}"  />
+			</p:selectOneMenu>
+			<h:outputText value="&nbsp;&nbsp;Saldo:*" />
+			<p:inputText value="#{cuentaBean.saldo}" required="true" requiredMessage="Campo Saldo Requerido"/>
+			<p:commandButton value="Crear" action="#{cuentaBean.crearCuenta()}" update=":form1 :form2:panel2"/>
+			<p:commandButton value="Limpiar" action="#{cuentaBean.limpiarDatos()}" update=":form1"/>	
+		</p:panelGrid>	
+	  </p:panel>
+	</h:form>
+	<h:form id="form2">
+		<p:panel id="panel2" header="Cuentas existentes">
+			<p:dataTable id="dt" value="#{cuentaBean.listCuentas}" rows="8" var="reg" paginator="true" emptyMessage="No existen datos"
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				<p:column filterBy="#{reg.nroCuenta}"  headerText="Nro. CUENTA">
+					<h:outputText value="#{reg.nroCuenta}"></h:outputText>
+				</p:column>	
+				<p:column filterBy="#{reg.cliente.ciRuc}"  headerText="C&Eacute;DULA">
+					<h:outputText value="#{reg.cliente.ciRuc}"></h:outputText>
+				</p:column>	
+	            <p:column filterBy="#{reg.cliente.apellido}"  headerText="APELLIDOS">
+					<h:outputText value="#{reg.cliente.apellido}"></h:outputText>
+				</p:column>			
+				<p:column filterBy="#{reg.cliente.nombre}" headerText="NOMBRES">
+					<h:outputText value="#{reg.cliente.nombre}"></h:outputText>
+				</p:column>
+				<p:column  headerText="SALDO ACTUAL">
+					<h:outputText value="#{reg.saldo}"></h:outputText>
+				</p:column>	
+			</p:dataTable>
+		</p:panel>
+	</h:form>
+	<p:dialog widgetVar="dlg1" modal="true" header="Cliente" width="800">
+		<h:form id="form3">
+			<p:dataTable id="dtc" value="#{cuentaBean.listClientes}" rows="8" var="cli" paginator="true" emptyMessage="No existen datos"
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				<p:column filterBy="#{cli.ciRuc}"  headerText="C&Eacute;DULA">
+					<h:outputText value="#{cli.ciRuc}"></h:outputText>
+				</p:column>	
+	            <p:column filterBy="#{cli.apellido}"  headerText="APELLIDOS">
+					<h:outputText value="#{cli.apellido}"></h:outputText>
+				</p:column>			
+				<p:column filterBy="#{cli.nombre}" headerText="NOMBRES">
+					<h:outputText value="#{cli.nombre}"></h:outputText>
+				</p:column>
+				<p:column headerText="SELECCI&Oacute;N">
+					<p:commandButton  icon="ui-icon-check" id="track" action="#{cuentaBean.seleccionCliente(cli)}" 
+						onclick="PF('dlg1').close();" update=":form1">
+						<p:tooltip for="track" value="Seleccionar Cliente" trackMouse="true" />
+					</p:commandButton>	
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:dialog>
+</body> 
+</html>

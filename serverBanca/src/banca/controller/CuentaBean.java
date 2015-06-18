@@ -217,8 +217,7 @@ public class CuentaBean implements Serializable{
 			bd = new BigDecimal(150);
 		}else if(tipocuenta.toLowerCase().equals("ahorros")){
 			bd = new BigDecimal(100);
-		}
-		setSaldo(bd);		
+		}		
 		return bd;
 	}
 	
@@ -256,10 +255,13 @@ public class CuentaBean implements Serializable{
 			}else{
 				String tipocuenta = mngCajero.findTipoCuentaByID(getIdTipocuenta()).getTipo();
 				if(!this.montoMinCuenta(tipocuenta, getSaldo())){
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Alerta","Monto menor"));
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Valor de saldo menor","Cuenta corriente 150$ y ahorros $100"));
 				}else{
 					setNroCuenta(this.nroCuenta(tipocuenta));
 					mngCajero.crearCuentaBancaria(getNroCuenta(), getIdTipocuenta(), getIdCliente(), getSaldo());
+					//Limpiar Datos
+					setNombre("");setApellido("");setCi("");setIdCliente(-1);
+					setIdTipocuenta(-1);setNroCuenta("");setSaldo(new BigDecimal(0));
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto","Cuenta creada"));
 				}
 			} 
@@ -269,4 +271,9 @@ public class CuentaBean implements Serializable{
 		return "";
 	}
 	
+	public String limpiarDatos(){
+		setNombre("");setApellido("");setCi("");setIdCliente(-1);
+		setIdTipocuenta(-1);setNroCuenta("");setSaldo(new BigDecimal(0));
+		return "";
+	}
 }
