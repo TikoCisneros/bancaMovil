@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Clientes</title>
+</h:head> 
+<body> 
+	<h:form id="form1">
+		<p:growl id="msj1" showDetail="true"/>
+		<p:panel id="panel1" header="Nuevo Cliente">
+			<p:panelGrid columns="2">
+				<h:outputText value="Cedula*"/>
+				<p:inputText required="true" id="cedula" maxlength="10" value="#{clienteBean.ciRuc}" requiredMessage="Campo C&eacute;dula Requerido" validatorMessage="Solo ingrese numeros">
+					<f:validateRegex pattern="[0-9]+" /> 
+				</p:inputText>
+				<h:outputText value="Apellidos*"/>
+				<p:inputText required="true" id="apellidos" value="#{clienteBean.apellido}" 
+				requiredMessage="Campo Apellidos Requerido" validatorMessage="El Apellido debe contener solo letras">
+					<f:validateRegex pattern="[a-zA-Z ñíóúéáÑÁÉÍÓÚ]+" />
+				</p:inputText>
+				<h:outputText value="Nombres*"/>
+				<p:inputText required="true" id="nombres" value="#{clienteBean.nombre}" 
+				requiredMessage="Campo Nombres Requerido" validatorMessage="El Nombre debe contener solo letras">
+					<f:validateRegex pattern="[a-zA-Z ñíóúéáÑÁÉÍÓÚ]+" />
+				</p:inputText>
+				<h:outputText value="Tel&eacute;fono*"/>
+				<p:inputText required="true" id="telf" value="#{clienteBean.telefono}" 
+				requiredMessage="Campo Telefono Requerido" validatorMessage="Telefono debe contener solo numeros">
+					<f:validateRegex pattern="[0-9]+" />
+				</p:inputText>
+				<h:outputText value="Direcci&oacute;n*"/>
+				<p:inputText required="true" id="direccion" value="#{clienteBean.direccion}" requiredMessage="Campo Direccion Requerido">
+				</p:inputText>
+				<h:outputText value="Correo*"/>
+				<p:inputText required="true" id="correo" value="#{clienteBean.correo}" 
+				requiredMessage="Campo Correo Requerido" validatorMessage="Debe ingresar un correo valido">
+					<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+				</p:inputText>
+				<p:commandButton value="Guardar" action="#{clienteBean.ingresarCliente()}" update=":form1 :form2:panel2"/>
+				<p:commandButton type="reset" value="Limpiar"/>		
+			</p:panelGrid>
+		</p:panel>
+	</h:form>
+	<br/><br/>
+	<h:form id="form2">
+		<p:growl id="msj2" showDetail="true"/>
+		<p:panel id="panel2" header="Clientes existentes">
+			<p:dataTable id="dt" value="#{clienteBean.listado}" rows="8" var="reg" paginator="true" emptyMessage="No existen datos"
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+	            <p:column filterBy="#{reg.ciRuc}"  headerText="C&Eacute;DULA">
+					<h:outputText value="#{reg.ciRuc}"></h:outputText>
+				</p:column>	
+	            <p:column filterBy="#{reg.apellido}"  headerText="APELLIDOS">
+					<h:outputText value="#{reg.apellido}"></h:outputText>
+				</p:column>			
+				<p:column filterBy="#{reg.nombre}" headerText="NOMBRES">
+					<h:outputText value="#{reg.nombre}"></h:outputText>
+				</p:column>
+				<p:column  headerText="CORREO">
+					<h:outputText value="#{reg.correo}"></h:outputText>
+				</p:column>
+				<p:column headerText="OPCIONES">
+					<p:commandButton  icon="ui-icon-pencil" id="track" action="#{clienteBean.cargarCliente(reg)}" 
+					oncomplete="PF('dlg1').show();" update=":form3 :form2:msj2">
+						<p:tooltip for="track" value="Editar Datos Cliente" trackMouse="true" />
+					</p:commandButton>	
+				</p:column>
+            </p:dataTable>	
+		</p:panel>
+	</h:form>
+	<p:dialog widgetVar="dlg1" modal="true" header="Editar Datos Cliente">
+		<h:form id="form3">
+			<p:panelGrid columns="2">
+				<h:outputText value="Cedula"/>
+				<h:outputText value="#{clienteBean.ciRuc}"/>
+				<h:outputText value="Apellidos"/>
+				<h:outputText value="#{clienteBean.apellido}"/>
+				<h:outputText value="Nombres"/>
+				<h:outputText value="#{clienteBean.nombre}"/>
+				<h:outputText value="Tel&eacute;fono*"/>
+				<p:inputText required="true" id="telf" value="#{clienteBean.telefono}" 
+				requiredMessage="Campo Telefono Requerido" validatorMessage="Telefono debe contener solo numeros">
+					<f:validateRegex pattern="[0-9]+" />
+				</p:inputText>
+				<h:outputText value="Direcci&oacute;n*"/>
+				<p:inputText required="true" id="direccion" value="#{clienteBean.direccion}" requiredMessage="Campo Direccion Requerido">
+				</p:inputText>
+				<h:outputText value="Correo*"/>
+				<p:inputText required="true" id="correo" value="#{clienteBean.correo}" 
+				requiredMessage="Campo Correo Requerido" validatorMessage="Debe ingresar un correo valido">
+					<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+				</p:inputText>
+				<p:commandButton value="Modificar" action="#{clienteBean.modificarCliente()}" update=":form3 :form2" onclick="PF('dlg1').close();"/>
+				<p:commandButton value="Cancelar" action="#{clienteBean.cancelarModCliente()}" update=":form3 :form2" onclick="PF('dlg1').close();"/>	
+			</p:panelGrid>
+		</h:form>
+	</p:dialog>
+</body> 
+</html>
