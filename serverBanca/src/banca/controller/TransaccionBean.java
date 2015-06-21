@@ -40,8 +40,9 @@ public class TransaccionBean implements Serializable{
 	
 	public TransaccionBean() {
 		mngCajero = new ManagerCajero();
+		this.nroCuenta = "0";
 		this.cuentas = mngCajero.findAllCuenta();
-		this.cajero = SessionBean.verificarSession("cajero");
+		this.cajero = SessionBean.verificarSession("operador");
 	}
 
 	public List<Cuenta> completeCuentas(String query) {
@@ -58,7 +59,7 @@ public class TransaccionBean implements Serializable{
 		return filteredCuentas;
 	}
 	
-	public void setCuentaCliente(AjaxBehaviorEvent a)
+	public void cuentaCliente(AjaxBehaviorEvent a)
 	{
 		if(this.cuenta != null)
 			this.cliente = cuenta.getCliente();

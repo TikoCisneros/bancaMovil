@@ -29,7 +29,8 @@ public class CuentaConverter implements Converter{
 	 
 	    public String getAsString(FacesContext fc, UIComponent uic, Object object) {
 	        if(object != null) {
-	            return String.valueOf(((Cuenta) object).getNroCuenta());
+	        	Cuenta c = (Cuenta) object;
+	            return c.getNroCuenta();
 	        }
 	        else {
 	            return null;

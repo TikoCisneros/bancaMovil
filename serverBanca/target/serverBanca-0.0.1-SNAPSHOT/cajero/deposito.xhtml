@@ -31,7 +31,7 @@ and open the template in the editor.
 			<p:panelGrid columns="2">
 				<h:outputText value="Cuenta" />
 				<p:autoComplete id="auCuenta" dropdown="true"
-					value="#{transaccionBean.cuentas}"
+					value="#{transaccionBean.cuenta}"
 					completeMethod="#{transaccionBean.completeCuentas}" var="c"
 					itemLabel="#{c.nroCuenta}" converter="cuentaConverter"
 					itemValue="#{c}" forceSelection="false">
@@ -44,22 +44,22 @@ and open the template in the editor.
 						</h:panelGrid>
 					</f:facet>
 					<f:ajax event="itemSelect" render="datosC"
-					 listener="setCuentaCliente()"></f:ajax>
+					 listener="#{transaccionBean.cuentaCliente}"></f:ajax>
 				</p:autoComplete>
-				<div id="datosC">
-					<h:outputText value="Apellidos" />
+			</p:panelGrid>
+			<p:panelGrid columns="2" id="datosC">
+					<h:outputText value="CI" />
 					<h:outputText value="#{transaccionBean.cliente.ciRuc}" />
 					<h:outputText value="Apellidos" />
 					<h:outputText value="#{transaccionBean.cliente.apellido}" />
-					<h:outputText value="Nombres" />
+					<h:outputText value="Nombres" />	
 					<h:outputText value="#{transaccionBean.cliente.nombre}" />
 					<h:outputText value="Tipo cuenta" />
 					<h:outputText value="#{transaccionBean.cuenta.tipocuenta.tipo}" />
-				</div>
 			</p:panelGrid>
 			<p:panelGrid columns="2">
-				<h3><h:outputText  value="TRANSACCIÓN" /></h3>
-				<h3><h:outputText  value="DEPOSITO" /></h3>
+				<h:outputText  value="TRANSACCIÓN" />
+				<h:outputText  value="DEPOSITO" />
 				<br/><br/>
 				<h:outputText  value="Monto o valor" />
 				<p:spinner min="0.01" prefix="$" stepFactor="0.01" value="#{transaccionBean.monto}">

@@ -116,7 +116,7 @@ public class SessionBean implements Serializable {
     	if(session == null || session.getAttribute("sessionBean") == null)
     	{
     		try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/serverBanca/login.xhtml");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/serverBanca/index.xhtml");
             } catch (IOException ex) {
             	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(),null));
             }
@@ -125,7 +125,7 @@ public class SessionBean implements Serializable {
         SessionBean user = (SessionBean) session.getAttribute("sessionBean");
         if (user==null || user.getSession() == null) {
             try {
-                FacesContext.getCurrentInstance().getExternalContext().redirect("/serverBanca/login.xhtml");
+                FacesContext.getCurrentInstance().getExternalContext().redirect("/serverBanca/index.xhtml");
             } catch (IOException ex) {
             	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.getMessage(),null));
             }
