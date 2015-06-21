@@ -1,12 +1,20 @@
 package banca.model.manager;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import banca.model.dao.entities.Cliente;
 import banca.model.dao.entities.Contador;
 import banca.model.dao.entities.Cuenta;
+import banca.model.dao.entities.Estadotrans;
+import banca.model.dao.entities.Historial;
 import banca.model.dao.entities.Tipocuenta;
+import banca.model.dao.entities.Tipotrans;
+import banca.model.dao.entities.Transacciones;
+import banca.model.dao.entities.Usuario;
 
 public class ManagerCajero {
 	
@@ -85,6 +93,27 @@ public class ManagerCajero {
 		mngDAO.actualizar(cli);
 	}
 	
+	/**
+	 * Bloquea la cuenta de un cliente
+	 * @param idCli
+	 * @throws Exception
+	 */
+	public void bloquearCuentaCliente(Integer idCli) throws Exception{
+		Cliente cli = findClienteByID(idCli);
+		cli.setBloqueda(Cliente.BLOQUEADA);
+		mngDAO.actualizar(cli);
+	}
+	/**
+	 * Desbloquea la cuenta de un cliente
+	 * @param idCli
+	 * @throws Exception
+	 */
+	public void desbloquearCuentaCliente(Integer idCli) throws Exception{
+		Cliente cli = findClienteByID(idCli);
+		cli.setBloqueda(Cliente.NO_BLOQUEADA);
+		mngDAO.actualizar(cli);
+	}
+	
 	/*********************************CUENTAS*********************************/
 	
 	/**
@@ -113,6 +142,13 @@ public class ManagerCajero {
 	@SuppressWarnings("unchecked")
 	public List<Cuenta> findAllCuenta(){
 		return mngDAO.findAll(Cuenta.class);
+	}
+	/**
+	 * Devuelve una cuenta segun su numero de cuenta
+	 * @return cuenta
+	 */
+	public Cuenta findCuentaByNro(String nro) throws Exception{
+		return (Cuenta)mngDAO.findById(Cuenta.class, nro);
 	}
 	
 	/**
@@ -155,6 +191,99 @@ public class ManagerCajero {
 		mngDAO.actualizar(cont);
 		
 		return valor+num;
+	}
+	
+	/*********************************TRANSACCIONES*********************************/
+	
+	
+	/**
+	 * Funcion interna para agregar una nueva transaccion
+	 * @param monto
+	 * @param tipo
+	 * @param cuentaDestino
+	 * @param cliente
+	 * @param cajero 
+	 * @throws Exception
+	 */
+	private void  crearTransaccion(BigDecimal monto,Tipotrans tipo,String cuentaDestino, Cliente cliente, Usuario cajero) throws Exception{
+		
+		if(monto.doubleValue() <= 0)
+			throw new Exception("El monto no puede ser menor o igual a 0");
+		Transacciones t = new Transacciones();
+		Historial ht = new Historial();
+		t.setCliente(cliente);
+		t.setTipotran(tipo);
+		Estadotrans estado = (Estadotrans)mngDAO.findById(Estadotrans.class, Estadotrans.FINALIZADA);
+		t.setEstadotran(estado);
+		Timestamp fecha = new Timestamp(new Date().getTime());
+		t.setFecha(fecha);
+		t.setMonto(monto);
+		t.setNrocDestino(cuentaDestino);
+		t.setNroCuenta(cuentaDestino);
+		Cuenta c = (Cuenta)mngDAO.findById(Cuenta.class, cuentaDestino);
+		BigDecimal saldo = c.getSaldo();
+		BigDecimal saldoA = new BigDecimal(0);
+		if(tipo.getTipotrans().equals("Deposito"))
+		{
+			saldoA = saldo.add(monto);
+			saldoA = saldoA.setScale(2, RoundingMode.HALF_UP);
+		}
+		else if(tipo.getTipotrans().equals("Retiro"))
+		{
+			saldoA = saldo.subtract(monto);
+			if(saldoA.doubleValue() < 0 )
+			saldoA = saldoA.setScale(2, RoundingMode.HALF_UP);
+			if(saldoA.doubleValue() < 0 )
+				throw new Exception("No tienes fondos suficientes para realizar este retiro.");
+		}
+		else if(tipo.getTipotrans().equals("Deposito"))
+			throw new Exception("No se puede realizar transferencias por medio de este método.");
+		t.setSaldoActual(saldo);
+		t.setSaldoFinal(saldoA);
+		
+		//historial
+		ht.setEstado(estado.getEstado());
+		ht.setFecha(fecha);
+		ht.setMonto(monto);
+		ht.setNrocDestino(cuentaDestino);
+		ht.setNroCuenta(cuentaDestino);
+		ht.setSaldoActual(t.getSaldoActual());
+		ht.setSaldoFinal(t.getSaldoFinal());
+		ht.setTipo(tipo.getTipotrans());
+		
+		mngDAO.insertar(t);
+		
+		//set nuevo saldo cuenta
+		c.setSaldo(saldoA);
+		mngDAO.actualizar(c);
+		mngDAO.insertar(ht);
+	}
+	/**
+	 * Realiza un deposito a un a cuenta de un cliente
+	 * @param monto
+	 * @param tipo
+	 * @param cuentaDestino
+	 * @param cliente
+	 * @param cajero 
+	 * @throws Exception
+	 */
+	public void  deposito(BigDecimal monto, String cuentaDestino, Cliente cliente, Usuario cajero) throws Exception{
+		Tipotrans tipo = (Tipotrans)mngDAO.findById(Tipotrans.class, Tipotrans.DEPOSITO);
+		crearTransaccion(monto, tipo, cuentaDestino, cliente, cajero);
+	}
+	
+	/**
+	 * Realiza un deposito a un a cuenta de un cliente
+	 * @param monto
+	 * @param tipo
+	 * @param cuentaDestino
+	 * @param cliente
+	 * @param cajero 
+	 * @throws Exception
+	 */
+	public void  retiro(BigDecimal monto, String cuentaDestino, Cliente cliente, Usuario cajero) throws Exception{
+		Tipotrans tipo = (Tipotrans)mngDAO.findById(Tipotrans.class, Tipotrans.RETIRO);
+		crearTransaccion(monto, tipo, cuentaDestino, cliente, cajero);
 	}
 	
 }

@@ -13,6 +13,8 @@ import java.util.List;
 @NamedQuery(name="Tipocuenta.findAll", query="SELECT t FROM Tipocuenta t")
 public class Tipocuenta implements Serializable {
 	private static final long serialVersionUID = 1L;
+	public static final int AHORROS = 2;
+	public static final int CORRIENTE = 1; 
 
 	@Id
 	@SequenceGenerator(name="TIPOCUENTA_IDTIPO_GENERATOR", sequenceName="SEC_TIPOCUENTA", allocationSize=1)

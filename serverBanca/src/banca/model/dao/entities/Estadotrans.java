@@ -13,6 +13,9 @@ import java.util.List;
 @NamedQuery(name="Estadotrans.findAll", query="SELECT e FROM Estadotrans e")
 public class Estadotrans implements Serializable {
 	private static final long serialVersionUID = 1L;
+	public static final int EN_PROCESO = 1;
+	public static final int FINALIZADA = 2;
+	public static final int FALLIDA = 3; 
 
 	@Id
 	@SequenceGenerator(name="ESTADOTRANS_IDEST_GENERATOR", sequenceName="SEC_ESTADOTRANS", allocationSize=1)

@@ -16,7 +16,7 @@
 			<div class="app-title">
 				<h2>Ingreso al Sistema</h2>
 			</div>
-
+			<h:form>
 			<div class="login-form">
 				<div class="control-group">
 				<h:inputText value="#{sessionBean.alias}"  pl:placeholder="alias" id="login-name" styleClass="login-field"/>
@@ -29,6 +29,7 @@
 				</div>
 				<h:commandButton action="#{sessionBean.login()}" value="Iniciar sesi&oacute;n" styleClass="btn btn-primary btn-large btn-block"/>
 			</div>
+			</h:form>
 		</div>
 	</div>
 </body>

@@ -13,6 +13,9 @@ import java.util.List;
 @NamedQuery(name="Tipotrans.findAll", query="SELECT t FROM Tipotrans t")
 public class Tipotrans implements Serializable {
 	private static final long serialVersionUID = 1L;
+	public static final int DEPOSITO = 1; 
+	public static final int RETIRO = 2; 
+	public static final int TRANSFERENCIA = 3; 
 
 	@Id
 	@SequenceGenerator(name="TIPOTRANS_IDTIPOTRANS_GENERATOR", sequenceName="SEC_TIPOTRANS", allocationSize=1)
