@@ -1,0 +1,16 @@
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:10:36:20 -0500] "GET /serverBanca HTTP/1.1" 302 - http-bio-8080-exec-1 0
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:10:36:20 -0500] "GET / HTTP/1.1" 404 - http-bio-8080-exec-2 0
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:10:36:21 -0500] "GET /favicon.ico HTTP/1.1" 404 - http-bio-8080-exec-3 0
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:10:36:27 -0500] "GET /serverBanca/ HTTP/1.1" 500 21940 http-bio-8080-exec-4 6485
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:10:45:47 -0500] "GET /serverBanca/ HTTP/1.1" 500 2586 http-bio-8080-exec-1 4060
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:10:47:55 -0500] "GET /serverBanca/ HTTP/1.1" 200 2322 http-bio-8080-exec-1 2215
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:10:47:55 -0500] "GET /serverBanca/javax.faces.resource/style.css.xhtml?ln=css HTTP/1.1" 304 - http-bio-8080-exec-2 2
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:10:47:55 -0500] "GET /serverBanca/javax.faces.resource/theme.css.xhtml?ln=primefaces-blitzer HTTP/1.1" 304 - http-bio-8080-exec-4 3
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:10:48:03 -0500] "POST /serverBanca/index.xhtml HTTP/1.1" 302 - http-bio-8080-exec-6 682
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:10:48:03 -0500] "GET /serverBanca/admin/index.xhtml HTTP/1.1" 200 293 http-bio-8080-exec-7 28
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:10:48:11 -0500] "GET /serverBanca/cajero/index.xhtml HTTP/1.1" 200 5290 http-bio-8080-exec-8 79
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:10:48:26 -0500] "GET /serverBanca/cajero/retiro HTTP/1.1" 404 1001 http-bio-8080-exec-10 1
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:10:48:31 -0500] "GET /serverBanca/cajero/retiro.xhtml HTTP/1.1" 500 9026 http-bio-8080-exec-10 254
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:10:58:13 -0500] "GET /serverBanca/cajero/retiro.xhtml HTTP/1.1" 500 9026 http-bio-8080-exec-1 2287
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:11:02:35 -0500] "GET /serverBanca/cajero/retiro.xhtml HTTP/1.1" 500 9026 http-bio-8080-exec-1 2578
+0:0:0:0:0:0:0:1 - - [21/Jun/2015:11:05:32 -0500] "GET /serverBanca/cajero/retiro.xhtml HTTP/1.1" 500 6139 http-bio-8080-exec-1 2329

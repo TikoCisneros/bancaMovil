@@ -1,12 +1,37 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets">
-
-	<h:head>
-	</h:head>
-	<h:body>
-	Cajero
-	</h:body>
+    <ui:composition template="template.xhtml">
+        <ui:define name="titulo">
+            Bienvenido Cajero
+        </ui:define>
+        <ui:define name="menu">
+             <p:menuitem>
+                <a href="#">
+                    <span>BANCA</span>
+                </a>
+            </p:menuitem> 
+            <p:submenu label="Menu" icon="ui-icon-document" >
+                <p:submenu label="submenu1" icon="ui-icon-user" >
+                    <p:menuitem value="item" url="#"/>
+                </p:submenu>
+            </p:submenu>
+            <p:menuitem value="Menu2" url="#" icon="ui-icon-document" />
+        </ui:define>
+        <ui:define name="contenido">
+            <p:panelGrid columns="2" style="width: 100%">
+                <p:panel header="Depositos"></p:panel>
+                <p:panel header="Retiros"></p:panel>
+            </p:panelGrid>
+        </ui:define>
+    </ui:composition>
 </html>

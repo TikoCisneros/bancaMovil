@@ -1,0 +1,8 @@
+0:0:0:0:0:0:0:1 - - [18/Jun/2015:00:57:44 -0500] "GET / HTTP/1.1" 404 - http-bio-8080-exec-5 0
+0:0:0:0:0:0:0:1 - - [18/Jun/2015:00:57:56 -0500] "GET /serverBanca/admin/usuarios.xhtml HTTP/1.1" 200 17157 http-bio-8080-exec-6 5720
+0:0:0:0:0:0:0:1 - - [18/Jun/2015:00:58:17 -0500] "GET /serverBanca/javax.faces.resource/images/ui-bg_flat_65_ffffff_40x100.png.xhtml?ln=primefaces-blitzer HTTP/1.1" 200 178 http-bio-8080-exec-7 11
+0:0:0:0:0:0:0:1 - - [18/Jun/2015:00:58:17 -0500] "POST /serverBanca/admin/usuarios.xhtml HTTP/1.1" 200 10813 http-bio-8080-exec-8 83
+0:0:0:0:0:0:0:1 - - [18/Jun/2015:00:58:17 -0500] "GET /serverBanca/javax.faces.resource/images/ui-icons_004276_256x240.png.xhtml?ln=primefaces-blitzer HTTP/1.1" 200 4369 http-bio-8080-exec-9 5
+0:0:0:0:0:0:0:1 - - [18/Jun/2015:00:58:17 -0500] "GET /serverBanca/javax.faces.resource/messages/messages.png.xhtml?ln=primefaces&v=5.2 HTTP/1.1" 200 27245 http-bio-8080-exec-10 7
+0:0:0:0:0:0:0:1 - - [18/Jun/2015:00:58:37 -0500] "POST /serverBanca/admin/usuarios.xhtml HTTP/1.1" 200 10142 http-bio-8080-exec-10 60
+0:0:0:0:0:0:0:1 - - [18/Jun/2015:00:58:58 -0500] "GET /serverBanca/cajero/deposito.xhtml HTTP/1.1" 500 5974 http-bio-8080-exec-10 1236

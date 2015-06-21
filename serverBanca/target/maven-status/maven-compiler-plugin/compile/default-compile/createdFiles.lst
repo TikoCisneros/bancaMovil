@@ -18,6 +18,7 @@ banca\model\dao\entities\Tipocuenta_.class
 banca\model\dao\entities\Cuenta_.class
 banca\model\dao\entities\Estadousr_.class
 banca\controller\ClienteBean.class
+banca\controller\Mensaje.class
 banca\model\dao\entities\Transacciones_.class
 banca\controller\CuentaBean.class
 banca\model\dao\entities\RespuestasPK.class
@@ -29,6 +30,7 @@ banca\model\dao\entities\Contador.class
 banca\model\dao\entities\RespuestasPK_.class
 banca\model\dao\entities\Tipousr_.class
 banca\model\manager\ManagerCajero.class
+banca\controller\TransaccionBean.class
 banca\controller\SessionBean.class
 banca\model\dao\entities\Preguntas_.class
 banca\model\dao\entities\Historial_.class

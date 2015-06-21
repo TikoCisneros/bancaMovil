@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<ui:composition template="index.xhtml">
+	<ui:define name="titulo">
+            Bienvenido Cajero
+        </ui:define>
+	<ui:define name="menu">
+		<p:menuitem>
+			<a href="#"> <span>BANCA</span>
+			</a>
+		</p:menuitem>
+		<p:submenu label="Menu" icon="ui-icon-document">
+			<p:submenu label="submenu1" icon="ui-icon-user">
+				<p:menuitem value="item" url="#" />
+			</p:submenu>
+		</p:submenu>
+		<p:menuitem value="Menu2" url="#" icon="ui-icon-document" />
+	</ui:define>
+	<ui:define name="contenido">
+		<p:panelGrid columns="2" style="width: 100%">
+			<p:panelGrid columns="2">
+				<h:outputText value="Cuenta" />
+				<p:autoComplete id="auCuenta" dropdown="true"
+					value="#{transaccionBean.cuentas}"
+					completeMethod="#{transaccionBean.completeCuentas}" var="c"
+					itemLabel="#{c.nroCuenta}" converter="cuentaConverter"
+					itemValue="#{c}" forceSelection="false">
+					<f:facet name="itemtip">
+						<h:panelGrid columns="1" cellpadding="5">
+							<f:facet name="header">
+								<h:outputText style="margin:30px;" value="Cliente" />
+							</f:facet>
+							<h:outputText value="#{c.cliente.nombre } - #{c.cliente.apellido}" />
+						</h:panelGrid>
+					</f:facet>
+					<f:ajax event="itemSelect" render="datosC"
+					 listener="setCuentaCliente()"></f:ajax>
+				</p:autoComplete>
+				<div id="datosC">
+					<h:outputText value="Apellidos" />
+					<h:outputText value="#{transaccionBean.cliente.ciRuc}" />
+					<h:outputText value="Apellidos" />
+					<h:outputText value="#{transaccionBean.cliente.apellido}" />
+					<h:outputText value="Nombres" />
+					<h:outputText value="#{transaccionBean.cliente.nombre}" />
+					<h:outputText value="Tipo cuenta" />
+					<h:outputText value="#{transaccionBean.cuenta.tipocuenta.tipo}" />
+				</div>
+			</p:panelGrid>
+			<p:panelGrid columns="2">
+				<h3><h:outputText  value="TRANSACCIÓN" /></h3>
+				<h3><h:outputText  value="DEPOSITO" /></h3>
+				<br/><br/>
+				<h:outputText  value="Monto o valor" />
+				<p:spinner min="0.01" prefix="$" stepFactor="0.01" value="#{transaccionBean.monto}">
+				</p:spinner>
+				
+				<p:commandButton value="Realizar Transacción" icon="ui-icon-disk" action="#{transaccionBean.realizarDeposito()}">
+				</p:commandButton>
+			</p:panelGrid>
+		</p:panelGrid>
+	</ui:define>
+</ui:composition>
+</html>
