@@ -76,6 +76,8 @@ public class ManagerCajero {
 		Cliente cli = new Cliente();
 		cli.setNombre(nombre);cli.setApellido(apellido);cli.setCiRuc(ciRuc);
 		cli.setTelefono(telefono);cli.setCorreo(correo);cli.setDireccion(direccion);
+		cli.setBloqueda(Cliente.NO_BLOQUEADA);
+		cli.setCmMovil(Cliente.CMOBIL_BLOQUEADA);
 		mngDAO.insertar(cli);
 	}
 	
@@ -98,9 +100,10 @@ public class ManagerCajero {
 	 * @param idCli
 	 * @throws Exception
 	 */
-	public void bloquearCuentaCliente(Integer idCli) throws Exception{
+	public void bloquearCuentaCliente(Integer idCli, String motivo) throws Exception{
 		Cliente cli = findClienteByID(idCli);
 		cli.setBloqueda(Cliente.BLOQUEADA);
+		cli.setMotivo(motivo);
 		mngDAO.actualizar(cli);
 	}
 	/**
@@ -111,6 +114,27 @@ public class ManagerCajero {
 	public void desbloquearCuentaCliente(Integer idCli) throws Exception{
 		Cliente cli = findClienteByID(idCli);
 		cli.setBloqueda(Cliente.NO_BLOQUEADA);
+		mngDAO.actualizar(cli);
+	}
+	/**
+	 * Bloquea la cuenta de un cliente
+	 * @param idCli
+	 * @throws Exception
+	 */
+	public void bloquearCuentaMobil(Integer idCli, String motivo) throws Exception{
+		Cliente cli = findClienteByID(idCli);
+		cli.setBloqueda(Cliente.BLOQUEADA);
+		mngDAO.actualizar(cli);
+	}
+	/**
+	 * Desbloquea la cuenta de un cliente
+	 * @param idCli
+	 * @throws Exception
+	 */
+	public void desbloquearCuentaMobil(Integer idCli) throws Exception{
+		Cliente cli = findClienteByID(idCli);
+		cli.setCmMovil(Cliente.CMOBIL_NO_BLOQUEADA);
+		cli.setCmPass("root");//genera password
 		mngDAO.actualizar(cli);
 	}
 	
@@ -207,6 +231,7 @@ public class ManagerCajero {
 	 */
 	private void  crearTransaccion(BigDecimal monto,Tipotrans tipo,String cuentaDestino, Cliente cliente, Usuario cajero) throws Exception{
 		
+		System.out.print("Transaccion de monto "+monto.doubleValue());
 		if(monto.doubleValue() <= 0)
 			throw new Exception("El monto no puede ser menor o igual a 0");
 		Transacciones t = new Transacciones();

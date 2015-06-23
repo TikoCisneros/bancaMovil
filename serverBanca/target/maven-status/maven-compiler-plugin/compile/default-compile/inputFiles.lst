@@ -1,9 +1,11 @@
 C:\Users\Fabian\git\bancaMovil\serverBanca\src\banca\model\dao\entities\Tipotrans.java
-C:\Users\Fabian\git\bancaMovil\serverBanca\src\banca\controller\CuentaConverter.java
-C:\Users\Fabian\git\bancaMovil\serverBanca\src\banca\model\dao\entities\Cuenta.java
 C:\Users\Fabian\git\bancaMovil\serverBanca\src\banca\model\dao\entities\Usuario.java
+C:\Users\Fabian\git\bancaMovil\serverBanca\src\banca\model\dao\entities\Cuenta.java
+C:\Users\Fabian\git\bancaMovil\serverBanca\src\banca\controller\CuentaConverter.java
 C:\Users\Fabian\git\bancaMovil\serverBanca\src\banca\model\manager\ManagerDAO.java
 C:\Users\Fabian\git\bancaMovil\serverBanca\src\banca\model\dao\entities\Estadotrans.java
+C:\Users\Fabian\git\bancaMovil\serverBanca\src\banca\controller\servicios\ServletLog.java
+C:\Users\Fabian\git\bancaMovil\serverBanca\src\banca\controller\EstadoCuentaClienteBean.java
 C:\Users\Fabian\git\bancaMovil\serverBanca\src\banca\model\dao\entities\Estadousr.java
 C:\Users\Fabian\git\bancaMovil\serverBanca\src\banca\model\dao\entities\Contador.java
 C:\Users\Fabian\git\bancaMovil\serverBanca\src\banca\controller\CuentaBean.java

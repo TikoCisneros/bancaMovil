@@ -235,6 +235,7 @@ public class ManagerDAO {
 					+ e.getMessage());
 		}
 		em.getTransaction().commit();
+		mostrarLog("Buscar","Busqueda por id");
 		return o;
 	}
 

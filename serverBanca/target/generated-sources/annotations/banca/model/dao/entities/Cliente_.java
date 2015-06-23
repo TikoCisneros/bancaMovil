@@ -10,7 +10,7 @@ import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-06-18T01:02:12")
+@Generated(value="EclipseLink-2.5.2.v20140319-rNA", date="2015-06-23T01:02:01")
 @StaticMetamodel(Cliente.class)
 public class Cliente_ { 
 
@@ -18,8 +18,8 @@ public class Cliente_ {
     public static volatile SingularAttribute<Cliente, String> apellido;
     public static volatile SingularAttribute<Cliente, Date> cmFechaUltmCon;
     public static volatile SingularAttribute<Cliente, String> direccion;
-    public static volatile ListAttribute<Cliente, Cuenta> cuentas;
     public static volatile SingularAttribute<Cliente, String> ultmIp;
+    public static volatile ListAttribute<Cliente, Cuenta> cuentas;
     public static volatile SingularAttribute<Cliente, String> alias;
     public static volatile SingularAttribute<Cliente, String> cmUltmIp;
     public static volatile SingularAttribute<Cliente, String> telefono;
@@ -28,8 +28,8 @@ public class Cliente_ {
     public static volatile SingularAttribute<Cliente, String> cmPin;
     public static volatile SingularAttribute<Cliente, String> pass;
     public static volatile SingularAttribute<Cliente, String> nombre;
-    public static volatile SingularAttribute<Cliente, Integer> idCli;
     public static volatile SingularAttribute<Cliente, String> motivo;
+    public static volatile SingularAttribute<Cliente, Integer> idCli;
     public static volatile SingularAttribute<Cliente, String> cmPass;
     public static volatile SingularAttribute<Cliente, String> bloqueda;
     public static volatile ListAttribute<Cliente, Transacciones> transacciones;

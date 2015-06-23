@@ -14,8 +14,10 @@ import java.util.List;
 @NamedQuery(name="Cliente.findAll", query="SELECT c FROM Cliente c")
 public class Cliente implements Serializable {
 	private static final long serialVersionUID = 1L;
-	public static final String BLOQUEADA = "S";
-	public static final String NO_BLOQUEADA = "N";
+	public static final String BLOQUEADA = "X";
+	public static final String NO_BLOQUEADA = "O";
+	public static final String CMOBIL_BLOQUEADA = "X";
+	public static final String CMOBIL_NO_BLOQUEADA = "O";
 
 	@Id
 	@SequenceGenerator(name="CLIENTE_IDCLI_GENERATOR", sequenceName="SEC_CLIENTE", allocationSize=1)

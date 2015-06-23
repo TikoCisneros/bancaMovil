@@ -21,7 +21,7 @@ public class Cuenta implements Serializable {
 	private BigDecimal saldo;
 
 	//bi-directional many-to-one association to Cliente
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="id_cli")
 	private Cliente cliente;
 

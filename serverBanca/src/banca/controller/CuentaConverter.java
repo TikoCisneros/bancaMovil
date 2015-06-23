@@ -13,7 +13,7 @@ import banca.model.manager.ManagerCajero;
 @FacesConverter("cuentaConverter")
 public class CuentaConverter implements Converter{
 	 public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
-	        if(value != null && value.trim().length() > 0) {
+	        if(value != null && value.trim().length() > 0) {	        	
 	            ManagerCajero service = new ManagerCajero();
 	            try {
 					return service.findCuentaByNro(value);
@@ -28,9 +28,8 @@ public class CuentaConverter implements Converter{
 	    }
 	 
 	    public String getAsString(FacesContext fc, UIComponent uic, Object object) {
-	        if(object != null) {
-	        	Cuenta c = (Cuenta) object;
-	            return c.getNroCuenta();
+	    	if(object != null) {
+	    		return String.valueOf(((Cuenta) object).getNroCuenta());
 	        }
 	        else {
 	            return null;

@@ -10,7 +10,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 
-import banca.model.dao.entities.Cliente;
 import banca.model.dao.entities.Cuenta;
 import banca.model.dao.entities.Usuario;
 import banca.model.manager.ManagerCajero;
@@ -28,8 +27,6 @@ public class TransaccionBean implements Serializable{
 	private Cuenta cuenta; 
 	private List<Cuenta> cuentas;
 
-	//Datos Cliente
-	private Cliente cliente;
 	
 	//Datos cajero en session
 	private Usuario cajero;
@@ -44,7 +41,7 @@ public class TransaccionBean implements Serializable{
 		this.cuentas = mngCajero.findAllCuenta();
 		this.cajero = SessionBean.verificarSession("operador");
 	}
-
+	
 	public List<Cuenta> completeCuentas(String query) {
 		List<Cuenta> allCuentas = cuentas;
 		List<Cuenta> filteredCuentas= new ArrayList<Cuenta>();
@@ -59,50 +56,72 @@ public class TransaccionBean implements Serializable{
 		return filteredCuentas;
 	}
 	
-	public void cuentaCliente(AjaxBehaviorEvent a)
-	{
-		if(this.cuenta != null)
-			this.cliente = cuenta.getCliente();
-	}
-	
 	public void realizarDeposito()
 	{
-		
 		if(this.cuenta == null)
-			Mensaje.crearMensajeERROR("No se ha se leccionado ninguna cuenta.");
-		if(this.cliente == null)
+		{
+			Mensaje.crearMensajeERROR("No se ha seleccionado ninguna cuenta.");
+			return;
+		}
+		if(this.cuenta.getCliente() == null)
+		{
 			Mensaje.crearMensajeERROR("Hubo problemas obteniendo los datos del cliente.");
+			return;
+		}
+			
 		if(this.monto <= 0)
+		{
 			Mensaje.crearMensajeERROR("El monto no puede ser menor o igual a 0");
+			return;
+		}
+			
 		
 		try {
 			BigDecimal aux = new BigDecimal(monto);
 			aux.setScale(2, RoundingMode.HALF_UP);
-			mngCajero.deposito(aux, cuenta.getNroCuenta(), cliente, cajero);
+			mngCajero.deposito(aux, cuenta.getNroCuenta(), this.cuenta.getCliente(), cajero);
 			Mensaje.crearMensajeINFO("La transaccion ha sido completada exitosamente.");
 		} catch (Exception e) {
 			Mensaje.crearMensajeERROR(e.getMessage());
 			e.printStackTrace();
+		}
+		finally
+		{
+			this.monto = 0;
 		}
 	}
 	public void realizarRetiro()
 	{
 		
 		if(this.cuenta == null)
-			Mensaje.crearMensajeERROR("No se ha se leccionado ninguna cuenta.");
-		if(this.cliente == null)
+		{
+			Mensaje.crearMensajeERROR("No se ha seleccionado ninguna cuenta.");
+			return;
+		}
+		if(this.cuenta.getCliente() == null)
+		{
 			Mensaje.crearMensajeERROR("Hubo problemas obteniendo los datos del cliente.");
+			return;
+		}
+			
 		if(this.monto <= 0)
+		{
 			Mensaje.crearMensajeERROR("El monto no puede ser menor o igual a 0");
+			return;
+		}
 		
 		try {
 			BigDecimal aux = new BigDecimal(monto);
 			aux.setScale(2, RoundingMode.HALF_UP);
-			mngCajero.retiro(aux, cuenta.getNroCuenta(), cliente, cajero);
+			mngCajero.retiro(aux, cuenta.getNroCuenta(), this.cuenta.getCliente(), cajero);
 			Mensaje.crearMensajeINFO("La transaccion ha sido completada exitosamente.");
 		} catch (Exception e) {
 			Mensaje.crearMensajeERROR(e.getMessage());
 			e.printStackTrace();
+		}
+		finally
+		{
+			this.monto = 0;
 		}
 	}
 
@@ -133,14 +152,6 @@ public class TransaccionBean implements Serializable{
 
 	public void setMonto(double monto) {
 		this.monto = monto;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
 	}
 
 	public Cuenta getCuenta() {

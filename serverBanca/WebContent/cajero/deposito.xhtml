@@ -28,46 +28,56 @@ and open the template in the editor.
 	</ui:define>
 	<ui:define name="contenido">
 		<p:panelGrid columns="2" style="width: 100%">
-			<p:panelGrid columns="2">
-				<h:outputText value="Cuenta" />
-				<p:autoComplete id="auCuenta" dropdown="true"
-					value="#{transaccionBean.cuenta}"
-					completeMethod="#{transaccionBean.completeCuentas}" var="c"
-					itemLabel="#{c.nroCuenta}" converter="cuentaConverter"
-					itemValue="#{c}" forceSelection="false">
-					<f:facet name="itemtip">
-						<h:panelGrid columns="1" cellpadding="5">
-							<f:facet name="header">
-								<h:outputText style="margin:30px;" value="Cliente" />
-							</f:facet>
-							<h:outputText value="#{c.cliente.nombre } - #{c.cliente.apellido}" />
-						</h:panelGrid>
-					</f:facet>
-					<f:ajax event="itemSelect" render="datosC"
-					 listener="#{transaccionBean.cuentaCliente}"></f:ajax>
-				</p:autoComplete>
-			</p:panelGrid>
-			<p:panelGrid columns="2" id="datosC">
+			<h:form>
+				<p:panelGrid columns="2" id="datos">
+
+					<h:outputText value="Cuenta" />
+					<p:autoComplete id="auCuenta" dropdown="true"
+						value="#{transaccionBean.cuenta}"
+						completeMethod="#{transaccionBean.completeCuentas}" var="c"
+						itemLabel="#{c.nroCuenta}" converter="cuentaConverter"
+						itemValue="#{c}" forceSelection="false">
+						<f:facet name="itemtip">
+							<h:panelGrid columns="1" cellpadding="5">
+								<f:facet name="header">
+									<h:outputText style="margin:30px;" value="Cliente" />
+								</f:facet>
+								<h:outputText
+									value="#{c.cliente.nombre } - #{c.cliente.apellido}" />
+							</h:panelGrid>
+						</f:facet>
+						<f:ajax event="itemSelect"
+							render="txtCI txtAp txtNom txtCue growl"></f:ajax>
+					</p:autoComplete>
 					<h:outputText value="CI" />
-					<h:outputText value="#{transaccionBean.cliente.ciRuc}" />
+					<h:outputText id="txtCI"
+						value="#{transaccionBean.cuenta.cliente.ciRuc}" />
 					<h:outputText value="Apellidos" />
-					<h:outputText value="#{transaccionBean.cliente.apellido}" />
-					<h:outputText value="Nombres" />	
-					<h:outputText value="#{transaccionBean.cliente.nombre}" />
+					<h:outputText id="txtAp"
+						value="#{transaccionBean.cuenta.cliente.apellido}" />
+					<h:outputText value="Nombres" />
+					<h:outputText id="txtNom"
+						value="#{transaccionBean.cuenta.cliente.nombre}" />
 					<h:outputText value="Tipo cuenta" />
-					<h:outputText value="#{transaccionBean.cuenta.tipocuenta.tipo}" />
-			</p:panelGrid>
-			<p:panelGrid columns="2">
-				<h:outputText  value="TRANSACCIÓN" />
-				<h:outputText  value="DEPOSITO" />
-				<br/><br/>
-				<h:outputText  value="Monto o valor" />
-				<p:spinner min="0.01" prefix="$" stepFactor="0.01" value="#{transaccionBean.monto}">
-				</p:spinner>
-				
-				<p:commandButton value="Realizar Transacción" icon="ui-icon-disk" action="#{transaccionBean.realizarDeposito()}">
+					<h:outputText id="txtCue"
+						value="#{transaccionBean.cuenta.tipocuenta.tipo}" />
+
+				</p:panelGrid>
+			</h:form>
+			<h:form id="frmMonto">
+				<p:panelGrid columns="2">
+					<h:outputText value="TRANSACCIÓN" />
+					<h:outputText value="DEPOSITO" />
+					<h:outputText value="Monto o valor" />
+					<p:spinner prefix="$" stepFactor="0.01"
+						value="#{transaccionBean.monto}">
+					</p:spinner>
+				</p:panelGrid>
+				<br />
+				<p:commandButton value="Realizar Transacción" icon="ui-icon-disk"
+					action="#{transaccionBean.realizarDeposito()}" update="growl frmMonto">
 				</p:commandButton>
-			</p:panelGrid>
+			</h:form>
 		</p:panelGrid>
 	</ui:define>
 </ui:composition>
