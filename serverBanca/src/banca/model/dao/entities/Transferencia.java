@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 @NamedQuery(name="Transferencia.findAll", query="SELECT t FROM Transferencia t")
 public class Transferencia implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	public static final double MONTO_MAX = 1000;
 
 	@Id
 	@SequenceGenerator(name="TRANSFERENCIA_IDTRANSF_GENERATOR", sequenceName="SEC_TRANSAFERENCIA", allocationSize=1)
