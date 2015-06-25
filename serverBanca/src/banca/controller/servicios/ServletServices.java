@@ -17,7 +17,7 @@ import banca.model.manager.ManagerServicios;
  * Servlet implementacion de servicios para Banca Movil
  */
 @WebServlet(name="ServletServices", urlPatterns={"/login","/logout","/pass","/mail","/lista",
-		"/cuentas","/transferencia", "/VTransferencia"})
+		"/poli","/dismov","/cuentas","/transferencia", "/VTransferencia"})
 public class ServletServices extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     public static final String HOST = "localhost:8080"; 
@@ -56,10 +56,16 @@ public class ServletServices extends HttpServlet {
     		setMail(request, response);
     	}else if(path.equalsIgnoreCase("/lista")){
     		verHistorial(request, response);
+    	}else if(path.equalsIgnoreCase("/poli")){
+    		aceptaPoliticas(request, response);
+    	}else if(path.equalsIgnoreCase("/dismov")){
+    		disableCliMovil(request, response);
     	}else if(path.equalsIgnoreCase("/cuentas")){
-    		verHistorial(request, response);
+    		verCuentas(request, response);
     	}else if(path.equalsIgnoreCase("/transferencia")){
-    		verHistorial(request, response);
+    		transferencia(request, response);
+    	}else if(path.equalsIgnoreCase("/VTransferencia")){
+    		validarTransferencia(request, response);
     	}
     }
     
@@ -80,22 +86,20 @@ public class ServletServices extends HttpServlet {
          try {
 			Cliente u = mngServ.findClienteByAliasPass(username, password);
 			//primera vez que se logea
-			if(u.getFechaUltmCon() == null){
-				//enviar token al correo
-				response.getWriter().write(mngServ.jsonMensajes("PA", "Se ha enviado el token a su correo"));
-			}else{
+			String ok = "SS";
+			//primera vez que se logea o no acepta politicas
+			if(u.getFechaUltmCon()==null || u.getAceptaPoliticas()==null || u.getAceptaPoliticas().isEmpty()){
+				ok = "PS"; //para ir a aceptar politicas
+			}
 				//insertar conexion
 				mngServ.insertIpDateConn(u.getIdCli(), ip);
 				//crear session
 				// poner solo id o dataos esenciales si pones toda la entidad mucha carga
 				//xq ahi estan las cuentas en dentro de cuentas las trnasferencias
 				//request.getSession().setAttribute("SessionUser", u);
-				
-				
+					
 				request.getSession().setAttribute("SessionUser", u.getIdCli());
-				
-				response.getWriter().write(mngServ.jsonMensajes("OK", mngServ.usrLog(u)));
-			}
+				response.getWriter().write(mngServ.jsonMensajes(ok, mngServ.usrLog(u)));
 		} catch (Exception e) {
 			response.getWriter().write(mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
@@ -125,12 +129,12 @@ public class ServletServices extends HttpServlet {
      * @throws ServletException
      */
     private void setPass(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-    	 String id = request.getParameter("id");
          String pass = request.getParameter("pwd");
          String npass = request.getParameter("npd");
-         String cpass = request.getParameter("cpd"); 	
+         String cpass = request.getParameter("cpd");
     	try {
-			mngServ.cambiarPass(Integer.parseInt(id), pass, npass, cpass);
+    		Integer c = (Integer)request.getSession().getAttribute("SessionUser");
+			mngServ.cambiarPass(c, pass, npass, cpass);
 			response.getWriter().write(mngServ.jsonMensajes("OK", "Cambio de password correcto"));
     	} catch (Exception e) {
 			response.getWriter().write(mngServ.jsonMensajes("EA", e.getMessage()));
@@ -147,10 +151,10 @@ public class ServletServices extends HttpServlet {
      * @throws ServletException
      */
     private void setMail(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-   	 	String id = request.getParameter("id");
-        String mail = request.getParameter("mail"); 	
+        String mail = request.getParameter("mail");
 	   	try {
-			mngServ.cambiarMail(Integer.parseInt(id), mail);
+	   		Integer c = (Integer)request.getSession().getAttribute("SessionUser");
+			mngServ.cambiarMail(c, mail);
 			response.getWriter().write(mngServ.jsonMensajes("OK", "Cambio de correo correcto"));
 	   	} catch (Exception e) {
 			response.getWriter().write(mngServ.jsonMensajes("EA", e.getMessage()));
@@ -167,9 +171,9 @@ public class ServletServices extends HttpServlet {
      * @throws ServletException
      */
     private void verHistorial(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
-    	String id = request.getParameter("id");
     	try {
-    		response.getWriter().write(mngServ.jsonMensajes("OK", mngServ.transfXcli(Integer.parseInt(id))));
+    		Integer c = (Integer)request.getSession().getAttribute("SessionUser");
+    		response.getWriter().write(mngServ.jsonMensajes("OK", mngServ.transfXcli(c)));
 		} catch (Exception e) {
 			response.getWriter().write(mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
@@ -252,6 +256,50 @@ public class ServletServices extends HttpServlet {
         	mngServ.validarTransferencia(Integer.parseInt(t), tk);
     		response.getWriter().write(mngServ.jsonMensajes("OK", "La transacción se completado satisfactoriamente"));
 		} catch (Exception e) {
+			response.getWriter().write(mngServ.jsonMensajes("EA", e.getMessage()));
+		} finally {
+			response.getWriter().close();
+		}
+    }
+    
+    /**
+     * Verifica si se acepta politicas de uso de la aplicacion
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws ServletException
+     */
+    private void aceptaPoliticas(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+    	String acepta = request.getParameter("ap");// 0 (no), 1 (si)
+    	try {
+    		Integer c = (Integer)request.getSession().getAttribute("SessionUser");
+    		if(acepta.equals("0")){
+    			response.getWriter().write(mngServ.jsonMensajes("EA", "No acepta politicas"));
+    		}else{
+    			mngServ.aceptarPoliticas(c);
+    			response.getWriter().write(mngServ.jsonMensajes("OK", "Politicas aceltadas"));
+    		}
+		} catch (Exception e) {
+			response.getWriter().write(mngServ.jsonMensajes("EA", e.getMessage()));
+		} finally {
+			response.getWriter().close();
+		}
+    }
+    
+    /**
+     * Desactiva el uso de la App Movil
+     * @param request
+     * @param response
+     * @throws IOException
+     * @throws ServletException
+     */
+    public void disableCliMovil(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException{
+    	String motivo = request.getParameter("mt");
+    	try {
+    		Integer c = (Integer)request.getSession().getAttribute("SessionUser");
+			mngServ.disableMovilApp(c, motivo);
+			response.getWriter().write(mngServ.jsonMensajes("OK", "Se ha desactivado correctamente"));
+    	} catch (Exception e) {
 			response.getWriter().write(mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
 			response.getWriter().close();

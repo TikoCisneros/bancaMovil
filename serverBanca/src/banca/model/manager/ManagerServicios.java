@@ -10,6 +10,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -28,6 +30,25 @@ public class ManagerServicios {
 
 	public ManagerServicios() {
 		mngDAO = new ManagerDAO();
+	}
+	
+	/**
+	 * Genera un token unico (UUID)
+	 * @return token
+	 */
+	public String genToken(){
+		String token = UUID.randomUUID().toString();
+		return token;
+	}
+	
+	/**
+	 * Genera un pin numerico unico
+	 * @return pin
+	 */
+	public String genPin(){
+		Random rnd = new Random();
+		Integer nrm = rnd.nextInt(9000)+999;
+		return nrm.toString();
 	}
 
 	/**
@@ -136,6 +157,43 @@ public class ManagerServicios {
 			throw e;
 		}
 	}
+	
+	/**
+	 * Permite la desactivacion de la cuenta movil
+	 * @param id_cli
+	 * @param motivo
+	 * @throws Exception
+	 */
+	public void disableMovilApp(Integer id_cli, String motivo) throws Exception{
+		try {
+			Cliente c = (Cliente) mngDAO.findById(Cliente.class, id_cli);
+			if(c.getBloqueda().equals("1")){
+				throw new Exception("Cuenta movil ya desactivada");
+			}
+			if(c.getBloqueda()==null){
+				throw new Exception("Cuenta movil no ha sido activada anteriormente");
+			}
+			c.setBloqueda("1");c.setMotivo(motivo);
+			mngDAO.actualizar(c);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	/**
+	 * Permite aceptar las politicas de la app de un cliente
+	 * @param id_cli
+	 * @throws Exception
+	 */
+	public void aceptarPoliticas(Integer id_cli) throws Exception{
+		try {
+			Cliente c = (Cliente) mngDAO.findById(Cliente.class, id_cli);
+			c.setAceptaPoliticas("1");
+			mngDAO.actualizar(c);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 
 	/**
 	 * Funcion interna para agregar una nueva transaccion
@@ -147,6 +205,7 @@ public class ManagerServicios {
 	 * @param token
 	 * @throws Exception
 	 */
+	@SuppressWarnings("unchecked")
 	public String crearTransferencia(BigDecimal monto, String cuentaDestino,
 			String cuentaOrigen, int cliente, String token) throws Exception {
 
@@ -342,7 +401,7 @@ public class ManagerServicios {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public JSONObject jsonTrans(Transferencia transf) {
+	public JSONObject objTrans(Transferencia transf) {
 		JSONObject obj = new JSONObject();
 		obj.put("cdestino", transf.getNrocDestino());
 		obj.put("asaldo", transf.getSaldoActual().toString());
@@ -363,9 +422,23 @@ public class ManagerServicios {
 	public JSONArray arrayTransf(List<Transferencia> list) {
 		JSONArray jarray = new JSONArray();
 		for (Transferencia t : list) {
-			jarray.add(jsonTrans(t));
+			jarray.add(objTrans(t));
 		}
 		return jarray;
+	}
+	
+	/**
+	 * Devuelve un objeto JSON de la clase cuenta
+	 * @param c clase Cuenta
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject objCuenta(Cuenta c){
+		JSONObject o = new JSONObject();
+		o.put("cuenta", c.getNroCuenta());
+		o.put("tipo", c.getTipocuenta().getTipo());
+		o.put("saldo", c.getSaldo().toString());
+		return o;
 	}
 
 	/**
@@ -454,5 +527,23 @@ public class ManagerServicios {
 		lhm.put("correo", u.getCorreo());
 		return lhm;
 	}
+	
+	/**
+	 * Devuelve los datos de un usuario logeado
+	 * @param u cliente
+	 * @return JSONObject
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject usrsLog(Cliente u){
+		JSONObject lhm = new JSONObject();
+		lhm.put("id", u.getIdCli().toString());
+		lhm.put("nombre", u.getNombre());
+		lhm.put("apellido", u.getApellido());
+		lhm.put("ci", u.getCiRuc());
+		lhm.put("direccion", u.getDireccion());
+		lhm.put("telefono", u.getTelefono());
+		lhm.put("correo", u.getCorreo());
+    	return lhm;
+    }
 
 }
