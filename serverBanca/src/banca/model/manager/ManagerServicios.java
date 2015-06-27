@@ -485,7 +485,7 @@ public class ManagerServicios {
 				JSONObject obj = new JSONObject();
 				obj.put("nro", cta.getNroCuenta());
 				obj.put("tipo", cta.getTipocuenta().getTipo());
-				obj.put("monto", cta.getSaldo());
+				obj.put("monto", cta.getSaldo().toString());
 				jarray.add(obj);
 			}
 			return jarray;
