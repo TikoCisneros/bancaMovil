@@ -37,7 +37,7 @@ public class Cliente implements Serializable {
 	@Column(name="ci_ruc")
 	private String ciRuc;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="cm_fecha_ultm_con")
 	private Date cmFechaUltmCon;
 
@@ -57,7 +57,7 @@ public class Cliente implements Serializable {
 
 	private String direccion;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="fecha_ultm_con")
 	private Date fechaUltmCon;
 
