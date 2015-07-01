@@ -135,6 +135,19 @@ public class ServletServices extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
+	private void enviarPIN(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		
+	}
+
+	/**
+	 * Permite el deslogeo de usuario
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
 	private void logout(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		request.getSession().invalidate();
@@ -195,6 +208,31 @@ public class ServletServices extends HttpServlet {
 			response.getWriter().close();
 		}
 	}
+	/**
+	 * Permite el cambio de PIN
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private void setPIN(HttpServletRequest request,
+			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
+		try {
+			String PIN = data.get("PIN").toString();
+			String nPIN = data.get("nPIN").toString();
+			Integer c = (Integer) request.getSession().getAttribute(
+					"SessionUser");
+			mngServ.cambiarPIN(c, PIN, nPIN);;
+			response.getWriter().write(
+					mngServ.jsonMensajes("OK", "Cambio de PIN correcto"));
+		} catch (Exception e) {
+			response.getWriter().write(
+					mngServ.jsonMensajes("EA", e.getMessage()));
+		} finally {
+			response.getWriter().close();
+		}
+	}
 
 	/**
 	 * Devuelve el historial de Transferencias de un cliente
@@ -206,7 +244,10 @@ public class ServletServices extends HttpServlet {
 	 */
 	private void verHistorial(HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException {
+		String PIN = request.getParameter("PIN");
 		try {
+			if (PIN == null || PIN.isEmpty())
+				throw new Exception("El PIN enviado es vacio o nulo.");
 			Integer c = (Integer) request.getSession().getAttribute(
 					"SessionUser");
 			response.getWriter().write(
@@ -236,7 +277,6 @@ public class ServletServices extends HttpServlet {
 					"SessionUser");
 			if (PIN == null || PIN.isEmpty())
 				throw new Exception("El PIN enviado es vacio o nulo.");
-			System.out.println("Usuario id:" + c);
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", mngServ.cuentasXCli(c)));
 		} catch (Exception e) {

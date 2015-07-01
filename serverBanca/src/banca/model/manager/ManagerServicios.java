@@ -157,6 +157,26 @@ public class ManagerServicios {
 			throw e;
 		}
 	}
+	/**
+	 * Cambiar el PIN de usuario cliente
+	 * 
+	 * @param id_cli
+	 * @param PIN
+	 * @param nPIN
+	 * @throws Exception
+	 */
+	public void cambiarPIN(Integer id_cli, String PIN, String nPIN) throws Exception {
+		try {
+			Cliente c = (Cliente) mngDAO.findById(Cliente.class, id_cli);
+			if(!c.getCmPin().equals(PIN))
+				throw new Exception("El PIN es invalido.");
+			
+			c.setCmPin(nPIN);
+			mngDAO.actualizar(c);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 	
 	/**
 	 * Permite la desactivacion de la cuenta movil
