@@ -64,7 +64,7 @@ public class ServletServices extends HttpServlet {
 		} else if (path.equalsIgnoreCase("/logout")) {// get
 			logout(request, response);
 		} else if (path.equalsIgnoreCase("/pass")) {
-			setPass(request, response);
+			setPass(request, response, o);
 		} else if (path.equalsIgnoreCase("/mail")) {
 			setMail(request, response);
 		} else if (path.equalsIgnoreCase("/lista")) {// get
@@ -166,10 +166,10 @@ public class ServletServices extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void setPass(HttpServletRequest request,
-			HttpServletResponse response) throws IOException, ServletException {
-		String pass = request.getParameter("pwd");
-		String npass = request.getParameter("npd");
-		String cpass = request.getParameter("cpd");
+			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
+		String pass = data.get("pwd").toString();
+		String npass = data.get("npd").toString();
+		String cpass = data.get("cpd").toString();
 		try {
 			Integer c = (Integer) request.getSession().getAttribute(
 					"SessionUser");

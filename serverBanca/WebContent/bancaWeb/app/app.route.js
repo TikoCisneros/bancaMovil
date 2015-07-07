@@ -6,6 +6,9 @@ bancaWebApp.config([ '$routeProvider', function($routeProvider) {
 	}).when('/main', {
 		templateUrl : '/serverBanca/bancaWeb/main.html',
 		controller : 'mainCtrl'
+	}).when('/cpwd', {
+		templateUrl : '/serverBanca/bancaWeb/cpwd.html',
+		controller : 'passCtrl'
 	});
 } ]);
 
