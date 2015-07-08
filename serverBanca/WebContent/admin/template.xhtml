@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title><ui:insert name="titulo">Administrador</ui:insert></title>
+        <meta name="viewport" content="width=device-width"/>
+    </h:head>
+    <h:body>
+        <h:form>  
+            <p:menubar autoDisplay="false" styleClass="menu">
+                <ui:insert name="menu"></ui:insert>
+            </p:menubar>
+        </h:form>
+        <ui:insert name="contenido" >
+        </ui:insert> 
+    </h:body>
+</html>

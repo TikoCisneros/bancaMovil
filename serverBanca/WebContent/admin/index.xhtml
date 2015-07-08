@@ -1,12 +1,29 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets">
-
-	<h:head>
-	</h:head>
-	<h:body>
-	Administrador
-	</h:body>
+      
+ 	<ui:composition template="template.xhtml">
+        <ui:define name="titulo">
+            Bienvenido Administrador
+        </ui:define>
+        <ui:define name="menu">
+             <p:submenu label="Gestionar" icon="ui-icon-check">
+             	<p:menuitem value="Usuarios" url="usuarios.xhtml" />
+             </p:submenu>
+             <f:facet name="options">
+	            <h:form>
+	            	<p:commandButton action="#{sessionBean.logout()}" value="Salir" icon="ui-icon-extlink" />
+	            </h:form>
+	        </f:facet>
+        </ui:define>
+        <ui:define name="contenido">
+        	<div style="text-align:center;margin-top: 10px;">
+            	<p:graphicImage url="/resources/img/admin.jpg" styleClass="imgcent"/>
+            </div>
+        </ui:define>
+    </ui:composition>
+    
 </html>
