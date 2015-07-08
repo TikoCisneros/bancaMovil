@@ -1,4 +1,4 @@
-﻿/*==============================================================*/
+/*==============================================================*/
 /* DBMS name:      PostgreSQL 8                                 */
 /* Created on:     14/06/2015 16:31:53                          */
 /*==============================================================*/
@@ -18,13 +18,15 @@ create table CLIENTE (
    PASS                 TEXT                 null,
    ULTM_IP              TEXT                 null,
    FECHA_ULTM_CON       DATE                 null,
+   TOKEN                TEXT                 null,
+   BLOQUEDA             CHAR(1)              null,
    ACEPTA_POLITICAS     CHAR(1)              null,
    CM_MOVIL             CHAR(1)              null,
    CM_PIN               VARCHAR(4)           null,
    CM_PASS              TEXT                 null,
    CM_ULTM_IP           TEXT                 null,
    CM_FECHA_ULTM_CON    DATE                 null,
-   BLOQUEDA             CHAR(1)              null,
+   CM_BLOQUEO           CHAR(1)              null,
    MOTIVO               TEXT                 null,
    constraint PK_CLIENTE primary key (ID_CLI)
 );
