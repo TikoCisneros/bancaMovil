@@ -1,7 +1,9 @@
 package banca.model.dao.entities;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.Date;
 import java.util.List;
 
@@ -18,9 +20,9 @@ public class Cliente implements Serializable {
 	public static final String NO_BLOQUEADA = "O";
 	public static final String CMOBIL_BLOQUEADA = "X";
 	public static final String CMOBIL_NO_BLOQUEADA = "O";
-
+	
 	@Id
-	@SequenceGenerator(name="CLIENTE_IDCLI_GENERATOR", sequenceName="SEC_CLIENTE", allocationSize=1)
+	@SequenceGenerator(name="CLIENTE_IDCLI_GENERATOR", sequenceName="SEC_CLIENTE")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="CLIENTE_IDCLI_GENERATOR")
 	@Column(name="id_cli")
 	private Integer idCli;
@@ -37,7 +39,10 @@ public class Cliente implements Serializable {
 	@Column(name="ci_ruc")
 	private String ciRuc;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="cm_bloqueo")
+	private String cmBloqueo;
+
+	@Temporal(TemporalType.DATE)
 	@Column(name="cm_fecha_ultm_con")
 	private Date cmFechaUltmCon;
 
@@ -57,7 +62,7 @@ public class Cliente implements Serializable {
 
 	private String direccion;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	@Column(name="fecha_ultm_con")
 	private Date fechaUltmCon;
 
@@ -68,6 +73,8 @@ public class Cliente implements Serializable {
 	private String pass;
 
 	private String telefono;
+
+	private String token;
 
 	@Column(name="ultm_ip")
 	private String ultmIp;
@@ -137,6 +144,14 @@ public class Cliente implements Serializable {
 
 	public void setCiRuc(String ciRuc) {
 		this.ciRuc = ciRuc;
+	}
+
+	public String getCmBloqueo() {
+		return this.cmBloqueo;
+	}
+
+	public void setCmBloqueo(String cmBloqueo) {
+		this.cmBloqueo = cmBloqueo;
 	}
 
 	public Date getCmFechaUltmCon() {
@@ -233,6 +248,14 @@ public class Cliente implements Serializable {
 
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
+	}
+
+	public String getToken() {
+		return this.token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 	public String getUltmIp() {
