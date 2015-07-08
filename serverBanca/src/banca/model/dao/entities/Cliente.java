@@ -22,7 +22,7 @@ public class Cliente implements Serializable {
 	public static final String CMOBIL_NO_BLOQUEADA = "O";
 	
 	@Id
-	@SequenceGenerator(name="CLIENTE_IDCLI_GENERATOR", sequenceName="SEC_CLIENTE")
+	@SequenceGenerator(name="CLIENTE_IDCLI_GENERATOR", sequenceName="SEC_CLIENTE", allocationSize=1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="CLIENTE_IDCLI_GENERATOR")
 	@Column(name="id_cli")
 	private Integer idCli;
