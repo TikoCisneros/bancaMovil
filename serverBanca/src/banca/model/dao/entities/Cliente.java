@@ -17,9 +17,11 @@ import java.util.List;
 public class Cliente implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String BLOQUEADA = "X";
-	public static final String NO_BLOQUEADA = "O";
+	public static final String ACTIVA = "A";//CUANDO YA CAMBIA LA CONTRASEÑA
+	public static final String NO_VERIFICADA = "N";//NO VERIFICA CUENTA-> INICIA A LO Q SE CREA
+	public static final String SIN_CAMBIO_DATOS = "S";//NO CAMBIA CONTRASEÑA ->INICIA A LO Q VERIFICA
 	public static final String CMOBIL_BLOQUEADA = "X";
-	public static final String CMOBIL_NO_BLOQUEADA = "O";
+	public static final String CMOBIL_ACTIVA = "O";
 	
 	@Id
 	@SequenceGenerator(name="CLIENTE_IDCLI_GENERATOR", sequenceName="SEC_CLIENTE", allocationSize=1)
