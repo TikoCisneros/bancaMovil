@@ -8,7 +8,7 @@ bancaWebServices.factory('bancaWebSV', [ '$resource',
 		return $resource('/serverBanca/:action', {}, {
 				login : {method : 'POST', isArray : false, params:{action: 'login'}, headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}},
 				spass : {method : 'POST', isArray : false, params:{action: 'pass'}, headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}},
-				update: { method:'PUT' },
+				sesion: { method:'GET' , isArray: false, params:{action: 'sesion'}},
 				save: {method: 'POST'},
 				drop: {method:'DELETE'}
 			});

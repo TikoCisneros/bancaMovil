@@ -1,14 +1,36 @@
 function addMsg(tipo, titulo, mensaje)
 {
-	$('#msg').html('<div class="alert alert-'+tipo+' alert-dismissible" role="alert">'
-			  +'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
-			  +'<strong>'+(titulo || "")+'</strong> <br>'
-			  +mensaje
-			  +'</div>');
-	$('body').append();
+	$.gritter.add({
+		  title: titulo,
+		  text: mensaje,
+		  image:'/serverBanca/resources/img/'+tipo+'.png',
+		  position:'top-left'
+		});
 	}
 
 var bancaWebController = angular.module('bancaWebController', []);
+
+function verUser(UserCM, bancaWebSV, location, callback)
+{
+	var user = UserCM.get();
+	if(user && user.ci)
+		return user;
+	else
+	{
+		bancaWebSV.sesion(function(res)
+		{
+			if(res.status != 'OK')
+			{
+				addMsg('danger', 'Error', res.value);
+				location.path('/login');
+			}
+				
+			UserCM.set(res.value);
+			callback(res.value);
+		});
+		
+	}
+}
 
 bancaWebController.controller('loginCtrl', [ '$scope', '$location',
 		'bancaWebSV', 'UserCM',
@@ -38,13 +60,17 @@ bancaWebController.controller('loginCtrl', [ '$scope', '$location',
 bancaWebController.controller('redirectCtrl', [ '$location',
 		function($location) {
 			$location.path('/login');
-		} ]);
+		} 
+]);
 
 bancaWebController.controller('passCtrl',[ '$scope','$location',
        'bancaWebSV', 'UserCM', 
        function($scope, $location, bancaWebSV, UserCM){
 			//verificar usuario sesion
-	
+			$scope.user = verUser(UserCM, bancaWebSV, $location, function(res)
+			{
+				$scope.user = res;
+			});
 			$scope.mspass = function(){
 				console.log('entra');
 				bancaWebSV.spass({
@@ -64,7 +90,10 @@ bancaWebController.controller('passCtrl',[ '$scope','$location',
 bancaWebController.controller('mainCtrl', [ '$scope', '$location',
 		'bancaWebSV', 'UserCM',
 		function($scope, $location, bancaWebSV, UserCM) {
-			$scope.user = UserCM.get(); 
-			console.log($scope.user);
+		
+			$scope.user = verUser(UserCM, bancaWebSV, $location, function(res)
+					{
+						$scope.user = res;
+					});
 		} 
 ]);

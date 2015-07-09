@@ -23,7 +23,7 @@ import banca.model.manager.ManagerServicios;
  */
 @WebServlet(name = "ServletServices", urlPatterns = { "/login", "/logout",
 		"/pass", "/mail", "/lista", "/poli", "/dismov", "/cuentas",
-		"/transferencia", "/VTransferencia" })
+		"/transferencia", "/VTransferencia", "/sesion" })
 public class ServletServices extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String HOST = "localhost:8080";
@@ -35,6 +35,36 @@ public class ServletServices extends HttpServlet {
 	public ServletServices() {
 		super();
 		mngServ = new ManagerServicios();
+	}
+	/**
+	 * RequestDispatcher view =
+	 * request.getRequestDispatcher("html/mypage.html"); view.forward(request,
+	 * response); Procesa la peticion HTTP de los metodos <code>GET</code> y
+	 * <code>POST</code>.
+	 * 
+	 * @param request
+	 *            servlet peticion
+	 * @param response
+	 *            servlet respuesta
+	 * @throws ServletException
+	 *             si existe un error de servlet-specific
+	 * @throws IOException
+	 *             si existe un error de I/O
+	 */
+	protected void processRequestGET(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException 
+	{
+		// switch para cada caso de servicos
+		String path = request.getServletPath();
+		if (path.equalsIgnoreCase("/sesion")) {
+			getSesion(request, response);
+		}else if (path.equalsIgnoreCase("/logout")) {// get
+			logout(request, response);
+		}else if (path.equalsIgnoreCase("/lista")) {// get
+			verHistorial(request, response);
+		}else if (path.equalsIgnoreCase("/cuentas")) {// get
+			verCuentas(request, response);
+		}
 	}
 
 	/**
@@ -52,7 +82,7 @@ public class ServletServices extends HttpServlet {
 	 * @throws IOException
 	 *             si existe un error de I/O
 	 */
-	protected void processRequest(HttpServletRequest request,
+	protected void processRequestPOST(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
 		 JSONObject o = getBodyData(request);
@@ -61,21 +91,15 @@ public class ServletServices extends HttpServlet {
 		String path = request.getServletPath();
 		if (path.equalsIgnoreCase("/login")) {
 			login(request, response, o);
-		} else if (path.equalsIgnoreCase("/logout")) {// get
-			logout(request, response);
 		} else if (path.equalsIgnoreCase("/pass")) {
 			setPass(request, response, o);
 		} else if (path.equalsIgnoreCase("/mail")) {
 			setMail(request, response);
-		} else if (path.equalsIgnoreCase("/lista")) {// get
-			verHistorial(request, response);
 		} else if (path.equalsIgnoreCase("/poli")) {
 			aceptaPoliticas(request, response);
 		} else if (path.equalsIgnoreCase("/dismov")) {
 			disableCliMovil(request, response);
-		} else if (path.equalsIgnoreCase("/cuentas")) {// get
-			verCuentas(request, response);
-		} else if (path.equalsIgnoreCase("/transferencia")) {
+		}  else if (path.equalsIgnoreCase("/transferencia")) {
 			transferencia(request, response);
 		} else if (path.equalsIgnoreCase("/VTransferencia")) {
 			validarTransferencia(request, response);
@@ -138,6 +162,32 @@ public class ServletServices extends HttpServlet {
 	private void enviarPIN(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
+	}
+	/**
+	 * Envia los daots del usuario en sesion
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private void getSesion(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		Integer c = (Integer) request.getSession().getAttribute(
+				"SessionUser");
+		try {
+			Cliente u = mngServ.findClienteById(c);
+			response.getWriter().write(
+					mngServ.jsonMensajes("OK", mngServ.usrLog(u)));
+		} catch (Exception e) {
+			response.getWriter().write(
+					mngServ.jsonMensajes("EA", e.getMessage()));
+			e.printStackTrace();
+		}
+		finally
+		{
+			response.getWriter().close();
+		}
 	}
 
 	/**
@@ -429,7 +479,7 @@ public class ServletServices extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
+		processRequestGET(request, response);
 	}
 
 	/**
@@ -438,7 +488,7 @@ public class ServletServices extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		processRequest(request, response);
+		processRequestPOST(request, response);
 	}
 
 	/*-METODOS UTILITARIOS-*/
