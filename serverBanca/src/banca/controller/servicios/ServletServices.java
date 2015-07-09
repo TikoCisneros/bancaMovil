@@ -94,20 +94,46 @@ public class ServletServices extends HttpServlet {
 		} else if (path.equalsIgnoreCase("/pass")) {
 			setPass(request, response, o);
 		} else if (path.equalsIgnoreCase("/mail")) {
-			setMail(request, response);
+			setMail(request, response, o);
 		} else if (path.equalsIgnoreCase("/poli")) {
 			aceptaPoliticas(request, response);
 		} else if (path.equalsIgnoreCase("/dismov")) {
-			disableCliMovil(request, response);
-		}  else if (path.equalsIgnoreCase("/transferencia")) {
+			disableCliMovil(request, response, o);
+		} else if (path.equalsIgnoreCase("/transferencia")) {
 			transferencia(request, response);
 		} else if (path.equalsIgnoreCase("/VTransferencia")) {
 			validarTransferencia(request, response);
-		}
+		}//REGISTRARSE FALTA
 	}
+	
 
 	/******************************************* METODOS *******************************************/
-
+	
+	/**
+	 * Permite el registro de usuarios
+	 * @param request
+	 * @param response
+	 * @param data
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public void registro(HttpServletRequest request, HttpServletResponse response, JSONObject data)
+			throws IOException, ServletException {
+		String ci = data.get("ced").toString();
+		String mail = data.get("mal").toString();
+		String alias = data.get("als").toString();
+		try {
+			mngServ.registroWeb(ci, mail, alias);
+			response.getWriter().write(
+					mngServ.jsonMensajes("OK", "Registro correcto!, se envio un correo para validar su cuenta"));
+		} catch (Exception e) {
+			response.getWriter().write(
+					mngServ.jsonMensajes("EA", e.getMessage()));
+		} finally {
+			response.getWriter().close();
+		}
+	}
+	
 	/**
 	 * Permite el logeo de usuario
 	 * 
@@ -124,21 +150,21 @@ public class ServletServices extends HttpServlet {
 		System.out.println("Log user :" +username);
 		try {
 			Cliente u = mngServ.findClienteByAliasPass(username, password);
-			// primera vez que se logea
-			String ok = "SS";
-			// primera vez que se logea o no acepta politicas
-			if (u.getFechaUltmCon() == null || u.getAceptaPoliticas() == null
-					|| u.getAceptaPoliticas().isEmpty()) {
-				ok = "PS"; // para ir a aceptar politicas
+			//Si la cuenta no ha sido verificada
+			if( u.getBloqueda().equals(Cliente.NO_VERIFICADA)){
+				throw new Exception("Cuenta no verificada, revise su correo");
+			}
+			//primera vez que se logea o no cambia pass
+			String ok = "SL";
+			if (u.getFechaUltmCon() == null || u.getBloqueda().equals(Cliente.SIN_CAMBIO_DATOS)) {
+				ok = "FL"; // para pedir que cambiar pass
 			}
 			// insertar conexion
 			mngServ.insertIpDateConn(u.getIdCli(), ip);
 			// crear session
-			// poner solo id o dataos esenciales si pones toda la entidad mucha
-			// carga
+			// poner solo id o datos esenciales si pones toda la entidad mucha carga
 			// xq ahi estan las cuentas en dentro de cuentas las trnasferencias
 			// request.getSession().setAttribute("SessionUser", u);
-
 			request.getSession().setAttribute("SessionUser", u.getIdCli());
 			response.getWriter().write(
 					mngServ.jsonMensajes(ok, mngServ.usrLog(u)));
@@ -159,6 +185,7 @@ public class ServletServices extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
+	@SuppressWarnings("unused")
 	private void enviarPIN(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		
@@ -243,8 +270,8 @@ public class ServletServices extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void setMail(HttpServletRequest request,
-			HttpServletResponse response) throws IOException, ServletException {
-		String mail = request.getParameter("mail");
+			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
+		String mail = data.get("mail").toString();
 		try {
 			Integer c = (Integer) request.getSession().getAttribute(
 					"SessionUser");
@@ -266,6 +293,7 @@ public class ServletServices extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
+	@SuppressWarnings("unused")
 	private void setPIN(HttpServletRequest request,
 			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
 		try {
@@ -456,8 +484,8 @@ public class ServletServices extends HttpServlet {
 	 * @throws ServletException
 	 */
 	public void disableCliMovil(HttpServletRequest request,
-			HttpServletResponse response) throws IOException, ServletException {
-		String motivo = request.getParameter("mt");
+			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
+		String motivo = data.get("mt").toString();
 		try {
 			Integer c = (Integer) request.getSession().getAttribute(
 					"SessionUser");

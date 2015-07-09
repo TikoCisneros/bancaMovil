@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import banca.model.dao.entities.Cliente;
 import banca.model.dao.entities.Contador;
@@ -76,8 +77,9 @@ public class ManagerCajero {
 		Cliente cli = new Cliente();
 		cli.setNombre(nombre);cli.setApellido(apellido);cli.setCiRuc(ciRuc);
 		cli.setTelefono(telefono);cli.setCorreo(correo);cli.setDireccion(direccion);
-		cli.setBloqueda(Cliente.NO_BLOQUEADA);
-		cli.setCmMovil(Cliente.CMOBIL_BLOQUEADA);
+		cli.setToken(UUID.randomUUID().toString());
+		cli.setBloqueda(Cliente.BLOQUEADA);
+		cli.setCmBloqueo(Cliente.CMOBIL_BLOQUEADA);
 		mngDAO.insertar(cli);
 	}
 	
@@ -113,7 +115,7 @@ public class ManagerCajero {
 	 */
 	public void desbloquearCuentaCliente(Integer idCli) throws Exception{
 		Cliente cli = findClienteByID(idCli);
-		cli.setBloqueda(Cliente.NO_BLOQUEADA);
+		cli.setBloqueda(Cliente.ACTIVA);
 		mngDAO.actualizar(cli);
 	}
 	/**
@@ -133,8 +135,7 @@ public class ManagerCajero {
 	 */
 	public void desbloquearCuentaMobil(Integer idCli) throws Exception{
 		Cliente cli = findClienteByID(idCli);
-		cli.setCmMovil(Cliente.CMOBIL_NO_BLOQUEADA);
-		cli.setCmPass("root");//genera password
+		cli.setCmMovil(Cliente.CMOBIL_ACTIVA);
 		mngDAO.actualizar(cli);
 	}
 	

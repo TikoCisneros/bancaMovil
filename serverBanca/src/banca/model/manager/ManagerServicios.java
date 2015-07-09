@@ -16,14 +16,13 @@ import java.util.UUID;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import banca.controller.servicios.Mailer;
 import banca.model.dao.entities.Cliente;
 import banca.model.dao.entities.Cuenta;
 import banca.model.dao.entities.Estadotrans;
 import banca.model.dao.entities.Historial;
-import banca.model.dao.entities.Tipotrans;
-import banca.model.dao.entities.Transacciones;
 import banca.model.dao.entities.Transferencia;
-import banca.model.dao.entities.Usuario;
+
 
 public class ManagerServicios {
 	private ManagerDAO mngDAO;
@@ -50,7 +49,75 @@ public class ManagerServicios {
 		Integer nrm = rnd.nextInt(9000)+999;
 		return nrm.toString();
 	}
-
+	
+	/**
+	 * Genera un pass numerico unico
+	 * @return pass
+	 */
+	public String genPass(){
+		Random rnd = new Random();
+		Integer nrm = rnd.nextInt(9000000)+999999;
+		return nrm.toString();
+	}
+	
+	/**
+	 * Verifica la existencia de alias
+	 * @param alias
+	 * @return true o false
+	 */
+	@SuppressWarnings("unchecked")
+	public boolean verificarAlias(String alias){
+		boolean bandera = false;
+		List<Cliente> listado = mngDAO.findAll(Cliente.class);
+		for (Cliente usr : listado) {
+			if(usr.getAlias().equals(alias)){
+				bandera = true;
+			}
+		}
+		return bandera;
+	}
+	
+	/**
+	 * Permite el registro de una cuenta web para el usuario
+	 * @param ci
+	 * @param correo
+	 * @param alias
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public void registroWeb(String ci,String correo, String alias) throws Exception{
+		try {
+			//Verificar CI
+			List<Cliente> listado = (List<Cliente>) mngDAO.findByParam(
+					Cliente.class, "o.ciRuc", ci, null);
+			if (listado == null || listado.isEmpty()) {
+				throw new Exception("Usuario no registrado");
+			}
+			Cliente cli = listado.get(0);
+			//SI YA ESTA REGISTRADO
+			if(!cli.getBloqueda().isEmpty() || cli.getBloqueda()!=null){
+				throw new Exception("Cuenta ya registrada");
+			}
+			//Verificar Correo
+			if(!cli.getCorreo().equals(correo)){
+				throw new Exception("Los correos no coinciden");
+			}
+			//Verificar Alias
+			if(verificarAlias(alias)){
+				throw new Exception("Alias en uso, ingrese otro");
+			}
+			//Ingresar cuenta con pass temporal y enviar correo con datos (link,pass,alias)
+			String pass = genPass();
+			cli.setPass(pass);cli.setAlias(alias);cli.setBloqueda(Cliente.NO_VERIFICADA);
+			mngDAO.actualizar(cli);
+			Mailer.generateAndSendEmail(correo, "Bienvenido a la Banca Virtual", 
+					"Ingrese al link para validar su cuenta "+
+					" Su alias es: "+alias+" Su contraseña es: "+pass); //FALTA SERVLET VERIFICACION
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
 	/**
 	 * Método que busca un usuario cliente respecto a su nick y contraseña
 	 * 
@@ -187,13 +254,13 @@ public class ManagerServicios {
 	public void disableMovilApp(Integer id_cli, String motivo) throws Exception{
 		try {
 			Cliente c = (Cliente) mngDAO.findById(Cliente.class, id_cli);
-			if(c.getBloqueda().equals("1")){
+			if(c.getBloqueda().equals(Cliente.BLOQUEADA)){
 				throw new Exception("Cuenta movil ya desactivada");
 			}
 			if(c.getBloqueda()==null){
 				throw new Exception("Cuenta movil no ha sido activada anteriormente");
 			}
-			c.setBloqueda("1");c.setMotivo(motivo);
+			c.setBloqueda(Cliente.BLOQUEADA);c.setMotivo(motivo);
 			mngDAO.actualizar(c);
 		} catch (Exception e) {
 			throw e;
@@ -344,6 +411,7 @@ public class ManagerServicios {
 		Cuenta co = (Cuenta) mngDAO.findById(Cuenta.class, t.getNroCuenta());
 		BigDecimal saldoCD = cd.getSaldo();
 		BigDecimal saldoCO = co.getSaldo();
+		@SuppressWarnings("unused")
 		BigDecimal saldoA = co.getSaldo();
 		
 		BigDecimal monto = t.getMonto();
