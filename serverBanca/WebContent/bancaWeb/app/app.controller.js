@@ -51,10 +51,14 @@ bancaWebController.controller('loginCtrl', [ '$scope', '$location',
 						console.log(res);
 						UserCM.set(res.value);
 						console.log(UserCM.get());
+						if(res.status == 'FL'){
+							addMsg('info', 'Favor cambiar la contrasena');
+						}
 						$location.path('/main');
 					}
 				});
 			};
+			
 		} ]);
 
 bancaWebController.controller('redirectCtrl', [ '$location',
@@ -79,21 +83,58 @@ bancaWebController.controller('passCtrl',[ '$scope','$location',
 					"cpd": $scope.cpd
 				},function(res){
 					console.log(res);
-					addMsg('success', 'Sus datos han sido cambiados');//info success danger warning
-					$scope.pwd=null;
-					$scope.npd=null;
-					$scope.cpd=null;
+					if (res.status == 'EA'){
+						addMsg('danger', res.value);//info success danger warning
+					}else{
+						addMsg('success', res.value);
+						$scope.pwd=null;
+						$scope.npd=null;
+						$scope.cpd=null;
+					}
 				});
-			};
-        }]);
+		};
+ }]);
+
+bancaWebController.controller('mailCtrl',[ '$scope','$location',
+       'bancaWebSV', 'UserCM', 
+       function($scope, $location, bancaWebSV, UserCM){
+			//verificar usuario sesion
+			$scope.user = verUser(UserCM, bancaWebSV, $location, function(res)
+			{
+				$scope.user = res;
+			});
+			$scope.msmail = function(){
+				console.log('entra');
+				bancaWebSV.smail({
+					"mail": $scope.mail
+				},function(res){
+					console.log(res);
+					if (res.status == 'EA'){
+						addMsg('danger', res.value);//info success danger warning
+					}else{
+						addMsg('success', res.value);
+						$scope.mail=null;
+					}
+				});
+		};
+ }]);
 
 bancaWebController.controller('mainCtrl', [ '$scope', '$location',
 		'bancaWebSV', 'UserCM',
 		function($scope, $location, bancaWebSV, UserCM) {
 		
 			$scope.user = verUser(UserCM, bancaWebSV, $location, function(res)
-					{
-						$scope.user = res;
-					});
+			{
+				$scope.user = res;
+			});
+			
+			$scope.logout = function (){
+				bancaWebSV.logout(function(res)
+				{
+					UserCM.set(null);
+					addMsg('success', res.value);
+					$location.path('/login');
+				});
+			};
 		} 
 ]);

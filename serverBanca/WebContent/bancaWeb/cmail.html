@@ -16,30 +16,22 @@
 				<li><a href="#"><i class="fa fa-user"></i> {{user.correo}}</a></a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#"><i class="fa fa-power-off"></i> Salir</a></li>
+				<li><a href="#"><i class="fa fa-power-off"></i>Salir</a></li>
 			</ul>
 		</div>
 	</div>
 </nav>
 <div class="container">
 	<div class="panel panel-primary" style="width: 560px;">
-	  <div class="panel-heading"><h4 class="t-center">Cambiar Pass</h4></div>
+	  <div class="panel-heading"><h4 class="t-center">Cambiar Correo</h4></div>
 	  <div class="panel-body">
-	    <form name="frmLog" ng-submit="mspass()">
+	    <form name="frmLog" ng-submit="msmail()">
 			<div class="form-group">
-				<input class="form-control" name="pa" type="password" ng-model="pwd" placeholder="Pass actual" required>
-				<p class="help-block text-danger"
-				ng-show="frmLog.$dirty && frmLog.pa.$errors.required">Este campo es requerido.</p>
-			</div>
-			<div class="form-group">
-				<input class="form-control" name="np" type="password" ng-model="npd" placeholder="Nueva pass" required>
-				<p class="help-block text-danger"
-				ng-show="frmLog.$dirty && frmLog.np.$errors.required">Este campo es requerido.</p>
-			</div>
-			<div class="form-group">
-				<input class="form-control" name="cp" type="password" ng-model="cpd" placeholder="Confirmacion" required>
-				<p class="help-block text-danger"
-				ng-show="frmLog.$dirty && frmLog.cp.$errors.required">Este campo es requerido.</p>
+				<input class="form-control" name="ma" type="email" ng-model="mail" placeholder='example@email.com' required>
+				<p class="help-block text-danger" ng-show="frmLog.$dirty && frmLog.ma.$errors.required ">
+				Este campo es requerido.</p>
+				<p class="help-block text-danger" ng-show="!frmLog.$pristine && frmLog.ma.$error.email ">
+				Ingrese un email valido.</p>
 			</div>
 			<div class="form-group t-center">
 				<button class="btn btn-success" style="width: 150px;" type="submit" ng-disabled="frmLog.$invalid">Cambiar</button>

@@ -8,12 +8,15 @@ bancaWebServices.factory('bancaWebSV', [ '$resource',
 		return $resource('/serverBanca/:action', {}, {
 				login : {method : 'POST', isArray : false, params:{action: 'login'}, headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}},
 				spass : {method : 'POST', isArray : false, params:{action: 'pass'}, headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}},
-				sesion: { method:'GET' , isArray: false, params:{action: 'sesion'}},
+				smail : {method : 'POST', isArray : false, params:{action: 'mail'}, headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}},
+				sesion: {method:'GET' , isArray: false, params:{action: 'sesion'}},
+				logout: {method:'GET' , isArray: false, params:{action: 'logout'}},
 				save: {method: 'POST'},
 				drop: {method:'DELETE'}
 			});
 		}
 ]);
+
 bancaWebServices.service('UserCM',function()
 		{
 			var user = {};
