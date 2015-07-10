@@ -119,6 +119,30 @@ bancaWebController.controller('mailCtrl',[ '$scope','$location',
 		};
  }]);
 
+bancaWebController.controller('desmovCtrl',[ '$scope', '$location',
+ 		'bancaWebSV', 'UserCM',
+		function($scope, $location, bancaWebSV, UserCM) {
+			$scope.user = verUser(UserCM, bancaWebSV, $location, function(res)
+			{
+				$scope.user = res;
+			});
+			
+			$scope.mdesmov = function (){
+				bancaWebSV.desmov({
+					"mt": $scope.mtv
+				},function(res){
+					console.log(res);
+					if (res.status == 'EA'){
+						addMsg('danger', res.value);//info success danger warning
+					}else{
+						addMsg('success', res.value);
+						$scope.mtv=null;
+					}
+				});
+			};
+		} 
+]);
+
 bancaWebController.controller('mainCtrl', [ '$scope', '$location',
 		'bancaWebSV', 'UserCM',
 		function($scope, $location, bancaWebSV, UserCM) {

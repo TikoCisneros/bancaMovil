@@ -12,6 +12,9 @@ bancaWebApp.config([ '$routeProvider', function($routeProvider) {
 	}).when('/cmail', {
 		templateUrl : '/serverBanca/bancaWeb/cmail.html',
 		controller : 'mailCtrl'
+	}).when('/dmovil', {
+		templateUrl : '/serverBanca/bancaWeb/dmovil.html',
+		controller : 'desmovCtrl'
 	});
 } ]);
 
