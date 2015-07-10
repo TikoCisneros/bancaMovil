@@ -23,7 +23,7 @@ import banca.model.manager.ManagerServicios;
  */
 @WebServlet(name = "ServletServices", urlPatterns = { "/login", "/logout",
 		"/pass", "/mail", "/lista", "/poli", "/dismov", "/cuentas",
-		"/transferencia", "/VTransferencia", "/sesion" })
+		"/transferencia", "/VTransferencia", "/sesion","/regusr" })
 public class ServletServices extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String HOST = "localhost:8080";
@@ -64,7 +64,7 @@ public class ServletServices extends HttpServlet {
 			verHistorial(request, response);
 		}else if (path.equalsIgnoreCase("/cuentas")) {// get
 			verCuentas(request, response);
-		}
+		}//FALTA VALIDAR REGISTRO CUENTA
 	}
 
 	/**
@@ -103,7 +103,9 @@ public class ServletServices extends HttpServlet {
 			transferencia(request, response);
 		} else if (path.equalsIgnoreCase("/VTransferencia")) {
 			validarTransferencia(request, response);
-		}//REGISTRARSE FALTA
+		}else if (path.equalsIgnoreCase("/regusr")){
+			registro(request, response, o);
+		}
 	}
 	
 
