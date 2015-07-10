@@ -15,6 +15,9 @@ bancaWebApp.config([ '$routeProvider', function($routeProvider) {
 	}).when('/dmovil', {
 		templateUrl : '/serverBanca/bancaWeb/dmovil.html',
 		controller : 'desmovCtrl'
+	}).when('/rgusr', {
+		templateUrl : '/serverBanca/bancaWeb/rgusr.html',
+		controller : 'regCtrl'
 	});
 } ]);
 

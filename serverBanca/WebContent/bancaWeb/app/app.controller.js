@@ -95,6 +95,30 @@ bancaWebController.controller('passCtrl',[ '$scope','$location',
 		};
  }]);
 
+bancaWebController.controller('regCtrl',[ '$scope','$location',
+       'bancaWebSV', 
+       function($scope, $location, bancaWebSV, UserCM){
+			$scope.mrgs = function(){
+				console.log('entra reg');
+				bancaWebSV.regis({
+					"ced": $scope.ci,
+					"mal": $scope.correo,
+					"als": $scope.alias
+				},function(res){
+					console.log(res);
+					if (res.status == 'EA'){
+						addMsg('danger', res.value);//info success danger warning
+					}else{
+						addMsg('success', res.value);
+						$scope.ci=null;
+						$scope.correo=null;
+						$scope.alias=null;
+						$location.path('/login');
+					}
+				});
+		};
+ }]);
+
 bancaWebController.controller('mailCtrl',[ '$scope','$location',
        'bancaWebSV', 'UserCM', 
        function($scope, $location, bancaWebSV, UserCM){
