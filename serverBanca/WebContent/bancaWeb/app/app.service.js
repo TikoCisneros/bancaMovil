@@ -13,8 +13,11 @@ bancaWebServices.factory('bancaWebSV', [ '$resource',
 				regis : {method : 'POST', isArray : false, params:{action: 'regusr'}, headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}},
 				sesion: {method:'GET' , isArray: false, params:{action: 'sesion'}},
 				logout: {method:'GET' , isArray: false, params:{action: 'logout'}},
-				save: {method: 'POST'},
-				drop: {method:'DELETE'}
+				getCuentas: {method: 'GET', isArray:false, params:{action:'cuentas'}},
+				vc: {method:'POST', isArray:false, params:{action:'vc'} },
+				transferencia: {method:'POST', isArray:false, params:{action:'transferencia'} },
+				vtransferencia: {method:'GET', isArray:false, params:{action:'VTransferencia'}},
+				getTrans: {method:'GET', isArray:false, params:{action:'historialT'}}
 			});
 		}
 ]);

@@ -18,7 +18,7 @@ public class Transferencia implements Serializable {
 	public static final double MONTO_MAX = 1000;
 
 	@Id
-	@SequenceGenerator(name="TRANSFERENCIA_IDTRANSF_GENERATOR", sequenceName="SEC_TRANSAFERENCIA", allocationSize=1)
+	@SequenceGenerator(name="TRANSFERENCIA_IDTRANSF_GENERATOR", sequenceName="SEC_TRANSFERENCIA", allocationSize=1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="TRANSFERENCIA_IDTRANSF_GENERATOR")
 	@Column(name="id_transf")
 	private long idTransf;

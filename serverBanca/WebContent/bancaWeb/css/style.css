@@ -18,6 +18,10 @@ body
 {
 	float:right;
 }
+.f-left
+{
+	float:left;
+}
 .container
 {
 	padding-top:50px;
@@ -35,4 +39,8 @@ body
 .container
 {
 	padding-top:80px;
+}
+.pointer
+{
+	cursor:pointer;
 }

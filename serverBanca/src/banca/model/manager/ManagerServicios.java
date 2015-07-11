@@ -161,6 +161,22 @@ public class ManagerServicios {
 			throw e;
 		}
 	}
+	/**
+	 * Método que busca una cuenta
+	 * 
+	 * @param nro
+	 * @return cuenta
+	 * @throws Exception
+	 */
+	public Cuenta findCuentaByNro(String nro)
+			throws Exception {
+		try {
+			Cuenta c = (Cuenta)mngDAO.findById(Cuenta.class, nro);
+			return c;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 
 	/**
 	 * Inserta la ip y fecha de conexion
@@ -358,7 +374,7 @@ public class ManagerServicios {
 	 * @param idtoken
 	 * @throws Exception
 	 */
-	public void validarTransferencia(int idTra, String token) throws Exception
+	public void validarTransferencia(Long idTra, String token) throws Exception
 	{
 		Transferencia t = (Transferencia)mngDAO.findById(Transferencia.class,idTra);
 		long fecha = t.getFecha().getTime();
@@ -432,6 +448,7 @@ public class ManagerServicios {
 		Historial ht = new Historial();
 		Estadotrans es = (Estadotrans)mngDAO.findById(Estadotrans.class, Estadotrans.FINALIZADA);
 		ht.setEstado(es.getEstado());
+		t.setEstadotran(es);
 		Timestamp time = new Timestamp(new Date().getTime());
 		ht.setFecha(time);
 		ht.setMonto(t.getMonto());
@@ -492,10 +509,12 @@ public class ManagerServicios {
 	public JSONObject objTrans(Transferencia transf) {
 		JSONObject obj = new JSONObject();
 		obj.put("cdestino", transf.getNrocDestino());
+		obj.put("corigen", transf.getNroCuenta());
 		obj.put("asaldo", transf.getSaldoActual().toString());
 		obj.put("monto", transf.getMonto().toString());
 		obj.put("saldo", transf.getSaldoFinal().toString());
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		obj.put("estado", transf.getEstadotran().getEstado());
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		obj.put("fecha", dateFormat.format(transf.getFecha()).toString());
 		return obj;
 	}

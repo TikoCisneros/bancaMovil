@@ -22,21 +22,29 @@
 	</div>
 </nav>
 <div class="container">
-	<div class="panel panel-primary" style="width: 560px;">
-	  <div class="panel-heading"><h4 class="t-center">Desactivar App Movil</h4></div>
-	  <div class="panel-body">
-	    <form name="frmLog" ng-submit="mdesmov()">
-			<div class="form-group">
-				<p>Al desactivar la App Movil Bancaria, no podra usar este servicio...</p>
-				<label for="comment">Motivo:</label>
-				<textarea class="form-control" rows="5" id="comment" name="mt" ng-model="mtv" required></textarea>
-				<p class="help-block text-danger" ng-show="frmLog.$dirty && frmLog.mt.$errors.required ">
-				Este campo es requerido.</p>
-			</div>
-			<div class="form-group t-center">
-				<button class="btn btn-success" style="width: 150px;" type="submit" ng-disabled="frmLog.$invalid">Aceptar</button>
-			</div>
-		</form>
-	  </div>
+	<h3>Cuentas</h3>
+	<hr>
+	<h3 ng-show="!cuentas || cuentas.length == 0">No hay ninguna cuenta.</h3>
+	<div class="list-group">
+		<a class="list-group-item" ng-repeat="c in cuentas">
+			<h4 class="list-group-item-heading">Cuenta Nro. {{c.nro}}<br>
+			<small>{{c.tipo}}</small>
+			</h4>
+			<h4 class="list-group-item-text">
+				Monto:    <button class="btn btn-xs btn-default vMonto" 
+				ng-click="getMonto($index)" type="button"
+					onclick="showMnt(this)">   Ver Monto </button> 
+					<span class="monto">{{monto | currency: '$'}}</span>
+			</h4>
+		</a>
 	</div>
 </div>
+<script>
+	function showMnt(elm)
+	{
+		$('.monto').fadeOut(0);
+		$('.vMonto').fadeIn(0);
+		$(elm).next('.monto').fadeIn('fast');
+		$(elm).fadeOut(0);	
+	}
+</script>

@@ -18,6 +18,23 @@ bancaWebApp.config([ '$routeProvider', function($routeProvider) {
 	}).when('/rgusr', {
 		templateUrl : '/serverBanca/bancaWeb/rgusr.html',
 		controller : 'regCtrl'
+	})
+	.when('/logout', {
+		templateUrl : '/serverBanca/bancaWeb/main.html',
+		controller : 'logOutCtrl'
+	}).when('/cuentas/:tipo', {
+		templateUrl : '/serverBanca/bancaWeb/cuentas.html',
+		controller : 'cuentasCtrl',
+		reloadOnSearch: false
+	}).when('/transferencia', {
+		templateUrl : '/serverBanca/bancaWeb/transferencia.html',
+		controller : 'transCtrl'
+	}).when('/validateT', {
+		templateUrl : '/serverBanca/bancaWeb/main.html',
+		controller : 'validateTCtrl'
+	}).when('/verTransferencias', {
+		templateUrl : '/serverBanca/bancaWeb/lstTrans.html',
+		controller : 'lstTransCtrl'
 	});
 } ]);
 

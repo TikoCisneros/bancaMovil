@@ -1,0 +1,59 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#/main">Banca Web</a>
+		</div>
+
+		<div class="collapse navbar-collapse"
+			id="bs-example-navbar-collapse-2">
+			<ul class="nav navbar-nav">
+				<li><a href="#/main"><i class="fa fa-user"></i>
+						{{user.correo}}</a></a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#/logout"><i class="fa fa-power-off"></i>
+						Salir</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<div class="container">
+	<h3>Historial de transferencias</h3>
+	<hr>
+	<div class="btn-group" role="group">
+		<button type="button" class="btn btn-default">Enviadas</button>
+		<button type="button" class="btn btn-default">Recividas</button>
+		<button type="button" class="btn btn-default">Todas</button>
+	</div>
+	<div  ng-repeat="c in cuentas">
+		<h4>Cuenta Nro: {{c.cuenta}}</h4>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Fecha</th>
+					<th>Origen</th>
+					<th>Destino</th>
+					<th>Monto</th>
+					<th>Estado</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="t in c.transf">
+					<th scope="row">{{t.idTransf}}</th>
+					<td>{{t.fecha | date: 'medium' }}</td>
+					<td>{{t.corigen}}</td>
+					<td>{{t.cdestino}}</td>
+					<td>{{t.monto}}</td>
+					<td>{{t.estado}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

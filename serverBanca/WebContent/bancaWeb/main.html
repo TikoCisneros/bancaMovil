@@ -7,22 +7,22 @@
 					class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#">Banca Web</a>
+			<a class="navbar-brand" href="#/main">Banca Web</a>
 		</div>
 
 		<div class="collapse navbar-collapse"
 			id="bs-example-navbar-collapse-2">
 			<ul class="nav navbar-nav">
-				<li><a href="#"><i class="fa fa-user"></i> {{user.correo}}</a></a></li>
+				<li><a href="#/main"><i class="fa fa-user"></i> {{user.correo}}</a></a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#"><i class="fa fa-power-off"></i> Salir</a></li>
+				<li><a href="#/logout"><i class="fa fa-power-off"></i> Salir</a></li>
 			</ul>
 		</div>
 	</div>
 </nav>
 <div class="container">
-	<h5>Bienvenido {{user.apellido}}  {{user.nombre}}</h5>
+	<h3>Bienvenido {{user.apellido}}  {{user.nombre}}</h3>
 	<hr>
 	<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
 		<div class="panel panel-primary">
@@ -31,8 +31,9 @@
 			</div>
 			<div class="panel-body">
 				<div class="list-group">
-				  <a class="list-group-item" href="#/cpwd">Ver cuentas de ahorros</a>
-				  <a class="list-group-item" href="#/cpwd">Ver cuentas corrientes</a>
+				  <a class="list-group-item" href="#/cuentas/Ahorros">Ver cuentas de ahorros</a>
+				  <a class="list-group-item" href="#/cuentas/Corriente">Ver cuentas corrientes</a>
+				  <a class="list-group-item" href="#/cuentas/todas">Ver todas las cuentas</a>
 				</div>
 			</div>
 		</div>
@@ -44,8 +45,9 @@
 			</div>
 			<div class="panel-body">
 				<div class="list-group">
-				  <a class="list-group-item" href="#/">Realizar Transferencia</a>
-				  <a class="list-group-item" href="#/">Historial Transacciones</a>
+				  <a class="list-group-item" href="#/transferencia">Realizar Transferencia</a>
+				  <a class="list-group-item" href="#/verTransferencias">Transacciones Bancarias</a>
+				  <a class="list-group-item" href="#/">Transacciones electronicas</a>
 				</div>
 			</div>
 		</div>
