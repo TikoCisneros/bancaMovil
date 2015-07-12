@@ -439,7 +439,7 @@ public class ServletServices extends HttpServlet {
 							+ nroD
 							+ "</p>"
 							+ "<p>Has clic al siguiente enlace para validar la transacción:"
-							+ "<br> <a href='" + HOST + "/VTransferencia?t="
+							+ "<br> <a href='" + HOST + "/index.html#/validateT?t="
 							+ idt + "&tk=" + token + "'>"
 							+ "VALIDAR TRANSFERENCIA</a></p>");
 			response.getWriter()
