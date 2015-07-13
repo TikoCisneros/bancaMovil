@@ -439,9 +439,10 @@ public class ServletServices extends HttpServlet {
 							+ nroD
 							+ "</p>"
 							+ "<p>Has clic al siguiente enlace para validar la transacción:"
-							+ "<br> <a href='" + HOST + "/index.html#/validateT?t="
+							+ "<br> <a href='" + HOST + "/bancaWeb/index.html#/validateT?t="
 							+ idt + "&tk=" + token + "'>"
 							+ "VALIDAR TRANSFERENCIA</a></p>");
+			System.out.println("Correo enviado.");
 			response.getWriter()
 					.write(mngServ
 							.jsonMensajes("OK",

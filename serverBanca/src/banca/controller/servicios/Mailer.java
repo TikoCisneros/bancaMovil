@@ -29,6 +29,7 @@ public class Mailer {
 		mailServerProperties.put("mail.smtp.auth", "true");
 		mailServerProperties.put("mail.smtp.starttls.enable", "true");
 		mailServerProperties.put("mail.smtp.host", "smtp.gmail.com");
+		mailServerProperties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
  
 		// 2nd ===> get Mail Session.."
