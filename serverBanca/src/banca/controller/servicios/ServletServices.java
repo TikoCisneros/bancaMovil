@@ -24,7 +24,7 @@ import banca.model.manager.ManagerServicios;
  */
 @WebServlet(name = "ServletServices", urlPatterns = { "/login", "/logout",
 		"/pass", "/mail", "/historialT", "/poli", "/dismov", "/cuentas",
-		"/transferencia", "/VTransferencia", "/sesion","/regusr", "/vc" })
+		"/transferencia", "/VTransferencia", "/sesion","/regusr", "/vc", "/VRegistro" })
 public class ServletServices extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String HOST = "http://localhost:8080/serverBanca";
@@ -67,7 +67,9 @@ public class ServletServices extends HttpServlet {
 			verCuentas(request, response);
 		}else if (path.equalsIgnoreCase("/VTransferencia")) {
 			validarTransferencia(request, response);
-		}//FALTA VALIDAR REGISTRO CUENTA
+		}else if (path.equalsIgnoreCase("/VRegistro")) {
+			validarRegistro(request, response);
+		}
 	}
 
 	/**
@@ -128,7 +130,7 @@ public class ServletServices extends HttpServlet {
 		String mail = data.get("mal").toString();
 		String alias = data.get("als").toString();
 		try {
-			mngServ.registroWeb(ci, mail, alias);
+			mngServ.registroWeb(HOST, ci, mail, alias);
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", "Registro correcto!, se envio un correo para validar su cuenta"));
 		} catch (Exception e) {
@@ -385,10 +387,10 @@ public class ServletServices extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
+	@SuppressWarnings("unused")
 	private void verCuentas(HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException {
 		String PIN = request.getParameter("PIN");
-
 		try {
 			Integer c = (Integer) request.getSession().getAttribute(
 					"SessionUser");
@@ -480,6 +482,31 @@ public class ServletServices extends HttpServlet {
 			response.getWriter().close();
 		}
 	}
+	
+	/**
+	 * Valida el registro de usuario
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private void validarRegistro(HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException {
+		try {
+			String token = request.getParameter("tk");
+			String usr = request.getParameter("id");
+			mngServ.validarRegistroWeb(Integer.parseInt(usr), token);
+			response.getWriter().write(
+					mngServ.jsonMensajes("OK",
+							"Se ha validado su cuenta."));
+		}  catch (Exception e) {
+			response.getWriter().write(
+					mngServ.jsonMensajes("EA", e.getMessage()));
+		} finally {
+			response.getWriter().close();
+		}
+	}
+
 
 	/**
 	 * Verifica si se acepta politicas de uso de la aplicacion

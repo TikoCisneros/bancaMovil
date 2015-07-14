@@ -85,7 +85,7 @@ public class ManagerServicios {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public void registroWeb(String ci,String correo, String alias) throws Exception{
+	public void registroWeb(String HOST, String ci, String correo, String alias) throws Exception{
 		try {
 			//Verificar CI
 			List<Cliente> listado = (List<Cliente>) mngDAO.findByParam(
@@ -108,11 +108,44 @@ public class ManagerServicios {
 			}
 			//Ingresar cuenta con pass temporal y enviar correo con datos (link,pass,alias)
 			String pass = genPass();
+			
+			String token = cli.getToken();
+			String id = cli.getIdCli().toString();
+			
 			cli.setPass(pass);cli.setAlias(alias);cli.setBloqueda(Cliente.NO_VERIFICADA);
 			mngDAO.actualizar(cli);
-			Mailer.generateAndSendEmail(correo, "Bienvenido a la Banca Virtual", 
-					"Ingrese al link para validar su cuenta "+
-					" Su alias es: "+alias+" Su contraseña es: "+pass); //FALTA SERVLET VERIFICACION
+			
+			Mailer.generateAndSendEmail(correo, "Bienvenido a la Banca Virtual, Validación de cuenta", 
+					"<h1>Validación de transacción</h1>"+
+					"<p>Su alias es: "+alias+" Su contraseña es: "+pass+"</p>"+
+					"<p>Ingrese al link para validar su cuenta</p>"+
+					"<a href='" + HOST + "/bancaWeb/index.html#/validateR?id="
+							+ id + "&tk=" + token + "'>"
+							+ "VALIDAR CUENTA</a>");
+			System.out.println("Correo enviado.");
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	/**
+	 * Valida el registro de cuenta
+	 * @param idUsr
+	 * @param token
+	 * @throws Exception
+	 */
+	public void validarRegistroWeb(Integer idUsr, String token)throws Exception{
+		try {
+			Cliente cli = (Cliente) mngDAO.findById(Cliente.class, idUsr);
+			
+			if(cli == null)
+				throw new Exception("No se encontro su cuenta, notifique al banco");
+			
+			if(!cli.getToken().equals(token))
+				throw new Exception("Error al verificar su cuenta, notifique al banco");
+			
+			cli.setBloqueda(Cliente.SIN_CAMBIO_DATOS);
+			mngDAO.actualizar(cli);
 		} catch (Exception e) {
 			throw e;
 		}
