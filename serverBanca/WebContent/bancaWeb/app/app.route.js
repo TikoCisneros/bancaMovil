@@ -32,12 +32,15 @@ bancaWebApp.config([ '$routeProvider', function($routeProvider) {
 	}).when('/transferencia', {
 		templateUrl : '/serverBanca/bancaWeb/transferencia.html',
 		controller : 'transCtrl'
-	}).when('/validateT', {
+	}).when('/validateR', {
 		templateUrl : '/serverBanca/bancaWeb/main.html',
-		controller : 'validateTCtrl'
+		controller : 'validateRCtrl'
 	}).when('/verTransferencias', {
 		templateUrl : '/serverBanca/bancaWeb/lstTrans.html',
 		controller : 'lstTransCtrl'
+	}).when('/validateT', {
+		templateUrl : '/serverBanca/bancaWeb/main.html',
+		controller : 'validateTCtrl'
 	});
 } ]);
 

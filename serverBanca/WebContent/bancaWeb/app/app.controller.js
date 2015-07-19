@@ -79,6 +79,28 @@ bancaWebController.controller('validateTCtrl', [ '$scope', '$location',
 
 			});
 		} ]);
+
+bancaWebController.controller('validateRCtrl', [ '$scope', '$location',
+	'$routeParams', 'bancaWebSV',
+	function($scope, $location, $routeParams, bancaWebSV) {
+		bancaWebSV.vregis({
+			id : $routeParams.id,
+			tk : $routeParams.tk
+		}, function(res) {
+			$routeParams = {};
+			$location.search('id', null);
+			$location.search('tk', null);
+			if (res.status != 'OK') {
+				addMsg('danger', 'Error', res.value);
+				$location.path('main');
+			} else {
+				addMsg('info', 'Información', res.value);
+				$location.path('login');
+			}
+	
+		});
+	} ]);
+
 bancaWebController.controller('logOutCtrl', [ '$location', 'bancaWebSV',
 		'UserCM', function($location, bancaWebSV, UserCM) {
 			UserCM.set(null);
@@ -231,6 +253,7 @@ bancaWebController.controller('cuentasCtrl', [ '$scope', '$location',
 			};
 
 		} ]);
+
 bancaWebController.controller('transCtrl', [ '$scope', '$location',
 		'bancaWebSV', 'UserCM',
 		function($scope, $location, bancaWebSV, UserCM) {
@@ -280,6 +303,7 @@ bancaWebController.controller('transCtrl', [ '$scope', '$location',
 				}
 			};
 		} ]);
+
 bancaWebController.controller('lstTransCtrl', [ '$scope', '$location',
 		'bancaWebSV', 'UserCM',
 		function($scope, $location, bancaWebSV, UserCM) {

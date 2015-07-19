@@ -15,17 +15,20 @@ and open the template in the editor.
             Bienvenido Cajero
         </ui:define>
         <ui:define name="menu">
-             <p:menuitem>
-                <a href="#">
-                    <span>BANCA</span>
-                </a>
-            </p:menuitem> 
-            <p:submenu label="Menu" icon="ui-icon-document" >
-                <p:submenu label="submenu1" icon="ui-icon-user" >
-                    <p:menuitem value="item" url="#"/>
-                </p:submenu>
-            </p:submenu>
-            <p:menuitem value="Menu2" url="#" icon="ui-icon-document" />
+             <p:submenu label="Gestionar" icon="ui-icon-check">
+             	<p:menuitem value="Clientes" url="clientes.xhtml" />
+             	<p:menuitem value="Cuentas" url="cuenta.xhtml" />
+             	<p:menuitem value="Activar cuentas" url="activarCuenta.xhtml" />
+             </p:submenu>
+             <p:submenu label="Transacciones" icon="ui-icon-check">
+             	<p:menuitem value="Retiros" url="retiro.xhtml" />
+             	<p:menuitem value="Depósitos" url="deposito.xhtml" />
+             </p:submenu>
+             <f:facet name="options">
+	            <h:form>
+	            	<p:commandButton action="#{sessionBean.logout()}" value="Salir" icon="ui-icon-extlink" />
+	            </h:form>
+	        </f:facet>
         </ui:define>
         <ui:define name="contenido">
             <p:panelGrid columns="2" style="width: 100%">
