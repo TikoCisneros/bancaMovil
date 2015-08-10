@@ -5,10 +5,9 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
-<h:head>
-	<title>Cuentas</title>
-</h:head> 
-<body>  
+<ui:composition template="index.xhtml">
+	<ui:define name="titulo">Cuentas</ui:define>
+<ui:define name="contenido">  
 	<h:form id="form1">
 	  <p:growl id="msj1" showDetail="true"/>
 	  <p:panel id="panel1" header="Nueva Cuenta">
@@ -79,5 +78,6 @@
 			</p:dataTable>
 		</h:form>
 	</p:dialog>
-</body> 
+</ui:define>
+</ui:composition> 
 </html>

@@ -6,22 +6,38 @@ and open the template in the editor.
 -->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
-    <h:head>
-        <title><ui:insert name="titulo">Cajero</ui:insert></title>
-        <meta name="viewport" content="width=device-width"/>
-    </h:head>
-    <h:body>
-        <p:growl id="growl" widgetVar="growl"/>
-        <h:form>  
-            <p:menubar autoDisplay="false" styleClass="menu">
-                <ui:insert name="menu"></ui:insert>
-            </p:menubar>
-        </h:form>
-        <ui:insert name="contenido" >
-        </ui:insert> 
-    </h:body>
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title><ui:insert name="titulo">Cajero</ui:insert></title>
+	<meta name="viewport" content="width=device-width" />
+</h:head>
+<h:body>
+	<p:growl id="growl" widgetVar="growl" />
+	<h:form>
+		<p:menubar autoDisplay="false" styleClass="menu">
+			<p:menuitem value="Inicio" url="index.xhtml" />
+			<p:submenu label="Gestionar" icon="ui-icon-check">
+				<p:menuitem value="Clientes" url="clientes.xhtml" />
+				<p:menuitem value="Cuentas" url="cuenta.xhtml" />
+				<p:menuitem value="Activar cuentas" url="activarCuenta.xhtml" />
+			</p:submenu>
+			<p:submenu label="Transacciones" icon="ui-icon-check">
+				<p:menuitem value="Retiros" url="retiro.xhtml" />
+				<p:menuitem value="Depósitos" url="deposito.xhtml" />
+			</p:submenu>
+			<f:facet name="options">
+				<h:form>
+					<p:commandButton action="#{sessionBean.logout()}" value="Salir"
+						icon="ui-icon-extlink" />
+				</h:form>
+			</f:facet>
+			<ui:insert name="menu"></ui:insert>
+		</p:menubar>
+	</h:form>
+	<ui:insert name="contenido">
+	</ui:insert>
+</h:body>
 </html>

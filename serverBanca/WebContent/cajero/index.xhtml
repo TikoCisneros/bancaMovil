@@ -14,22 +14,6 @@ and open the template in the editor.
         <ui:define name="titulo">
             Bienvenido Cajero
         </ui:define>
-        <ui:define name="menu">
-             <p:submenu label="Gestionar" icon="ui-icon-check">
-             	<p:menuitem value="Clientes" url="clientes.xhtml" />
-             	<p:menuitem value="Cuentas" url="cuenta.xhtml" />
-             	<p:menuitem value="Activar cuentas" url="activarCuenta.xhtml" />
-             </p:submenu>
-             <p:submenu label="Transacciones" icon="ui-icon-check">
-             	<p:menuitem value="Retiros" url="retiro.xhtml" />
-             	<p:menuitem value="Depósitos" url="deposito.xhtml" />
-             </p:submenu>
-             <f:facet name="options">
-	            <h:form>
-	            	<p:commandButton action="#{sessionBean.logout()}" value="Salir" icon="ui-icon-extlink" />
-	            </h:form>
-	        </f:facet>
-        </ui:define>
         <ui:define name="contenido">
             <p:panelGrid columns="2" style="width: 100%">
                 <p:panel header="Depositos"></p:panel>
