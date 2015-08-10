@@ -10,13 +10,14 @@ and open the template in the editor.
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
-<ui:composition template="index.xhtml">
+<ui:composition template="template.xhtml">
 	<ui:define name="titulo">
             Bienvenido Cajero
         </ui:define>
 	<ui:define name="contenido">
 		<p:panelGrid columns="2" style="width: 100%">
 			<h:form>
+				<p:growl id="growl"></p:growl>
 				<p:panelGrid columns="2" id="datos">
 
 					<h:outputText value="Cuenta" />
