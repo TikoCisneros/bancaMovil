@@ -78,8 +78,6 @@ public class ManagerCajero {
 		cli.setNombre(nombre);cli.setApellido(apellido);cli.setCiRuc(ciRuc);
 		cli.setTelefono(telefono);cli.setCorreo(correo);cli.setDireccion(direccion);
 		cli.setToken(UUID.randomUUID().toString());
-		cli.setBloqueda(Cliente.BLOQUEADA);
-		cli.setCmBloqueo(Cliente.CMOBIL_BLOQUEADA);
 		mngDAO.insertar(cli);
 	}
 	
