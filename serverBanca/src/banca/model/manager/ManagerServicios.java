@@ -70,9 +70,9 @@ public class ManagerServicios {
 		boolean bandera = false;
 		List<Cliente> listado = mngDAO.findAll(Cliente.class);
 		for (Cliente usr : listado) {
-			if(usr.getAlias().equals(alias)){
-				bandera = true;
-			}
+			if(usr.getAlias()!=null)
+				if(usr.getAlias().equals(alias)) 
+					bandera = true;
 		}
 		return bandera;
 	}
@@ -95,7 +95,7 @@ public class ManagerServicios {
 			}
 			Cliente cli = listado.get(0);
 			//SI YA ESTA REGISTRADO
-			if(!cli.getBloqueda().isEmpty() || cli.getBloqueda()!=null){
+			if(cli.getBloqueda()!=null){
 				throw new Exception("Cuenta ya registrada");
 			}
 			//Verificar Correo
@@ -106,15 +106,13 @@ public class ManagerServicios {
 			if(verificarAlias(alias)){
 				throw new Exception("Alias en uso, ingrese otro");
 			}
+			System.out.println("Verificaciones completas");
 			//Ingresar cuenta con pass temporal y enviar correo con datos (link,pass,alias)
 			String pass = genPass();
-			
 			String token = cli.getToken();
 			String id = cli.getIdCli().toString();
-			
 			cli.setPass(pass);cli.setAlias(alias);cli.setBloqueda(Cliente.NO_VERIFICADA);
 			mngDAO.actualizar(cli);
-			
 			Mailer.generateAndSendEmail(correo, "Bienvenido a la Banca Virtual, Validación de cuenta", 
 					"<h1>Validación de transacción</h1>"+
 					"<p>Su alias es: "+alias+" Su contraseña es: "+pass+"</p>"+
