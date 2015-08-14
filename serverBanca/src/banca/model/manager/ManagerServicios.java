@@ -265,12 +265,12 @@ public class ManagerServicios {
 		try {
 			Cliente c = (Cliente) mngDAO.findById(Cliente.class, id_cli);
 			c.setCorreo(mail);
-			;
 			mngDAO.actualizar(c);
 		} catch (Exception e) {
 			throw e;
 		}
 	}
+	
 	/**
 	 * Cambiar el PIN de usuario cliente
 	 * 

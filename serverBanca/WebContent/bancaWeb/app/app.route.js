@@ -1,46 +1,49 @@
 var bancaWebApp= angular.module('bancaWebApp', ['ngRoute','bancaWebController','bancaWebServices']);
 bancaWebApp.config([ '$routeProvider', function($routeProvider) {
 	$routeProvider.when('/', {
-		templateUrl : '/serverBanca/bancaWeb/login.html',
+		templateUrl : '/BancaWM/bancaWeb/login.html',
 		controller : 'loginCtrl'
 	}).when('/login', {
-		templateUrl : '/serverBanca/bancaWeb/login.html',
+		templateUrl : '/BancaWM/bancaWeb/login.html',
 		controller : 'loginCtrl'
 	}).when('/main', {
-		templateUrl : '/serverBanca/bancaWeb/main.html',
+		templateUrl : '/BancaWM/bancaWeb/main.html',
 		controller : 'mainCtrl'
 	}).when('/cpwd', {
-		templateUrl : '/serverBanca/bancaWeb/cpwd.html',
+		templateUrl : '/BancaWM/bancaWeb/cpwd.html',
 		controller : 'passCtrl'
 	}).when('/cmail', {
-		templateUrl : '/serverBanca/bancaWeb/cmail.html',
+		templateUrl : '/BancaWM/bancaWeb/cmail.html',
 		controller : 'mailCtrl'
 	}).when('/dmovil', {
-		templateUrl : '/serverBanca/bancaWeb/dmovil.html',
+		templateUrl : '/BancaWM/bancaWeb/dmovil.html',
 		controller : 'desmovCtrl'
 	}).when('/rgusr', {
-		templateUrl : '/serverBanca/bancaWeb/rgusr.html',
+		templateUrl : '/BancaWM/bancaWeb/rgusr.html',
 		controller : 'regCtrl'
 	})
 	.when('/logout', {
-		templateUrl : '/serverBanca/bancaWeb/main.html',
+		templateUrl : '/BancaWM/bancaWeb/main.html',
 		controller : 'logOutCtrl'
 	}).when('/cuentas/:tipo', {
-		templateUrl : '/serverBanca/bancaWeb/cuentas.html',
+		templateUrl : '/BancaWM/bancaWeb/cuentas.html',
 		controller : 'cuentasCtrl',
 		reloadOnSearch: false
 	}).when('/transferencia', {
-		templateUrl : '/serverBanca/bancaWeb/transferencia.html',
+		templateUrl : '/BancaWM/bancaWeb/transferencia.html',
 		controller : 'transCtrl'
 	}).when('/validateR', {
-		templateUrl : '/serverBanca/bancaWeb/main.html',
+		templateUrl : '/BancaWM/bancaWeb/main.html',
 		controller : 'validateRCtrl'
 	}).when('/verTransferencias', {
-		templateUrl : '/serverBanca/bancaWeb/lstTrans.html',
+		templateUrl : '/BancaWM/bancaWeb/lstTrans.html',
 		controller : 'lstTransCtrl'
 	}).when('/validateT', {
-		templateUrl : '/serverBanca/bancaWeb/main.html',
+		templateUrl : '/BancaWM/bancaWeb/main.html',
 		controller : 'validateTCtrl'
+	}).when('/validateM', {
+		templateUrl : '/BancaWM/bancaWeb/main.html',
+		controller : 'validateMCtrl'
 	});
 } ]);
 

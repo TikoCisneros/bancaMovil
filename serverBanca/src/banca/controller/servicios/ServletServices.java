@@ -24,7 +24,7 @@ import banca.model.manager.ManagerServicios;
  */
 @WebServlet(name = "ServletServices", urlPatterns = { "/login", "/logout",
 		"/pass", "/mail", "/historialT", "/poli", "/dismov", "/cuentas",
-		"/transferencia", "/VTransferencia", "/sesion","/regusr", "/vc", "/VRegistro" })
+		"/transferencia", "/VTransferencia", "/sesion","/regusr", "/vc", "/VRegistro","/Vmail" })
 public class ServletServices extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String HOST = "http://localhost:8080/serverBanca";
@@ -69,6 +69,8 @@ public class ServletServices extends HttpServlet {
 			validarTransferencia(request, response);
 		}else if (path.equalsIgnoreCase("/VRegistro")) {
 			validarRegistro(request, response);
+		}else if (path.equalsIgnoreCase("/Vmail")) {
+			validarSetMail(request, response);
 		}
 	}
 
@@ -317,12 +319,37 @@ public class ServletServices extends HttpServlet {
 			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
 		String mail = data.get("mail").toString();
 		try {
-			Integer c = (Integer) request.getSession().getAttribute(
+			Integer idusr = (Integer) request.getSession().getAttribute(
 					"SessionUser");
-			mngServ.cambiarMail(c, mail);
+			Mailer.generateAndSendEmail(
+					mail,
+					"Validación de Correo Electrónico",
+					"<h1>Validación de Correo Electrónico</h1>"
+							+ "<p>Has clic al siguiente enlace para validar su correo:"
+							+ "<br> <a href='" + HOST + "/bancaWeb/index.html#/validateM?id="
+							+ idusr + "&ml=" + mail + "'>"
+							+ "VALIDAR NUEVO CORREO</a></p>");
+			System.out.println("Correo enviado.");
 			response.getWriter().write(
-					mngServ.jsonMensajes("OK", "Cambio de correo correcto"));
+					mngServ.jsonMensajes("OK", "Se ha enviado un mensaje al nuevo correo para validarlo."));
 		} catch (Exception e) {
+			response.getWriter().write(
+					mngServ.jsonMensajes("EA", e.getMessage()));
+		} finally {
+			response.getWriter().close();
+		}
+	}
+	
+	
+	private void validarSetMail(HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException {
+		try {
+			Integer usr = Integer.parseInt(request.getParameter("id"));
+			String mail = request.getParameter("ml");
+			mngServ.cambiarMail(usr, mail);
+			response.getWriter().write(
+					mngServ.jsonMensajes("OK", "Se validó y cambió su correo correctamente"));
+		}  catch (Exception e) {
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {

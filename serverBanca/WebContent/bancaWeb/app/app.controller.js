@@ -2,7 +2,7 @@ function addMsg(tipo, titulo, mensaje) {
 	$.gritter.add({
 		title : titulo,
 		text : mensaje || 'Desconocido',
-		image : '/serverBanca/resources/img/' + tipo + '.png',
+		image : '/BancaWM/resources/img/' + tipo + '.png',
 		position : 'top-left'
 	});
 }
@@ -100,6 +100,25 @@ bancaWebController.controller('validateRCtrl', [ '$scope', '$location',
 	
 		});
 	} ]);
+
+bancaWebController.controller('validateMCtrl', [ '$scope', '$location',
+ 	'$routeParams', 'bancaWebSV',
+ 	function($scope, $location, $routeParams, bancaWebSV) {
+ 		bancaWebSV.vsmail({
+ 			id : $routeParams.id,
+ 			ml : $routeParams.ml
+ 		}, function(res) {
+ 			$routeParams = {};
+ 			$location.search('id', null);
+ 			$location.search('ml', null);
+ 			if (res.status != 'OK') {
+ 				addMsg('danger', 'Error', res.value);
+ 			} else {
+ 				addMsg('info', 'Información', res.value);
+ 			}
+ 			$location.path('main');
+ 		});
+ 	} ]);
 
 bancaWebController.controller('logOutCtrl', [ '$location', 'bancaWebSV',
 		'UserCM', function($location, bancaWebSV, UserCM) {
