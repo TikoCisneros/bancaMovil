@@ -21,8 +21,7 @@ bancaWebApp.config([ '$routeProvider', function($routeProvider) {
 	}).when('/rgusr', {
 		templateUrl : '/BancaWM/bancaWeb/rgusr.html',
 		controller : 'regCtrl'
-	})
-	.when('/logout', {
+	}).when('/logout', {
 		templateUrl : '/BancaWM/bancaWeb/main.html',
 		controller : 'logOutCtrl'
 	}).when('/cuentas/:tipo', {
