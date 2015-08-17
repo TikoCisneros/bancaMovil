@@ -16,6 +16,7 @@
 		<class>banca.model.dao.entities.Transacciones</class>
 		<class>banca.model.dao.entities.Transferencia</class>
 		<class>banca.model.dao.entities.Usuario</class>
+		<class>banca.model.dao.entities.Cmsesion</class>
 		<properties>
 			<property name="javax.persistence.jdbc.url" value="jdbc:postgresql://192.168.1.15:5432/banca"/>
 			<property name="javax.persistence.jdbc.user" value="fabian"/>
