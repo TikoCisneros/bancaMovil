@@ -78,7 +78,8 @@ public class TransaccionBean implements Serializable{
 		
 		try {
 			BigDecimal aux = new BigDecimal(monto);
-			aux.setScale(2, RoundingMode.HALF_UP);
+			aux = aux.setScale(2, RoundingMode.DOWN);
+			System.out.print("Monto:    "+aux.toString());
 			mngCajero.deposito(aux, cuenta.getNroCuenta(), this.cuenta.getCliente(), cajero);
 			Mensaje.crearMensajeINFO("La transaccion ha sido completada exitosamente.");
 		} catch (Exception e) {
@@ -112,7 +113,7 @@ public class TransaccionBean implements Serializable{
 		
 		try {
 			BigDecimal aux = new BigDecimal(monto);
-			aux.setScale(2, RoundingMode.HALF_UP);
+			aux = aux.setScale(2, RoundingMode.DOWN);
 			mngCajero.retiro(aux, cuenta.getNroCuenta(), this.cuenta.getCliente(), cajero);
 			Mensaje.crearMensajeINFO("La transaccion ha sido completada exitosamente.");
 		} catch (Exception e) {

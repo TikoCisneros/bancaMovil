@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="serverBanca">
+    <wb-module deploy-name="BancaWM">
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <property name="context-root" value="serverBanca"/>
-        <property name="java-output-path" value="/serverBanca/build/classes"/>
+        <property name="java-output-path" value="/BancaWM/build/classes"/>
+        <property name="context-root" value="BancaWM"/>
     </wb-module>
 </project-modules>

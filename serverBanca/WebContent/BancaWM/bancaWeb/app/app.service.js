@@ -2,10 +2,10 @@
  * Services RESTFUL of the APP
  */
 var bancaWebServices= angular.module('bancaWebServices',[ 'ngResource' ]);
-var svr = '/BancaWM'; // cambiar x tu path
+
 bancaWebServices.factory('bancaWebSV', [ '$resource', 
 	function($resource) {
-		return $resource(svr + '/:action', {}, {
+		return $resource('/BancaWM/:action', {}, {
 				login : {method : 'POST', isArray : false, params:{action: 'login'}, headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}},
 				spass : {method : 'POST', isArray : false, params:{action: 'pass'}, headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}},
 				smail : {method : 'POST', isArray : false, params:{action: 'mail'}, headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}},
@@ -19,8 +19,7 @@ bancaWebServices.factory('bancaWebSV', [ '$resource',
 				transferencia: {method:'POST', isArray:false, params:{action:'transferencia'} },
 				vtransferencia: {method:'GET', isArray:false, params:{action:'VTransferencia'}},
 				vsmail: {method:'GET', isArray:false, params:{action:'Vmail'}},
-				getTrans: {method:'GET', isArray:false, params:{action:'historialT'}},
-				getTranc: {method:'GET', isArray:false, params:{action:'historialTc'}}
+				getTrans: {method:'GET', isArray:false, params:{action:'historialT'}}
 			});
 		}
 ]);

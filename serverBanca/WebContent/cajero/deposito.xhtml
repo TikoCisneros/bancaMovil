@@ -18,7 +18,7 @@ and open the template in the editor.
 		<p:panelGrid columns="2" style="width: 100%">
 			<h:form>
 				<p:growl id="growl"></p:growl>
-				<p:panelGrid columns="2" id="datos">
+				<p:panelGrid columns="2" id="datos" style="width: 100%">
 
 					<h:outputText value="Cuenta" />
 					<p:autoComplete id="auCuenta" dropdown="true"
@@ -58,8 +58,8 @@ and open the template in the editor.
 					<h:outputText value="TRANSACCIÓN" />
 					<h:outputText value="DEPOSITO" />
 					<h:outputText value="Monto o valor" />
-					<p:spinner prefix="$" stepFactor="0.01"
-						value="#{transaccionBean.monto}">
+					<p:spinner prefix="$" stepFactor="0.01" min="0.00"
+						value="#{transaccionBean.monto}">				
 					</p:spinner>
 				</p:panelGrid>
 				<br />

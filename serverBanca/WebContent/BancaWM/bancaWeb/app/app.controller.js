@@ -304,16 +304,12 @@ bancaWebController.controller('transCtrl', [ '$scope', '$location',
 				}
 			};
 			$scope.trans = function() {
-				$('#btntra').html('Procesando ...');
-				$('#btntra').attr('disabled', 'true');
 				if ($scope.existeDestino) {
 					bancaWebSV.transferencia({
 						nroD : $scope.destino,
 						nroO : $scope.origen,
 						monto : $scope.monto
 					}, function(res) {
-						$('#btntra').html('<i class="fa fa-send"></i> Transferir');
-						$('#btntra').removeAttr('disabled');
 						console.log(res);
 						if (res.status != 'OK')
 							addMsg('danger', 'Error', res.value);
@@ -336,34 +332,7 @@ bancaWebController.controller('lstTransCtrl', [ '$scope', '$location',
 			});
 			$scope.cuentas;
 			$scope.order;
-			$scope.setCuenta = function(c)
-			{
-				$scope.c = c;
-			};
 			bancaWebSV.getTrans(function(res) {
-				console.log(res);
-				if (res.status != 'OK')
-					return addMsg('danger', 'Error', res.value);
-				else {
-					$scope.cuentas = res.value;
-				}
-			});
-		} ]);
-
-bancaWebController.controller('lstTrancCtrl', [ '$scope', '$location',
-		'bancaWebSV', 'UserCM',
-		function($scope, $location, bancaWebSV, UserCM) {
-
-			$scope.user = verUser(UserCM, bancaWebSV, $location, function(res) {
-				$scope.user = res;
-			});
-			$scope.cuentas;
-			$scope.order;
-			$scope.setCuenta = function(c)
-			{
-				$scope.c = c;
-			};
-			bancaWebSV.getTranc(function(res) {
 				console.log(res);
 				if (res.status != 'OK')
 					return addMsg('danger', 'Error', res.value);

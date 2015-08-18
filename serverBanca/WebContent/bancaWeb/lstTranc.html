@@ -38,20 +38,19 @@
 				<tr>
 					<th>#</th>
 					<th>Fecha</th>
-					<th>Origen</th>
-					<th>Destino</th>
+					<th>Saldo anterior</th>
 					<th>Monto</th>
-					<th>Estado</th>
+					<th>Tipo</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-repeat="t in c.transf.reverse()">
-					<th scope="row">{{t.idTransf}}</th>
+				<tr ng-repeat="t in c.tranc.reverse()">
+					<th scope="row">{{$index}}</th>
 					<td>{{t.fecha | date: 'medium' }}</td>
-					<td>{{t.corigen}}</td>
-					<td>{{t.cdestino}}</td>
+					<td>{{t.asaldo | currency: '$'}}</td>
 					<td>{{t.monto | currency: '$'}}</td>
-					<td>{{t.estado}}</td>
+					<td>{{t.asaldo | currency: '$'}}</td>
+					<td>{{t.tipo}}</td>
 				</tr>
 			</tbody>
 		</table>

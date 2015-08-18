@@ -24,19 +24,28 @@ import banca.model.manager.ManagerServicios;
  */
 @WebServlet(name = "ServletServices", urlPatterns = { "/login", "/logout",
 		"/pass", "/mail", "/historialT", "/historialTc", "/poli", "/dismov", "/cuentas",
-		"/transferencia", "/VTransferencia", "/sesion","/regusr", "/vc", "/VRegistro","/Vmail" })
-public class ServletServices extends HttpServlet {
+		"/transferencia", "/VTransferencia", "/sesion", "/regusr", "/vc",
+		"/VRegistro", "/Vmail" })
+public class ServletServicesMobil extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	public static final String HOST = "http://localhost:8080/serverBanca";
+	public static final String HOST = "http://localhost:8080/BancaWM";
 	private ManagerServicios mngServ;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public ServletServices() {
+	public ServletServicesMobil() {
 		super();
 		mngServ = new ManagerServicios();
 	}
+
+	private void addCorsHeader(HttpServletResponse response) { 	
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		response.addHeader("Access-Control-Allow-Methods", "POST, GET");
+		response.addHeader("Access-Control-Allow-Headers",
+				"Origin, X-Requested-With, Content-Type, Accept");
+	}
+
 	/**
 	 * RequestDispatcher view =
 	 * request.getRequestDispatcher("html/mypage.html"); view.forward(request,
@@ -53,25 +62,24 @@ public class ServletServices extends HttpServlet {
 	 *             si existe un error de I/O
 	 */
 	protected void processRequestGET(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException 
-	{
+			HttpServletResponse response) throws ServletException, IOException {
 		// switch para cada caso de servicos
 		String path = request.getServletPath();
 		if (path.equalsIgnoreCase("/sesion")) {
 			getSesion(request, response);
-		}else if (path.equalsIgnoreCase("/logout")) {// get
+		} else if (path.equalsIgnoreCase("/logout")) {// get
 			logout(request, response);
-		}else if (path.equalsIgnoreCase("/historialT")) {// get
+		} else if (path.equalsIgnoreCase("/historialT")) {// get
 			verHistorial(request, response);
-		}else if (path.equalsIgnoreCase("/historialTc")) {// get
+		} else if (path.equalsIgnoreCase("/historialTc")) {// get
 			verHistorialT(request, response);
-		}else if (path.equalsIgnoreCase("/cuentas")) {// get
+		} else if (path.equalsIgnoreCase("/cuentas")) {// get
 			verCuentas(request, response);
-		}else if (path.equalsIgnoreCase("/VTransferencia")) {
+		} else if (path.equalsIgnoreCase("/VTransferencia")) {
 			validarTransferencia(request, response);
-		}else if (path.equalsIgnoreCase("/VRegistro")) {
+		} else if (path.equalsIgnoreCase("/VRegistro")) {
 			validarRegistro(request, response);
-		}else if (path.equalsIgnoreCase("/Vmail")) {
+		} else if (path.equalsIgnoreCase("/Vmail")) {
 			validarSetMail(request, response);
 		}
 	}
@@ -94,8 +102,8 @@ public class ServletServices extends HttpServlet {
 	protected void processRequestPOST(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
-		 JSONObject o = getBodyData(request);
-		 System.out.println(o.toJSONString());
+		JSONObject o = getBodyData(request);
+		System.out.println(o.toJSONString());
 		// switch para cada caso de servicos
 		String path = request.getServletPath();
 		if (path.equalsIgnoreCase("/login")) {
@@ -109,34 +117,38 @@ public class ServletServices extends HttpServlet {
 		} else if (path.equalsIgnoreCase("/dismov")) {
 			disableCliMovil(request, response, o);
 		} else if (path.equalsIgnoreCase("/transferencia")) {
-			transferencia(request, response,o);
-		} else if (path.equalsIgnoreCase("/regusr")){
+			transferencia(request, response, o);
+		} else if (path.equalsIgnoreCase("/regusr")) {
 			registro(request, response, o);
-		}else if(path.equalsIgnoreCase("/vc")){
+		} else if (path.equalsIgnoreCase("/vc")) {
 			validarCuenta(request, response, o);
 		}
 	}
-	
 
 	/******************************************* METODOS *******************************************/
-	
+
 	/**
 	 * Permite el registro de usuarios
+	 * 
 	 * @param request
 	 * @param response
 	 * @param data
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	public void registro(HttpServletRequest request, HttpServletResponse response, JSONObject data)
-			throws IOException, ServletException {
+	public void registro(HttpServletRequest request,
+			HttpServletResponse response, JSONObject data) throws IOException,
+			ServletException {
+		
 		String ci = data.get("ced").toString();
 		String mail = data.get("mal").toString();
 		String alias = data.get("als").toString();
 		try {
 			mngServ.registroWeb(HOST, ci, mail, alias);
-			response.getWriter().write(
-					mngServ.jsonMensajes("OK", "Registro correcto!, se envio un correo para validar su cuenta"));
+			response.getWriter()
+					.write(mngServ
+							.jsonMensajes("OK",
+									"Registro correcto!, se envio un correo para validar su cuenta"));
 		} catch (Exception e) {
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
@@ -144,7 +156,7 @@ public class ServletServices extends HttpServlet {
 			response.getWriter().close();
 		}
 	}
-	
+
 	/**
 	 * Permite el logeo de usuario
 	 * 
@@ -153,27 +165,30 @@ public class ServletServices extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void login(HttpServletRequest request, HttpServletResponse response, JSONObject data)
-			throws IOException, ServletException {
+	private void login(HttpServletRequest request,
+			HttpServletResponse response, JSONObject data) throws IOException,
+			ServletException {
 		String username = data.get("usr").toString();
 		String password = data.get("pwd").toString();
 		String ip = getClientIpAddr(request);
-		System.out.println("Log user :" +username);
+		System.out.println("Log user :" + username);
 		try {
 			Cliente u = mngServ.findClienteByAliasPass(username, password);
-			//Si la cuenta no ha sido verificada
-			if( u.getBloqueda().equals(Cliente.NO_VERIFICADA)){
+			// Si la cuenta no ha sido verificada
+			if (u.getBloqueda().equals(Cliente.NO_VERIFICADA)) {
 				throw new Exception("Cuenta no verificada, revise su correo");
 			}
-			//primera vez que se logea o no cambia pass
+			// primera vez que se logea o no cambia pass
 			String ok = "SL";
-			if (u.getFechaUltmCon() == null || u.getBloqueda().equals(Cliente.SIN_CAMBIO_DATOS)) {
+			if (u.getFechaUltmCon() == null
+					|| u.getBloqueda().equals(Cliente.SIN_CAMBIO_DATOS)) {
 				ok = "FL"; // para pedir que cambiar pass
 			}
 			// insertar conexion
 			mngServ.insertIpDateConn(u.getIdCli(), ip);
 			// crear session
-			// poner solo id o datos esenciales si pones toda la entidad mucha carga
+			// poner solo id o datos esenciales si pones toda la entidad mucha
+			// carga
 			// xq ahi estan las cuentas en dentro de cuentas las trnasferencias
 			// request.getSession().setAttribute("SessionUser", u);
 			request.getSession().setAttribute("SessionUser", u.getIdCli());
@@ -189,28 +204,6 @@ public class ServletServices extends HttpServlet {
 	}
 
 	/**
-	 * Devuelve el historial de transacciones de un cliente
-	 * 
-	 * @param request
-	 * @param response
-	 * @throws IOException
-	 * @throws ServletException
-	 */
-	private void verHistorialT(HttpServletRequest request,
-			HttpServletResponse response) throws IOException, ServletException {
-		try {
-			Integer c = (Integer) request.getSession().getAttribute(
-					"SessionUser");
-			response.getWriter().write(
-					mngServ.jsonMensajes("OK", mngServ.trancXcli(c)));
-		} catch (Exception e) {
-			response.getWriter().write(
-					mngServ.jsonMensajes("EA", e.getMessage()));
-		} finally {
-			response.getWriter().close();
-		}
-	}
-	/**
 	 * Permite el deslogeo de usuario
 	 * 
 	 * @param request
@@ -219,10 +212,11 @@ public class ServletServices extends HttpServlet {
 	 * @throws ServletException
 	 */
 	@SuppressWarnings("unused")
-	private void enviarPIN(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-		
+	private void enviarPIN(HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException {
+
 	}
+
 	/**
 	 * Envia los daots del usuario en sesion
 	 * 
@@ -231,10 +225,9 @@ public class ServletServices extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void getSesion(HttpServletRequest request, HttpServletResponse response)
-			throws IOException, ServletException {
-		Integer c = (Integer) request.getSession().getAttribute(
-				"SessionUser");
+	private void getSesion(HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException {
+		Integer c = (Integer) request.getSession().getAttribute("SessionUser");
 		try {
 			Cliente u = mngServ.findClienteById(c);
 			response.getWriter().write(
@@ -243,12 +236,11 @@ public class ServletServices extends HttpServlet {
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", "No has accedido al sistema."));
 			e.printStackTrace();
-		}
-		finally
-		{
+		} finally {
 			response.getWriter().close();
 		}
 	}
+
 	/**
 	 * Validar cuenta
 	 * 
@@ -257,32 +249,28 @@ public class ServletServices extends HttpServlet {
 	 * @throws IOException
 	 * @throws ServletException
 	 */
-	private void validarCuenta(HttpServletRequest request, HttpServletResponse response,
-			JSONObject data)
-			throws IOException, ServletException {
+	private void validarCuenta(HttpServletRequest request,
+			HttpServletResponse response, JSONObject data) throws IOException,
+			ServletException {
 		String nro = data.get("nro").toString();
-		int c = (Integer) request.getSession().getAttribute(
-				"SessionUser");
+		int c = (Integer) request.getSession().getAttribute("SessionUser");
 		try {
-			if(c == 0)
+			if (c == 0)
 				mngServ.jsonMensajes("EA", "No has accedido al sistema.");
-			else
-			{
+			else {
 				Cuenta cn = mngServ.findCuentaByNro(nro);
-				if(cn != null && cn.getNroCuenta().length() > 4)
+				if (cn != null && cn.getNroCuenta().length() > 4)
 					response.getWriter().write(
-						mngServ.jsonMensajes("OK", "La cuenta existe."));
+							mngServ.jsonMensajes("OK", "La cuenta existe."));
 				else
 					mngServ.jsonMensajes("EA", "No existe.");
 			}
-			
+
 		} catch (Exception e) {
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", "No has accedido al sistema."));
 			e.printStackTrace();
-		}
-		finally
-		{
+		} finally {
 			response.getWriter().close();
 		}
 	}
@@ -313,7 +301,8 @@ public class ServletServices extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void setPass(HttpServletRequest request,
-			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
+			HttpServletResponse response, JSONObject data) throws IOException,
+			ServletException {
 		String pass = data.get("pwd").toString();
 		String npass = data.get("npd").toString();
 		String cpass = data.get("cpd").toString();
@@ -340,7 +329,8 @@ public class ServletServices extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void setMail(HttpServletRequest request,
-			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
+			HttpServletResponse response, JSONObject data) throws IOException,
+			ServletException {
 		String mail = data.get("mail").toString();
 		try {
 			Integer idusr = (Integer) request.getSession().getAttribute(
@@ -350,12 +340,15 @@ public class ServletServices extends HttpServlet {
 					"Validación de Correo Electrónico",
 					"<h1>Validación de Correo Electrónico</h1>"
 							+ "<p>Has clic al siguiente enlace para validar su correo:"
-							+ "<br> <a href='" + HOST + "/bancaWeb/index.html#/validateM?id="
-							+ idusr + "&ml=" + mail + "'>"
+							+ "<br> <a href='" + HOST
+							+ "/bancaWeb/index.html#/validateM?id=" + idusr
+							+ "&ml=" + mail + "'>"
 							+ "VALIDAR NUEVO CORREO</a></p>");
 			System.out.println("Correo enviado.");
-			response.getWriter().write(
-					mngServ.jsonMensajes("OK", "Se ha enviado un mensaje al nuevo correo para validarlo."));
+			response.getWriter()
+					.write(mngServ
+							.jsonMensajes("OK",
+									"Se ha enviado un mensaje al nuevo correo para validarlo."));
 		} catch (Exception e) {
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
@@ -363,8 +356,7 @@ public class ServletServices extends HttpServlet {
 			response.getWriter().close();
 		}
 	}
-	
-	
+
 	private void validarSetMail(HttpServletRequest request,
 			HttpServletResponse response) throws IOException, ServletException {
 		try {
@@ -372,14 +364,16 @@ public class ServletServices extends HttpServlet {
 			String mail = request.getParameter("ml");
 			mngServ.cambiarMail(usr, mail);
 			response.getWriter().write(
-					mngServ.jsonMensajes("OK", "Se validó y cambió su correo correctamente"));
-		}  catch (Exception e) {
+					mngServ.jsonMensajes("OK",
+							"Se validó y cambió su correo correctamente"));
+		} catch (Exception e) {
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
 			response.getWriter().close();
 		}
 	}
+
 	/**
 	 * Permite el cambio de PIN
 	 * 
@@ -390,13 +384,15 @@ public class ServletServices extends HttpServlet {
 	 */
 	@SuppressWarnings("unused")
 	private void setPIN(HttpServletRequest request,
-			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
+			HttpServletResponse response, JSONObject data) throws IOException,
+			ServletException {
 		try {
 			String PIN = data.get("PIN").toString();
 			String nPIN = data.get("nPIN").toString();
 			Integer c = (Integer) request.getSession().getAttribute(
 					"SessionUser");
-			mngServ.cambiarPIN(c, PIN, nPIN);;
+			mngServ.cambiarPIN(c, PIN, nPIN);
+			;
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", "Cambio de PIN correcto"));
 		} catch (Exception e) {
@@ -422,6 +418,28 @@ public class ServletServices extends HttpServlet {
 					"SessionUser");
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", mngServ.transfXcli(c)));
+		} catch (Exception e) {
+			response.getWriter().write(
+					mngServ.jsonMensajes("EA", e.getMessage()));
+		} finally {
+			response.getWriter().close();
+		}
+	}
+	/**
+	 * Devuelve el historial de transacciones de un cliente
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private void verHistorialT(HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException {
+		try {
+			Integer c = (Integer) request.getSession().getAttribute(
+					"SessionUser");
+			response.getWriter().write(
+					mngServ.jsonMensajes("OK", mngServ.trancXcli(c)));
 		} catch (Exception e) {
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
@@ -464,9 +482,10 @@ public class ServletServices extends HttpServlet {
 	 * @throws ServletException
 	 */
 	private void transferencia(HttpServletRequest request,
-			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
+			HttpServletResponse response, JSONObject data) throws IOException,
+			ServletException {
 		try {
-			String nroO =  data.get("nroO").toString();
+			String nroO = data.get("nroO").toString();
 			String nroD = data.get("nroD").toString();
 			if(nroO.equals(nroD))
 				throw new Exception("La cuenta de origen y destino es la misma");
@@ -494,8 +513,9 @@ public class ServletServices extends HttpServlet {
 							+ nroD
 							+ "</p>"
 							+ "<p>Has clic al siguiente enlace para validar la transacción:"
-							+ "<br> <a href='" + HOST + "/bancaWeb/index.html#/validateT?t="
-							+ idt + "&tk=" + token + "'>"
+							+ "<br> <a href='" + HOST
+							+ "/bancaWeb/index.html#/validateT?t=" + idt
+							+ "&tk=" + token + "'>"
 							+ "VALIDAR TRANSFERENCIA</a></p>");
 			System.out.println("Correo enviado.");
 			response.getWriter()
@@ -523,7 +543,7 @@ public class ServletServices extends HttpServlet {
 			HttpServletResponse response) throws IOException, ServletException {
 		try {
 			String tk = request.getParameter("tk");
-			String t = request.getParameter("t");	
+			String t = request.getParameter("t");
 			mngServ.validarTransferencia(Long.parseLong(t), tk);
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK",
@@ -535,9 +555,10 @@ public class ServletServices extends HttpServlet {
 			response.getWriter().close();
 		}
 	}
-	
+
 	/**
 	 * Valida el registro de usuario
+	 * 
 	 * @param request
 	 * @param response
 	 * @throws IOException
@@ -550,16 +571,14 @@ public class ServletServices extends HttpServlet {
 			String usr = request.getParameter("id");
 			mngServ.validarRegistroWeb(Integer.parseInt(usr), token);
 			response.getWriter().write(
-					mngServ.jsonMensajes("OK",
-							"Se ha validado su cuenta."));
-		}  catch (Exception e) {
+					mngServ.jsonMensajes("OK", "Se ha validado su cuenta."));
+		} catch (Exception e) {
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
 			response.getWriter().close();
 		}
 	}
-
 
 	/**
 	 * Verifica si se acepta politicas de uso de la aplicacion
@@ -600,7 +619,8 @@ public class ServletServices extends HttpServlet {
 	 * @throws ServletException
 	 */
 	public void disableCliMovil(HttpServletRequest request,
-			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
+			HttpServletResponse response, JSONObject data) throws IOException,
+			ServletException {
 		String motivo = data.get("mt").toString();
 		try {
 			Integer c = (Integer) request.getSession().getAttribute(

@@ -21,6 +21,7 @@ import banca.model.dao.entities.Cliente;
 import banca.model.dao.entities.Cuenta;
 import banca.model.dao.entities.Estadotrans;
 import banca.model.dao.entities.Historial;
+import banca.model.dao.entities.Transacciones;
 import banca.model.dao.entities.Transferencia;
 
 
@@ -511,6 +512,25 @@ public class ManagerServicios {
 		}
 		return lista;
 	}
+	/**
+	 * Devuelve la lista de tranferencias por cliente y nro de cuenta
+	 * 
+	 * @param id_cli
+	 * @param nrocuenta
+	 * @return List<Transacciones>
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Transacciones> findTrancByCli(Integer id_cli, String nrocuenta) {
+		List<Transacciones> todas = mngDAO.findAll(Transacciones.class);
+		List<Transacciones> lista = new ArrayList<Transacciones>();
+		for (Transacciones t : todas) {
+			if (t.getCliente().getIdCli().equals(id_cli)
+					&& t.getNroCuenta().equals(nrocuenta)) {
+				lista.add(t);
+			}
+		}
+		return lista;
+	}
 
 	/**
 	 * Devuelve la lista de cuentas por cliente
@@ -549,6 +569,26 @@ public class ManagerServicios {
 		obj.put("fecha", dateFormat.format(transf.getFecha()).toString());
 		return obj;
 	}
+	/**
+	 * Crea un Objeto JSON de Transferencia
+	 * 
+	 * @param transf
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject objTranc(Transacciones transf) {
+		JSONObject obj = new JSONObject();
+		obj.put("cdestino", transf.getNrocDestino());
+		obj.put("corigen", transf.getNroCuenta());
+		obj.put("asaldo", transf.getSaldoActual().toString());
+		obj.put("tipo", transf.getTipotran().getTipotrans().toString());
+		obj.put("monto", transf.getMonto().toString());
+		obj.put("saldo", transf.getSaldoFinal().toString());
+		obj.put("estado", transf.getEstadotran().getEstado());
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		obj.put("fecha", dateFormat.format(transf.getFecha()).toString());
+		return obj;
+	}
 
 	/**
 	 * Devuelve un array de transferencias
@@ -561,6 +601,20 @@ public class ManagerServicios {
 		JSONArray jarray = new JSONArray();
 		for (Transferencia t : list) {
 			jarray.add(objTrans(t));
+		}
+		return jarray;
+	}
+	/**
+	 * Devuelve un array de transacciones
+	 * 
+	 * @param list
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONArray arrayTranc(List<Transacciones> list) {
+		JSONArray jarray = new JSONArray();
+		for (Transacciones t : list) {
+			jarray.add(objTranc(t));
 		}
 		return jarray;
 	}
@@ -597,6 +651,32 @@ public class ManagerServicios {
 				obj.put("cuenta", cta.getNroCuenta());
 				obj.put("transf",
 						this.arrayTransf(this.findTransByCli(id_cli,
+								cta.getNroCuenta())));
+				jarray.add(obj);
+			}
+			return jarray;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	/**
+	 * Devuelve el array de cuentas con el array de transferencias respectivas
+	 * [{"cuenta":"#","transf":[{},{},{}]},{"cuenta":"#","transf":[{},{},{}]}]
+	 * 
+	 * @param id_cli
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONArray trancXcli(Integer id_cli) throws Exception {
+		try {
+			JSONArray jarray = new JSONArray();
+			List<Cuenta> cuentas = this.findCuentasByCli(id_cli);
+			for (Cuenta cta : cuentas) {
+				JSONObject obj = new JSONObject();
+				obj.put("cuenta", cta.getNroCuenta());
+				obj.put("tranc",
+						this.arrayTranc(this.findTrancByCli(id_cli,
 								cta.getNroCuenta())));
 				jarray.add(obj);
 			}
