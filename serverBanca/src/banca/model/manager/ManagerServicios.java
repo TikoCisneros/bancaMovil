@@ -249,6 +249,7 @@ public class ManagerServicios {
 						"La nueva contrase&ntilde;a como su confirmacion deben ser iguales");
 			}
 			c.setPass(nPass);// MD5 PASS getMD5(pass)
+			c.setBloqueda(Cliente.ACTIVA);
 			mngDAO.actualizar(c);
 		} catch (Exception e) {
 			throw e;
