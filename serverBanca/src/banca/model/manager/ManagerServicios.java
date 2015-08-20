@@ -18,6 +18,7 @@ import org.json.simple.JSONObject;
 
 import banca.controller.servicios.Mailer;
 import banca.model.dao.entities.Cliente;
+import banca.model.dao.entities.Cmsesion;
 import banca.model.dao.entities.Cuenta;
 import banca.model.dao.entities.Estadotrans;
 import banca.model.dao.entities.Historial;
@@ -249,7 +250,6 @@ public class ManagerServicios {
 						"La nueva contrase&ntilde;a como su confirmacion deben ser iguales");
 			}
 			c.setPass(nPass);// MD5 PASS getMD5(pass)
-			c.setBloqueda(Cliente.ACTIVA);
 			mngDAO.actualizar(c);
 		} catch (Exception e) {
 			throw e;
@@ -764,5 +764,110 @@ public class ManagerServicios {
 		lhm.put("correo", u.getCorreo());
     	return lhm;
     }
-
+	
+	/*********************************************APP MOVIL WEB*********************************************/
+	public void crearCM(Integer idCli, String pass) throws Exception{
+		Cliente c = findClienteById(idCli);
+		if(!c.getCmMovil().isEmpty() || c.getCmMovil()!=null)
+			throw new Exception("Usted ya posee una cuenta móvil.");
+		c.setCmMovil("S");c.setCmPass(pass);c.setCmBloqueo(Cliente.CMOBIL_ACTIVA);
+		String ping = genPin();c.setCmPin(ping);
+		mngDAO.actualizar(c);
+		Mailer.generateAndSendEmail(c.getCorreo(), "Cuenta Movil Activada", "Se ha activado su cuenta movil, "
+				+ "ya puede hacer uso de este servicio con su mismo usuario y con la contraseña para esta cuenta."
+				+ "<br/>Recuerde su ping secreto es "+ping+" .");
+	}
+	
+	public void cambioPassCM(Integer idCli, String antPass, String nPass, String ncPass)throws Exception{
+		Cliente c = findClienteById(idCli);
+		if(c.getCmMovil().isEmpty() || c.getCmMovil()==null)
+			throw new Exception("Usted no posee una cuenta móvil.");
+		if(!c.getCmPass().equals(antPass))
+			throw new Exception("Las contraseña anterior es incorrecta.");
+		if(!nPass.equals(ncPass))
+			throw new Exception("Las nueva contraseña como su confirmación deben ser las mismas.");
+		c.setCmPass(nPass);
+		mngDAO.actualizar(c);
+	}
+	
+	public void cambioPinCM(Integer idCli) throws Exception{
+		Cliente c = findClienteById(idCli);
+		if(c.getCmMovil().isEmpty() || c.getCmMovil()==null)
+			throw new Exception("Usted no posee una cuenta móvil.");
+		String ping = genPin();c.setCmPin(ping);
+		mngDAO.actualizar(c);
+		Mailer.generateAndSendEmail(c.getCorreo(), "Cambio de PIN", "Su nuevo ping secreto es "+ping+" .");	
+	}
+	
+	public void activarCM(Integer idCli) throws Exception{
+		Cliente c = findClienteById(idCli);
+		if(c.getCmMovil().isEmpty() || c.getCmMovil()==null)
+			throw new Exception("Usted no posee una cuenta móvil.");
+		if(c.getCmBloqueo().equals(Cliente.CMOBIL_ACTIVA))
+			throw new Exception("Su cuenta ya se encuentra activa.");
+		c.setCmBloqueo(Cliente.CMOBIL_BLOQUEADA);
+		mngDAO.actualizar(c);
+	}
+	
+	public void desactivarCM(Integer idCli) throws Exception{
+		Cliente c = findClienteById(idCli);
+		if(c.getCmMovil().isEmpty() || c.getCmMovil()==null)
+			throw new Exception("Usted no posee una cuenta móvil.");
+		if(c.getCmBloqueo().equals(Cliente.CMOBIL_BLOQUEADA))
+			throw new Exception("Su cuenta ya se encuentra desactivada.");
+		c.setCmBloqueo(Cliente.CMOBIL_ACTIVA);
+		mngDAO.actualizar(c);
+	}
+	
+	/*********************************************APP MOVIL*********************************************/
+	public Cliente findClienteByAliasPassM(String alias, String pass)
+			throws Exception {
+		try {
+			@SuppressWarnings("unchecked")
+			List<Cliente> listado = (List<Cliente>) mngDAO.findByParam(
+					Cliente.class, "o.alias", alias, null);
+			if (listado == null || listado.isEmpty()) {
+				throw new Exception("No se encuentra el usuario.");
+			}
+			Cliente cli = listado.get(0);
+			if (cli.getCmPass().equals(pass)) {// MD5 PASS getMD5(pass)
+				return cli;
+			} else {
+				throw new Exception("Usuario o contraseña invalidos");
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	public void crearSesionM(Integer idCli, String ping) throws Exception{
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date()); // Now use today date.
+		c.add(Calendar.DATE, 15); // Adding 15 days
+		Cmsesion s = new Cmsesion();
+		s.setIdCli(idCli);s.setClaveSesion(ping);s.setFechaExpiracion(c.getTime());
+		mngDAO.insertar(s);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void cerrarSesionM(Integer idCli) throws Exception{
+		List<Cmsesion> lstSesiones = mngDAO.findWhere(Cmsesion.class, "o.idCli="+idCli, null);
+		for (Cmsesion ss : lstSesiones) {
+			mngDAO.eliminar(Cmsesion.class, ss.getIdSesion());
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean activaSesionM(Integer idCli){
+		List<Cmsesion> lstSesiones = mngDAO.findWhere(Cmsesion.class, "o.idCli="+idCli, null);
+		if(lstSesiones.size()>0){
+			for (Cmsesion s : lstSesiones) {
+				if(s.getFechaExpiracion().compareTo(new Date())>=0)
+					return true;
+			}
+			return false;
+		}else{
+			return false;
+		}
+	}
 }
