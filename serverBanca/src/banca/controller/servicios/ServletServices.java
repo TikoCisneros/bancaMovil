@@ -24,7 +24,8 @@ import banca.model.manager.ManagerServicios;
  */
 @WebServlet(name = "ServletServices", urlPatterns = { "/login", "/logout",
 		"/pass", "/mail", "/historialT", "/historialTc", "/poli", "/dismov", "/cuentas",
-		"/transferencia", "/VTransferencia", "/sesion","/regusr", "/vc", "/VRegistro","/Vmail" })
+		"/transferencia", "/VTransferencia", "/sesion","/regusr", "/vc", "/VRegistro",
+		"/Vmail", "/nCM", "/pwdCM", "/rpinCM", "/aCM", "/dCM" })
 public class ServletServices extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String HOST = "http://localhost:8080/serverBanca";
@@ -73,6 +74,12 @@ public class ServletServices extends HttpServlet {
 			validarRegistro(request, response);
 		}else if (path.equalsIgnoreCase("/Vmail")) {
 			validarSetMail(request, response);
+		}else if (path.equalsIgnoreCase("/rpinCM")) {
+			resetPinMovil(request, response);
+		}else if (path.equalsIgnoreCase("/aCM")) {
+			activarMovil(request, response);
+		}else if (path.equalsIgnoreCase("/dCM")) {
+			desactivarMovil(request, response);
 		}
 	}
 
@@ -114,6 +121,10 @@ public class ServletServices extends HttpServlet {
 			registro(request, response, o);
 		}else if(path.equalsIgnoreCase("/vc")){
 			validarCuenta(request, response, o);
+		}else if(path.equals("/nCM")){
+			nuevoCliMovil(request, response, o);
+		}else if(path.equals("/pwdCM")){
+			cambioPwdMovil(request, response, o);
 		}
 	}
 	
@@ -609,6 +620,129 @@ public class ServletServices extends HttpServlet {
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK",
 							"Se ha desactivado correctamente"));
+		} catch (Exception e) {
+			response.getWriter().write(
+					mngServ.jsonMensajes("EA", e.getMessage()));
+		} finally {
+			response.getWriter().close();
+		}
+	}
+	
+	/**
+	 * Permite crear una nueva cuenta móvil
+	 * @param request
+	 * @param response
+	 * @param data
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public void nuevoCliMovil(HttpServletRequest request,
+			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
+		String mpwd = data.get("mpwd").toString();
+		try {
+			Integer c = (Integer) request.getSession().getAttribute(
+					"SessionUser");
+			mngServ.crearCM(c, mpwd);
+			response.getWriter().write(
+					mngServ.jsonMensajes("OK",
+							"Cuenta creada correctamente, revise su correo electrónico."));
+		} catch (Exception e) {
+			response.getWriter().write(
+					mngServ.jsonMensajes("EA", e.getMessage()));
+		} finally {
+			response.getWriter().close();
+		}
+	}
+	
+	/**
+	 * Permite el cambio de password de la cuenta móvil
+	 * @param request
+	 * @param response
+	 * @param data
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public void cambioPwdMovil(HttpServletRequest request,
+			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
+		String mpwd = data.get("mpwd").toString();
+		String npwd = data.get("npwd").toString();
+		String cpwd = data.get("cpwd").toString();
+		try {
+			Integer c = (Integer) request.getSession().getAttribute(
+					"SessionUser");
+			mngServ.cambioPassCM(c, mpwd, npwd, cpwd);
+			response.getWriter().write(
+					mngServ.jsonMensajes("OK",
+							"Cambio de clave correcto"));
+		} catch (Exception e) {
+			response.getWriter().write(
+					mngServ.jsonMensajes("EA", e.getMessage()));
+		} finally {
+			response.getWriter().close();
+		}
+	}
+	
+	/**
+	 * Resetea el ping de la cuenta móvil
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public void resetPinMovil(HttpServletRequest request,
+				HttpServletResponse response) throws IOException, ServletException {
+		try {
+			Integer c = (Integer) request.getSession().getAttribute(
+					"SessionUser");
+			mngServ.cambioPinCM(c);
+			response.getWriter().write(
+					mngServ.jsonMensajes("OK", "Se ha enviado su nuevo PIN al correo de su cuenta."));
+		} catch (Exception e) {
+			response.getWriter().write(
+					mngServ.jsonMensajes("EA", e.getMessage()));
+		} finally {
+			response.getWriter().close();
+		}
+	}
+	
+	/**
+	 * Reactiva una cuenta móvil
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public void activarMovil(HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException {
+		try {
+			Integer c = (Integer) request.getSession().getAttribute(
+					"SessionUser");
+			mngServ.activarCM(c);
+			response.getWriter().write(
+					mngServ.jsonMensajes("OK", "Se ha reactivado correctamente su cuenta."));
+		} catch (Exception e) {
+			response.getWriter().write(
+					mngServ.jsonMensajes("EA", e.getMessage()));
+		} finally {
+			response.getWriter().close();
+		}
+	}
+	
+	/**
+	 * Desactiva una cuenta móvil
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	public void desactivarMovil(HttpServletRequest request,
+			HttpServletResponse response) throws IOException, ServletException {
+		try {
+			Integer c = (Integer) request.getSession().getAttribute(
+					"SessionUser");
+			mngServ.desactivarCM(c);
+			response.getWriter().write(
+					mngServ.jsonMensajes("OK", "Se ha desactivado correctamente su cuenta."));
 		} catch (Exception e) {
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));

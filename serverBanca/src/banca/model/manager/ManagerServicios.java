@@ -744,6 +744,7 @@ public class ManagerServicios {
 		lhm.put("direccion", u.getDireccion());
 		lhm.put("telefono", u.getTelefono());
 		lhm.put("correo", u.getCorreo());
+		lhm.put("ping", u.getCmPin());
 		return lhm;
 	}
 	
@@ -764,7 +765,7 @@ public class ManagerServicios {
 		lhm.put("correo", u.getCorreo());
     	return lhm;
     }
-	
+
 	/*********************************************APP MOVIL WEB*********************************************/
 	public void crearCM(Integer idCli, String pass) throws Exception{
 		Cliente c = findClienteById(idCli);
@@ -786,6 +787,7 @@ public class ManagerServicios {
 			throw new Exception("Las contraseña anterior es incorrecta.");
 		if(!nPass.equals(ncPass))
 			throw new Exception("Las nueva contraseña como su confirmación deben ser las mismas.");
+		cerrarSesionM(idCli);//CIERRA LA SESION
 		c.setCmPass(nPass);
 		mngDAO.actualizar(c);
 	}
@@ -815,6 +817,7 @@ public class ManagerServicios {
 			throw new Exception("Usted no posee una cuenta móvil.");
 		if(c.getCmBloqueo().equals(Cliente.CMOBIL_BLOQUEADA))
 			throw new Exception("Su cuenta ya se encuentra desactivada.");
+		cerrarSesionM(idCli);//CIERRA LA SESION
 		c.setCmBloqueo(Cliente.CMOBIL_ACTIVA);
 		mngDAO.actualizar(c);
 	}
@@ -840,13 +843,25 @@ public class ManagerServicios {
 		}
 	}
 	
-	public void crearSesionM(Integer idCli, String ping) throws Exception{
+	public void crearSesionM(Integer idCli) throws Exception{
 		Calendar c = Calendar.getInstance();
 		c.setTime(new Date()); // Now use today date.
 		c.add(Calendar.DATE, 15); // Adding 15 days
+		Cliente cli = (Cliente) mngDAO.findById(Cliente.class, idCli);
 		Cmsesion s = new Cmsesion();
-		s.setIdCli(idCli);s.setClaveSesion(ping);s.setFechaExpiracion(c.getTime());
+		s.setIdCli(idCli);s.setClaveSesion(cli.getCmPin());s.setFechaExpiracion(c.getTime());
 		mngDAO.insertar(s);
+	}
+	
+	public void insertarIPCM(Integer id_cli, String ip) throws Exception {
+		try {
+			Cliente c = (Cliente) mngDAO.findById(Cliente.class, id_cli);
+			c.setCmUltmIp(ip);
+			c.setCmFechaUltmCon(new Date());
+			mngDAO.actualizar(c);
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
