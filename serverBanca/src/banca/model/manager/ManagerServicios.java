@@ -769,7 +769,7 @@ public class ManagerServicios {
 	/*********************************************APP MOVIL WEB*********************************************/
 	public void crearCM(Integer idCli, String pass, String cpass) throws Exception{
 		Cliente c = findClienteById(idCli);
-		if(!c.getCmMovil().isEmpty() || c.getCmMovil()!=null)
+		if(c.getCmMovil()!=null)
 			throw new Exception("Usted ya posee una cuenta móvil.");
 		if(!pass.equals(cpass))
 			throw new Exception("Las contraseñas deben ser las mismas.");
@@ -783,7 +783,7 @@ public class ManagerServicios {
 	
 	public void cambioPassCM(Integer idCli, String antPass, String nPass, String ncPass)throws Exception{
 		Cliente c = findClienteById(idCli);
-		if(c.getCmMovil().isEmpty() || c.getCmMovil()==null)
+		if(c.getCmMovil()==null || c.getCmMovil().isEmpty())
 			throw new Exception("Usted no posee una cuenta móvil.");
 		if(!c.getCmPass().equals(antPass))
 			throw new Exception("Las contraseña anterior es incorrecta.");
@@ -796,7 +796,7 @@ public class ManagerServicios {
 	
 	public void cambioPinCM(Integer idCli) throws Exception{
 		Cliente c = findClienteById(idCli);
-		if(c.getCmMovil().isEmpty() || c.getCmMovil()==null)
+		if(c.getCmMovil()==null || c.getCmMovil().isEmpty())
 			throw new Exception("Usted no posee una cuenta móvil.");
 		String ping = genPin();c.setCmPin(ping);
 		mngDAO.actualizar(c);
@@ -805,7 +805,7 @@ public class ManagerServicios {
 	
 	public void activarCM(Integer idCli) throws Exception{
 		Cliente c = findClienteById(idCli);
-		if(c.getCmMovil().isEmpty() || c.getCmMovil()==null)
+		if(c.getCmMovil()==null || c.getCmMovil().isEmpty())
 			throw new Exception("Usted no posee una cuenta móvil.");
 		if(c.getCmBloqueo().equals(Cliente.CMOBIL_ACTIVA))
 			throw new Exception("Su cuenta ya se encuentra activa.");
@@ -815,7 +815,7 @@ public class ManagerServicios {
 	
 	public void desactivarCM(Integer idCli) throws Exception{
 		Cliente c = findClienteById(idCli);
-		if(c.getCmMovil().isEmpty() || c.getCmMovil()==null)
+		if(c.getCmMovil()==null || c.getCmMovil().isEmpty())
 			throw new Exception("Usted no posee una cuenta móvil.");
 		if(c.getCmBloqueo().equals(Cliente.CMOBIL_BLOQUEADA))
 			throw new Exception("Su cuenta ya se encuentra desactivada.");

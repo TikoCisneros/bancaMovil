@@ -171,12 +171,15 @@ public class ServletServicesMobil extends HttpServlet {
 	private void verHistorial(HttpServletRequest request,
 			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
 		try {
+			
+			
+			
 			Integer c = Integer.parseInt(data.get("idc").toString());
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", mngServ.transfXcli(c)));
 		} catch (Exception e) {
 			response.getWriter().write(
-					mngServ.jsonMensajes("EA", e.getMessage()));
+					mngServ.jsonMensajes("ES", e.getMessage()));
 		} finally {
 			response.getWriter().close();
 		}

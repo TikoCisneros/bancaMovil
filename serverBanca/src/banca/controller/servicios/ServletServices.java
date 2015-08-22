@@ -648,6 +648,7 @@ public class ServletServices extends HttpServlet {
 					mngServ.jsonMensajes("OK",
 							"Cuenta creada correctamente, revise su correo electrónico."));
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
