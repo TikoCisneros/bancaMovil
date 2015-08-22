@@ -639,10 +639,11 @@ public class ServletServices extends HttpServlet {
 	public void nuevoCliMovil(HttpServletRequest request,
 			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
 		String mpwd = data.get("mpwd").toString();
+		String mpwdc = data.get("mpwdc").toString();	
 		try {
 			Integer c = (Integer) request.getSession().getAttribute(
 					"SessionUser");
-			mngServ.crearCM(c, mpwd);
+			mngServ.crearCM(c, mpwd, mpwdc);
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK",
 							"Cuenta creada correctamente, revise su correo electrónico."));

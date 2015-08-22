@@ -231,21 +231,51 @@ bancaWebController.controller('desmovCtrl', [ '$scope', '$location',
 		} ]);
 
 bancaWebController.controller('mainCtrl', [ '$scope', '$location',
-		'bancaWebSV', 'UserCM',
-		function($scope, $location, bancaWebSV, UserCM) {
+                                    		'bancaWebSV', 'UserCM',
+	function($scope, $location, bancaWebSV, UserCM) {
 
-			$scope.user = verUser(UserCM, bancaWebSV, $location, function(res) {
-				$scope.user = res;
+		$scope.user = verUser(UserCM, bancaWebSV, $location, function(res) {
+			$scope.user = res;
+		});
+
+		$scope.logout = function() {
+			bancaWebSV.logout(function(res) {
+				UserCM.set(null);
+				addMsg('success', res.value);
+				$location.path('/login');
 			});
-
-			$scope.logout = function() {
-				bancaWebSV.logout(function(res) {
-					UserCM.set(null);
+		};
+		//Reenvio PIN
+		$scope.newping = function(){
+			bancaWebSV.rpincm(function(res) {
+				if (res.status != 'OK'){
+					addMsg('danger', 'Error', res.value);
+				}else {
 					addMsg('success', res.value);
-					$location.path('/login');
-				});
-			};
-		} ]);
+				}
+			});
+		};
+		//Activar CM
+		$scope.actcm = function(){
+			bancaWebSV.actamov(function(res) {
+				if (res.status != 'OK'){
+					addMsg('danger', 'Error', res.value);
+				}else {
+					addMsg('success', res.value);
+				}
+			});
+		};
+		//Desactivar CM
+		$scope.dsccm = function(){
+			bancaWebSV.dctamov(function(res) {
+				if (res.status != 'OK'){
+					addMsg('danger', 'Error', res.value);
+				}else {
+					addMsg('success', res.value);
+				}
+			});
+		};
+	} ]);
 bancaWebController.controller('cuentasCtrl', [ '$scope', '$location',
 		'$routeParams', 'bancaWebSV', 'UserCM',
 		function($scope, $location, $routeParams, bancaWebSV, UserCM) {
@@ -372,3 +402,46 @@ bancaWebController.controller('lstTrancCtrl', [ '$scope', '$location',
 				}
 			});
 		} ]);
+
+bancaWebController.controller('ctamovCtrl', [ '$scope', '$location', 'bancaWebSV', 'UserCM',
+ 		function($scope, $location, bancaWebSV, UserCM) {
+		$scope.user = verUser(UserCM, bancaWebSV, $location, function(res) {
+			$scope.user = res;
+		});
+		//NUEVA CUENTA
+ 			$scope.mncm = function() {
+ 				bancaWebSV.nctamov({
+ 					"mpwd" : $scope.mp,
+ 					"mpwdc" : $scope.mpc,
+ 				}, function(res) {
+ 					console.log(res);
+ 					if (res.status == 'EA') {
+ 						addMsg('danger', res.value);
+ 					} else {
+ 						addMsg('success', res.value);
+ 						$scope.mp = null;
+ 						$scope.mpc = null;
+ 						$location.path('/main');
+ 					}
+ 				});
+ 			};
+ 			//CAMBIO PASS
+ 			$scope.mcpcm = function() {
+ 				bancaWebSV.pctamov({
+ 					"mpwd" : $scope.mpa,
+ 					"npwd" : $scope.mpn,
+ 					"cpwd" : $scope.mpcn,
+ 				}, function(res) {
+ 					console.log(res);
+ 					if (res.status == 'EA') {
+ 						addMsg('danger', res.value);
+ 					} else {
+ 						addMsg('success', res.value);
+ 						$scope.mpa = null;
+ 						$scope.mpn = null;
+ 						$scope.mpcn = null;
+ 						$location.path('/main');
+ 					}
+ 				});
+ 			};
+ 		} ]);

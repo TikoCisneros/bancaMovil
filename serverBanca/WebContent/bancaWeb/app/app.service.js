@@ -20,7 +20,12 @@ bancaWebServices.factory('bancaWebSV', [ '$resource',
 				vtransferencia: {method:'GET', isArray:false, params:{action:'VTransferencia'}},
 				vsmail: {method:'GET', isArray:false, params:{action:'Vmail'}},
 				getTrans: {method:'GET', isArray:false, params:{action:'historialT'}},
-				getTranc: {method:'GET', isArray:false, params:{action:'historialTc'}}
+				getTranc: {method:'GET', isArray:false, params:{action:'historialTc'}},
+				nctamov: {method : 'POST', isArray : false, params:{action: 'nCM'}, headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}},
+				pctamov: {method : 'POST', isArray : false, params:{action: 'pwdCM'}, headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'}},
+				rpincm: {method:'GET', isArray:false, params:{action:'rpinCM'}},
+				actamov: {method:'GET', isArray:false, params:{action:'aCM'}},
+				dctamov: {method:'GET', isArray:false, params:{action:'dCM'}}
 			});
 		}
 ]);

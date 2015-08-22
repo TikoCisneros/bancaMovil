@@ -767,10 +767,12 @@ public class ManagerServicios {
     }
 
 	/*********************************************APP MOVIL WEB*********************************************/
-	public void crearCM(Integer idCli, String pass) throws Exception{
+	public void crearCM(Integer idCli, String pass, String cpass) throws Exception{
 		Cliente c = findClienteById(idCli);
 		if(!c.getCmMovil().isEmpty() || c.getCmMovil()!=null)
 			throw new Exception("Usted ya posee una cuenta móvil.");
+		if(!pass.equals(cpass))
+			throw new Exception("Las contraseñas deben ser las mismas.");
 		c.setCmMovil("S");c.setCmPass(pass);c.setCmBloqueo(Cliente.CMOBIL_ACTIVA);
 		String ping = genPin();c.setCmPin(ping);
 		mngDAO.actualizar(c);

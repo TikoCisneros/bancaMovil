@@ -47,6 +47,12 @@ bancaWebApp.config([ '$routeProvider', function($routeProvider) {
 	}).when('/validateM', {
 		templateUrl : svr + '/bancaWeb/main.html',
 		controller : 'validateMCtrl'
+	}).when('/regCM', {
+		templateUrl : svr + '/bancaWeb/regcm.html',
+		controller : 'ctamovCtrl'
+	}).when('/pwdCM', {
+		templateUrl : svr + '/bancaWeb/pwdcm.html',
+		controller : 'ctamovCtrl'
 	});
 } ]);
 
