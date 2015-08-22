@@ -3,6 +3,7 @@ package banca.controller.servicios;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.UUID;
 
 import javax.servlet.ServletException;
@@ -482,6 +483,7 @@ public class ServletServices extends HttpServlet {
 			if(nroO.equals(nroD))
 				throw new Exception("La cuenta de origen y destino es la misma");
 			BigDecimal monto = new BigDecimal(data.get("monto").toString());
+			monto = monto.setScale(2, RoundingMode.DOWN);
 			Integer c = (Integer) request.getSession().getAttribute(
 					"SessionUser");
 			Cliente cliente = mngServ.findClienteById(c);

@@ -12,7 +12,7 @@ create table CLIENTE (
    APELLIDO             TEXT                 null,
    CI_RUC               VARCHAR(10)          null,
    TELEFONO             VARCHAR(20)          null,
-   CORREO               TEXT                 null,
+   CORREO               TEXT                 null unique,
    DIRECCION            TEXT                 null,
    ALIAS                TEXT                 null,
    PASS                 TEXT                 null,

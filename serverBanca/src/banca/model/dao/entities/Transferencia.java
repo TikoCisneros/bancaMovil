@@ -16,6 +16,7 @@ public class Transferencia implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	public static final double MONTO_MAX = 1000;
+	public static final double MONTOU_MAX = 1000;
 
 	@Id
 	@SequenceGenerator(name="TRANSFERENCIA_IDTRANSF_GENERATOR", sequenceName="SEC_TRANSFERENCIA", allocationSize=1)
