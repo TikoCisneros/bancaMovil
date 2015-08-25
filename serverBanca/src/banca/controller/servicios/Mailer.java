@@ -10,8 +10,14 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.ws.rs.core.MediaType;
 
-import com.sendgrid.*;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+
 
 public class Mailer {
 
@@ -19,9 +25,8 @@ public class Mailer {
 	static Session getMailSession;
 	static MimeMessage generateMailMessage;
 
-	static String guser = "openticec@gmail.com";
-	static String gpass = "opentic'sec";
-	static SendGrid sendgrid = new SendGrid("ianz","bankmobil90");
+	static String guser = "bancawebmailer@gmail.com";
+	static String gpass = "bancamovil7";
 
 	public static void generateAndSendEmail(String to, String subject,
 			String emailBody) throws AddressException, MessagingException {
@@ -47,6 +52,7 @@ public class Mailer {
 		generateMailMessage.setSubject(subject);
 		generateMailMessage.setContent(emailBody, "text/html");
 		Transport.send(generateMailMessage);
+		System.out.println("Correo enviado a : " +to);
 		// Get Session and Send mail"
 		// Transport transport = getMailSession.getTransport("smtp");
 
@@ -57,16 +63,19 @@ public class Mailer {
 		// generateMailMessage.getAllRecipients());
 		// transport.close();
 	}
-
-	public static void generateAndSendEmailSG(String to, String subject,
-			String emailBody) throws SendGridException {
-
-		SendGrid.Email email = new SendGrid.Email();
-		email.addTo(to);
-		email.setFrom("no-reply@bancaWM.com");
-		email.setSubject(subject);
-		email.setHtml(emailBody);
-		SendGrid.Response response = sendgrid.send(email);
-		System.out.print(response.getMessage());
+	public static void generateAndSendEmailM(String to, String subject,
+			String emailBody) {
+	    Client client = Client.create();
+	    client.addFilter(new HTTPBasicAuthFilter("api",
+	                "key-29ebc947023a09b9b1202fca3d6f55f6"));
+	    WebResource webResource =
+	        client.resource("https://api.mailgun.net/v3/sandboxf40f3fcb3fab47848df8cee4306f4d10.mailgun.org/messages");
+	    MultivaluedMapImpl formData = new MultivaluedMapImpl();
+	    formData.add("from", "postmaster@sandboxf40f3fcb3fab47848df8cee4306f4d10.mailgun.org");
+	    formData.add("to", to);
+	    formData.add("subject", subject);
+	    formData.add("text/html", emailBody);
+	    ClientResponse c = webResource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class, formData);
+	    System.out.println("Correo enviado a : " +to + " status " +c.getStatusInfo().getStatusCode());
 	}
 }

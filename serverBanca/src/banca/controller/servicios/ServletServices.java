@@ -58,6 +58,7 @@ public class ServletServices extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException 
 	{
 		// switch para cada caso de servicos
+		response.setContentType ("text/html;charset=utf-8");
 		String path = request.getServletPath();
 		if (path.equalsIgnoreCase("/sesion")) {
 			getSesion(request, response);
@@ -104,6 +105,7 @@ public class ServletServices extends HttpServlet {
 
 		 JSONObject o = getBodyData(request);
 		 System.out.println(o.toJSONString());
+		 response.setContentType ("text/html;charset=utf-8");
 		// switch para cada caso de servicos
 		String path = request.getServletPath();
 		if (path.equalsIgnoreCase("/login")) {
@@ -152,6 +154,7 @@ public class ServletServices extends HttpServlet {
 		} catch (Exception e) {
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
+			System.out.println(e.getMessage());
 		} finally {
 			response.getWriter().close();
 		}
@@ -542,6 +545,7 @@ public class ServletServices extends HttpServlet {
 					mngServ.jsonMensajes("OK",
 							"Se ha validado la transferencia."));
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
@@ -566,6 +570,7 @@ public class ServletServices extends HttpServlet {
 					mngServ.jsonMensajes("OK",
 							"Se ha validado su cuenta."));
 		}  catch (Exception e) {
+			e.printStackTrace();
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
@@ -597,6 +602,7 @@ public class ServletServices extends HttpServlet {
 						mngServ.jsonMensajes("OK", "Politicas aceltadas"));
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
@@ -623,6 +629,7 @@ public class ServletServices extends HttpServlet {
 					mngServ.jsonMensajes("OK",
 							"Se ha desactivado correctamente"));
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
@@ -650,7 +657,7 @@ public class ServletServices extends HttpServlet {
 					mngServ.jsonMensajes("OK",
 							"Cuenta creada correctamente, revise su correo electrónico."));
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
@@ -679,6 +686,7 @@ public class ServletServices extends HttpServlet {
 					mngServ.jsonMensajes("OK",
 							"Cambio de clave correcto"));
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
@@ -702,6 +710,7 @@ public class ServletServices extends HttpServlet {
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", "Se ha enviado su nuevo PIN al correo de su cuenta."));
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
@@ -725,6 +734,7 @@ public class ServletServices extends HttpServlet {
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", "Se ha reactivado correctamente su cuenta."));
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
@@ -748,6 +758,7 @@ public class ServletServices extends HttpServlet {
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", "Se ha desactivado correctamente su cuenta."));
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {

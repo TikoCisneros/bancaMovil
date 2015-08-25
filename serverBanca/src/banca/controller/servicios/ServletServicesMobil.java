@@ -42,6 +42,7 @@ public class ServletServicesMobil extends HttpServlet {
 		response.addHeader("Access-Control-Allow-Methods", "POST, GET");
 		response.addHeader("Access-Control-Allow-Headers",
 				"Origin, X-Requested-With, Content-Type, Accept");
+		response.setContentType ("text/html;charset=utf-8");
 	}
 
 	/**
@@ -154,6 +155,7 @@ public class ServletServicesMobil extends HttpServlet {
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", "Sesión finalizada correctamente."));
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
@@ -179,6 +181,7 @@ public class ServletServicesMobil extends HttpServlet {
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", mngServ.transfXcli(c)));
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.getWriter().write(
 					mngServ.jsonMensajes("ES", e.getMessage()));
 		} finally {
@@ -200,6 +203,7 @@ public class ServletServicesMobil extends HttpServlet {
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", mngServ.trancXcli(c)));
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {

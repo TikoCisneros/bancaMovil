@@ -41,13 +41,13 @@ bancaWebController.controller('loginCtrl', [ '$scope', '$location',
 				}, function(res) {
 					console.log('Respuesta' + res);
 					if (res.status == 'EA')
-						addMsg('danger', res.value);
+						addMsg('danger' , 'Error', res.value);
 					else {
 						console.log(res);
 						UserCM.set(res.value);
 						console.log(UserCM.get());
 						if (res.status == 'FL') {
-							addMsg('info', 'Favor cambiar la contrasena');
+							addMsg('info', 'Información', 'Favor cambiar la contrasena');
 						}
 						$location.path('/main');
 					}
@@ -147,10 +147,10 @@ bancaWebController.controller('passCtrl', [ '$scope', '$location',
 				}, function(res) {
 					console.log(res);
 					if (res.status == 'EA') {
-						addMsg('danger', res.value);// info success danger
+						addMsg('danger', 'Error', res.value);// info success danger
 						// warning
 					} else {
-						addMsg('success', res.value);
+						addMsg('success', 'Información', res.value);
 						$scope.pwd = null;
 						$scope.npd = null;
 						$scope.cpd = null;
@@ -170,10 +170,10 @@ bancaWebController.controller('regCtrl', [ '$scope', '$location', 'bancaWebSV',
 				}, function(res) {
 					console.log(res);
 					if (res.status == 'EA') {
-						addMsg('danger', res.value);// info success danger
+						addMsg('danger', 'Error', res.value);// info success danger
 						// warning
 					} else {
-						addMsg('success', res.value);
+						addMsg('success', 'Información', res.value);
 						$scope.ci = null;
 						$scope.correo = null;
 						$scope.alias = null;
@@ -197,10 +197,10 @@ bancaWebController.controller('mailCtrl', [ '$scope', '$location',
 				}, function(res) {
 					console.log(res);
 					if (res.status == 'EA') {
-						addMsg('danger', res.value);// info success danger
+						addMsg('danger', 'Error', res.value);// info success danger
 						// warning
 					} else {
-						addMsg('success', res.value);
+						addMsg('success', 'Infromación', res.value);
 						$scope.mail = null;
 					}
 				});
@@ -220,10 +220,10 @@ bancaWebController.controller('desmovCtrl', [ '$scope', '$location',
 				}, function(res) {
 					console.log(res);
 					if (res.status == 'EA') {
-						addMsg('danger', res.value);// info success danger
+						addMsg('danger', 'Error', res.value);// info success danger
 						// warning
 					} else {
-						addMsg('success', res.value);
+						addMsg('success', 'Información', res.value);
 						$scope.mtv = null;
 					}
 				});
@@ -241,7 +241,7 @@ bancaWebController.controller('mainCtrl', [ '$scope', '$location',
 		$scope.logout = function() {
 			bancaWebSV.logout(function(res) {
 				UserCM.set(null);
-				addMsg('success', res.value);
+				addMsg('success', 'Información', res.value);
 				$location.path('/login');
 			});
 		};
@@ -251,7 +251,7 @@ bancaWebController.controller('mainCtrl', [ '$scope', '$location',
 				if (res.status != 'OK'){
 					addMsg('danger', 'Error', res.value);
 				}else {
-					addMsg('success', res.value);
+					addMsg('success', 'Información', res.value);
 				}
 			});
 		};
@@ -271,7 +271,7 @@ bancaWebController.controller('mainCtrl', [ '$scope', '$location',
 				if (res.status != 'OK'){
 					addMsg('danger', 'Error', res.value);
 				}else {
-					addMsg('success', res.value);
+					addMsg('success', 'Información', res.value);
 				}
 			});
 		};
@@ -416,9 +416,9 @@ bancaWebController.controller('ctamovCtrl', [ '$scope', '$location', 'bancaWebSV
  				}, function(res) {
  					console.log(res);
  					if (res.status == 'EA') {
- 						addMsg('danger', res.value);
+ 						addMsg('danger', 'Error', res.value);
  					} else {
- 						addMsg('success', res.value);
+ 						addMsg('success', 'Información', res.value);
  						$scope.mp = null;
  						$scope.mpc = null;
  						$location.path('/main');
@@ -434,9 +434,9 @@ bancaWebController.controller('ctamovCtrl', [ '$scope', '$location', 'bancaWebSV
  				}, function(res) {
  					console.log(res);
  					if (res.status == 'EA') {
- 						addMsg('danger', res.value);
+ 						addMsg('danger', 'Error', res.value);
  					} else {
- 						addMsg('success', res.value);
+ 						addMsg('success', 'Información', res.value);
  						$scope.mpa = null;
  						$scope.mpn = null;
  						$scope.mpcn = null;

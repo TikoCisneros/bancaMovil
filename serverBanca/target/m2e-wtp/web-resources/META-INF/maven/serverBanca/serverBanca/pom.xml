@@ -95,6 +95,12 @@
 			<version>2.2.10</version>
 		</dependency>
 		<dependency>
+	<groupId>com.sun.jersey</groupId>
+	<artifactId>jersey-client</artifactId>
+	<version>1.19</version>
+</dependency>
+		
+		<dependency>
 			<groupId>org.primefaces.themes</groupId>
 			<artifactId>blitzer</artifactId>
 			<version>1.0.10</version>
