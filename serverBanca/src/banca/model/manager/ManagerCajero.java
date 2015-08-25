@@ -74,6 +74,8 @@ public class ManagerCajero {
 	 */
 	public void crearCliente(String nombre, String apellido, String ciRuc, String telefono, String correo, 
 			String direccion) throws Exception{
+		if(this.existeMAIL(correo))
+			throw new Exception("Tenemos registrado ese correo, use uno distinto.");		
 		Cliente cli = new Cliente();
 		cli.setNombre(nombre);cli.setApellido(apellido);cli.setCiRuc(ciRuc);
 		cli.setTelefono(telefono);cli.setCorreo(correo);cli.setDireccion(direccion);
@@ -90,9 +92,20 @@ public class ManagerCajero {
 	 * @throws Exception
 	 */
 	public void modificarDatosCliente(Integer idCli, String telefono, String correo, String direccion) throws Exception{
+		if(this.existeMAIL(correo))
+			throw new Exception("Tenemos registrado ese correo, use uno distinto.");
 		Cliente cli = findClienteByID(idCli);
 		cli.setTelefono(telefono);cli.setCorreo(correo);cli.setDireccion(direccion);
 		mngDAO.actualizar(cli);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean existeMAIL(String correo){
+		List<Cliente> lista = mngDAO.findWhere(Cliente.class, "o.correo='"+correo+"'", null);
+		if(lista==null || lista.isEmpty())
+			return false;
+		else
+			return true;
 	}
 	
 	/**

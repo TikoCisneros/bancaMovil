@@ -79,6 +79,15 @@ public class ManagerServicios {
 		return bandera;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public boolean existeMAIL(String correo){
+		List<Cliente> lista = mngDAO.findWhere(Cliente.class, "o.correo='"+correo+"'", null);
+		if(lista==null || lista.isEmpty())
+			return false;
+		else
+			return true;
+	}
+	
 	/**
 	 * Permite el registro de una cuenta web para el usuario
 	 * @param ci
@@ -265,6 +274,8 @@ public class ManagerServicios {
 	 */
 	public void cambiarMail(Integer id_cli, String mail) throws Exception {
 		try {
+			if(this.existeMAIL(mail))
+				throw new Exception("Tenemos registrado ese correo, use uno distinto.");
 			Cliente c = (Cliente) mngDAO.findById(Cliente.class, id_cli);
 			c.setCorreo(mail);
 			mngDAO.actualizar(c);
@@ -348,8 +359,6 @@ public class ManagerServicios {
 		System.out.print("Transaccion de monto " + monto.doubleValue());
 		if (monto.doubleValue() <= 0)
 			throw new Exception("El monto no puede ser menor o igual a 0");
-		if (monto.doubleValue() > Transferencia.MONTOU_MAX)
-			throw new Exception("El monto sobrepasa el limite.");
 		List<Transferencia> transferencias = (List<Transferencia>) mngDAO
 				.findAll(Transferencia.class, "o.fecha DESC");
 		Calendar cal = Calendar.getInstance();
