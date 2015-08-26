@@ -1,0 +1,71 @@
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700");
+
+body
+{
+	font-family: "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
+}
+.t-center
+{
+	text-align:center;
+}
+.f-right
+{
+	float:right;
+}
+.f-left
+{
+	float:left;
+}
+.container
+{
+	padding-top:50px;
+}
+.panel-title
+{
+	font-weight: bold;
+	font-size: 1.5em;
+}
+.panel-title > .lg
+{
+	font-size: 3em;
+}
+
+.container
+{
+	padding-top:80px;
+}
+.pointer
+{
+	cursor:pointer;
+}
+
+.inactive
+{
+	max-height: 0;
+	    overflow: hidden;
+    padding: 0px;
+}
+.active
+{
+	overflow-y: hidden;
+	padding: 15px;
+	max-height: 500px; /* approximate max height */
+	transition-property: all;
+	transition-duration: .5s;
+	transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+div.hide
+{
+	display: none;
+}
+
+div div.container
+{
+	margin-top: 5%;
+	padding-top: 0px;
+}
+.icon-bar
+{
+	background-color: #067195;
+}

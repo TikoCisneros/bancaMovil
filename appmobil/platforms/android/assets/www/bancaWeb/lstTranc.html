@@ -1,0 +1,58 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#/main">Banca Web</a>
+		</div>
+
+		<div class="collapse navbar-collapse"
+			id="bs-example-navbar-collapse-2">
+			<ul class="nav navbar-nav">
+				<li><a href="#/main"><i class="fa fa-user"></i>
+						{{user.correo}}</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#/logout"><i class="fa fa-power-off"></i>
+						Salir</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<div class="container">
+	<h3>Historial de transferencias</h3>
+	<hr>
+	<div class="btn-group" role="group">
+		<button type="button" class="btn btn-default"
+		ng-repeat="c in cuentas"
+		ng-click="setCuenta(c)">Nro. {{c.cuenta}}</button>
+	</div>
+	<div >
+		<h4>Cuenta Nro: {{c.cuenta}}</h4>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Fecha</th>
+					<th>Saldo anterior</th>
+					<th>Monto</th>
+					<th>Tipo</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="t in c.tranc.reverse()">
+					<th scope="row">{{$index}}</th>
+					<td>{{t.fecha | date: 'medium' }}</td>
+					<td>{{t.asaldo | currency: '$'}}</td>
+					<td>{{t.monto | currency: '$'}}</td>
+					<td>{{t.asaldo | currency: '$'}}</td>
+					<td>{{t.tipo}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

@@ -1,0 +1,29 @@
+<div class="container">
+	<div class="panel panel-primary pnlCenter" style="width: 560px;">
+	  <div class="panel-heading"><h4 class="t-center">Registro de Usuario</h4></div>
+	  <div class="panel-body">
+	    <form name="frmLog" ng-submit="mrgs()">
+			<div class="form-group">
+				<input class="form-control" name="ciu" type="text" ng-model="ci" placeholder="Ingresa tu cedula" required>
+				<p class="help-block text-danger"
+				ng-show="frmLog.$dirty && frmLog.ciu.$errors.required">Este campo es requerido.</p>
+			</div>
+			<div class="form-group">
+				<input class="form-control" name="ma" type="email" ng-model="correo" placeholder='Ingresa tu email, example@email.com' required>
+				<p class="help-block text-danger" ng-show="frmLog.$dirty && frmLog.ma.$errors.required ">
+				Este campo es requerido.</p>
+				<p class="help-block text-danger" ng-show="!frmLog.$pristine && frmLog.ma.$error.email ">
+				Ingrese un email valido.</p>
+			</div>
+			<div class="form-group">
+				<input class="form-control" name="alias" type="text" ng-model="alias" placeholder="Ingresa tu alias" required>
+				<p class="help-block text-danger"
+				ng-show="frmLog.$dirty && frmLog.alias.$errors.required">Este campo es requerido.</p>
+			</div>
+			<div class="form-group t-center">
+				<button class="btn btn-success" style="width: 150px;" type="submit" ng-disabled="frmLog.$invalid">Enviar</button>
+			</div>
+		</form>
+	  </div>
+	</div>
+</div>

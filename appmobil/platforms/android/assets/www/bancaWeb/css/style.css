@@ -1,0 +1,46 @@
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700");
+
+body
+{
+	font-family: "Source Sans Pro", Calibri, Candara, Arial, sans-serif;
+}
+.pnlCenter
+{
+	margin:auto;
+	top:100px;
+	position: relative;
+}
+.t-center
+{
+	text-align:center;
+}
+.f-right
+{
+	float:right;
+}
+.f-left
+{
+	float:left;
+}
+.container
+{
+	padding-top:50px;
+}
+.panel-title
+{
+	font-weight: bold;
+	font-size: 1.5em;
+}
+.panel-title > .lg
+{
+	font-size: 3em;
+}
+
+.container
+{
+	padding-top:80px;
+}
+.pointer
+{
+	cursor:pointer;
+}

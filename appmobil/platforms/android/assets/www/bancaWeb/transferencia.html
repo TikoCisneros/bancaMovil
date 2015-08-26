@@ -1,0 +1,96 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#/main">Banca Web</a>
+		</div>
+
+		<div class="collapse navbar-collapse"
+			id="bs-example-navbar-collapse-2">
+			<ul class="nav navbar-nav">
+				<li><a href="#/main"><i class="fa fa-user"></i>
+						{{user.correo}}</a></a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#/logout"><i class="fa fa-power-off"></i>
+						Salir</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<div class="container">
+	<h3>Transferencia</h3>
+	<hr>
+	<form name="frmTransferencia" novalidate ng-submit="trans();">
+		<fieldset>
+			<legend>Nueva transferencia a {{destino}}</legend>
+			<div class="form-group row">
+				<label for="origen" class="col-lg-4 control-label">Mi
+					cuenta: </label>
+				<div class="col-lg-10 col-sm-12">
+					<select class="form-control" name="origen" ng-model="origen"
+						placeholder="Escoje una cuenta" required>
+						<option disabled selected="true">Escoje una cuenta</option>
+						<option value="{{c.nro}}" ng-repeat="c in cuentas">{{c.nro
+							+' - '+c.tipo}}</option>
+					</select>
+					<p class="help-block text-danger"
+						ng-show="frmTransferencia.$dirty && frmTransferencia.origen.$errors.required">
+						Este campo es requerido.</p>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="destino" class="col-lg-4 control-label">Nro
+					cuenta destino: </label>
+				<div class="col-lg-10 col-sm-12">
+					<input type="text" class="form-control" name="destino"
+						ng-keyup="validarDest()" ng-model="destino"
+						placeholder="Ingresa la cuenta destino" required
+						ng-pattern="/^\d+$/">
+					<div>
+						<p class="help-block text-danger"
+							ng-show="frmTransferencia.$dirty && frmTransferencia.destino.$errors.required">
+							Este campo es requerido.</p>
+						<p class="help-block text-danger"
+							ng-show="frmTransferencia.$dirty && frmTransferencia.destino.$errors.pattern">
+							Ingresa solo números.</p>
+						<p class="help-block text-danger" ng-show="!existeDestino"
+							ng-show="frmTransferencia.$dirty && frmTransferencia.origen.$errors.required">
+							El numero de cuenta es invalido o no existe.</p>
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="destino" class="col-lg-3 hidden-xs control-label"
+					style="font-size: 60px;">Monto: </label>
+				<div class="col-lg-6 col-xs-12">
+					<div class="input-group">
+						<input type="number" class="form-control" name="monto"
+							style="font-size: 60px; height: 90px;" ng-model="monto"
+							placeholder="####,##" required
+							ng-pattern="/^\s*-?\d+(\.\d{1,2})?\s*$/">
+						<span class="input-group-addon">USD($)</span>
+						<p class="help-block text-danger"
+							ng-show="frmTransferencia.$dirty && frmTransferencia.monto.$errors.required">
+							Este campo es requerido.</p>
+						<p class="help-block text-danger"
+							ng-show="frmTransferencia.$dirty && frmTransferencia.monto.$errors.pattern">
+							El formato es invalido. Formato valido ####,##</p>
+					</div>
+
+				</div>
+			</div>
+			<div class="form-group row f-right" style="font-size: 2em;">
+				<button id="btntra" class="btn btn-success btn-lg" style="width: 150px;"
+					type="submit" ng-disabled="frmTransferencia.$invalid">
+					<i class="fa fa-send"></i> Transferir
+				</button>
+			</div>
+		</fieldset>
+	</form>
+</div>

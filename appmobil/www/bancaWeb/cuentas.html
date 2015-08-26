@@ -1,0 +1,50 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#/main">Banca Web</a>
+		</div>
+
+		<div class="collapse navbar-collapse"
+			id="bs-example-navbar-collapse-2">
+			<ul class="nav navbar-nav">
+				<li><a href="#/main"><i class="fa fa-user"></i> {{user.correo}}</a></a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#/logout"><i class="fa fa-power-off"></i> Salir</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+<div class="container">
+	<h3>Cuentas</h3>
+	<hr>
+	<h3 ng-show="!cuentas || cuentas.length == 0">No hay ninguna cuenta.</h3>
+	<div class="list-group">
+		<a class="list-group-item" ng-repeat="c in cuentas">
+			<h4 class="list-group-item-heading">Cuenta Nro. {{c.nro}}<br>
+			<small>{{c.tipo}}</small>
+			</h4>
+			<h4 class="list-group-item-text">
+				Monto:    <button class="btn btn-xs btn-default vMonto" 
+				ng-click="getMonto($index)" type="button"
+					onclick="showMnt(this)">   Ver Monto </button> 
+					<span class="monto">{{monto | currency: '$'}}</span>
+			</h4>
+		</a>
+	</div>
+</div>
+<script>
+	function showMnt(elm)
+	{
+		$('.monto').fadeOut(0);
+		$('.vMonto').fadeIn(0);
+		$(elm).next('.monto').fadeIn('fast');
+		$(elm).fadeOut(0);	
+	}
+</script>
