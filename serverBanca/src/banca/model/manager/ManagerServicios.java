@@ -859,6 +859,7 @@ public class ManagerServicios {
 	}
 	
 	public long crearSesionM(Integer idCli) throws Exception{
+		cerrarSesionM(idCli);//CIERRA SESIONES
 		Calendar c = Calendar.getInstance();
 		c.setTime(new Date()); // Now use today date.
 		c.add(Calendar.DATE, 15); // Adding 15 days
