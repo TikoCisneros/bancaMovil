@@ -902,8 +902,8 @@ public class ManagerServicios {
 		}
 	}
 	@SuppressWarnings("unchecked")
-	public boolean activaSesionM(Integer idCli){
-		List<Cmsesion> lstSesiones = mngDAO.findWhere(Cmsesion.class, "o.idCli="+idCli, null);
+	public boolean activaSesionM(Integer idCli, String pin){
+		List<Cmsesion> lstSesiones = mngDAO.findWhere(Cmsesion.class, "o.idCli="+idCli+" AND o.claveSesion='"+pin+"'", null);
 		if(lstSesiones.size()>0){
 			for (Cmsesion s : lstSesiones) {
 				if(s.getFechaExpiracion().compareTo(new Date())>=0)
