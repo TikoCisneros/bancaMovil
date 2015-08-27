@@ -28,6 +28,8 @@ import banca.model.dao.entities.Transferencia;
 
 public class ManagerServicios {
 	private ManagerDAO mngDAO;
+	
+	private static long MAXIMA_FECHA_VALIDAR_TRANS = (24 * 60 * 60 * 1000); 
 
 	public ManagerServicios() {
 		mngDAO = new ManagerDAO();
@@ -423,7 +425,7 @@ public class ManagerServicios {
 		Transferencia t = (Transferencia)mngDAO.findById(Transferencia.class,idTra);
 		long fecha = t.getFecha().getTime();
 		long maxFecha = new Date().getTime();
-		maxFecha += (24 * 60 * 60 * 1000);
+		maxFecha += MAXIMA_FECHA_VALIDAR_TRANS; // un dia maximo para validar
 		if(t.getEstadotran().getIdEst().intValue() !=  Estadotrans.EN_PROCESO)
 		{
 			System.out.println("Estado finaizado");
@@ -856,7 +858,7 @@ public class ManagerServicios {
 		}
 	}
 	
-	public void crearSesionM(Integer idCli) throws Exception{
+	public long crearSesionM(Integer idCli) throws Exception{
 		Calendar c = Calendar.getInstance();
 		c.setTime(new Date()); // Now use today date.
 		c.add(Calendar.DATE, 15); // Adding 15 days
@@ -864,6 +866,7 @@ public class ManagerServicios {
 		Cmsesion s = new Cmsesion();
 		s.setIdCli(idCli);s.setClaveSesion(cli.getCmPin());s.setFechaExpiracion(c.getTime());
 		mngDAO.insertar(s);
+		return s.getFechaExpiracion().getTime();
 	}
 	
 	public void insertarIPCM(Integer id_cli, String ip) throws Exception {
@@ -884,7 +887,20 @@ public class ManagerServicios {
 			mngDAO.eliminar(Cmsesion.class, ss.getIdSesion());
 		}
 	}
-	
+	@SuppressWarnings("unchecked")
+	public long checkSesionM(Integer idCli, String ping){
+		List<Cmsesion> lstSesiones = mngDAO.findWhere(Cmsesion.class, "o.idCli="+idCli, null);
+		if(lstSesiones.size()>0){
+			for (Cmsesion s : lstSesiones) {
+				if(s.getFechaExpiracion().compareTo(new Date())>=0 &&
+						s.getClaveSesion().equals(ping))
+					return s.getFechaExpiracion().getTime();
+			}
+			return 0;
+		}else{
+			return 0;
+		}
+	}
 	@SuppressWarnings("unchecked")
 	public boolean activaSesionM(Integer idCli){
 		List<Cmsesion> lstSesiones = mngDAO.findWhere(Cmsesion.class, "o.idCli="+idCli, null);

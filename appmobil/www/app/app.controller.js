@@ -6,6 +6,8 @@ function addMsg(tipo, titulo, mensaje) {
 		position : 'top-left'
 	});
 }
+var tiempoInactividad = 1 * 60 * 60 * 1000;
+var tiempoInactividadP = 30 * 1000;
 var bancaWebController = angular.module('bancaWebController', []);
 var sesion;
 function setS(t)
@@ -13,24 +15,6 @@ function setS(t)
 	sesion = t;
 
 }
-function verUser(UserCM, bancaWebSV, location, callback) {
-	var user = UserCM.get();
-	if (user && user.ci)
-		return user;
-	else {
-		bancaWebSV.sesion(function(res) {
-			if (res.status != 'OK') {
-				addMsg('danger', 'Error', res.value);
-				location.path('/login');
-			}
-
-			UserCM.set(res.value);
-			callback(res.value);
-		});
-
-	}
-}
-
 bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 		'bancaWebSV', 
 		function($scope, $location, bancaWebSV) {
@@ -90,7 +74,7 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 			function validarSesion(data)
 			{
 				data = data.split('|');
-				if(!data || data.length < 3)
+				if(!data || data.length < 4)
 				{
 					nfail(1);
 					$('#page').val('login');
@@ -99,7 +83,17 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 				{
 					//$scope.page = 'main';
 					$location.search('page', 'main');
-					hayUser(data);
+					$scope.user = 
+					{
+						id: data[0],
+						ping: data[1],
+						n: data[2],
+						fc: data[3]
+					};
+					console.log(data);
+					console.log(new Date().getTime());
+					if(new Date().getTime() > data[3])
+						$('#mPIN').modal({backdrop: 'static', keyboard: false}); 
 					$('#page').val('main');
 				}
 				$('#page').trigger('input');
@@ -126,328 +120,234 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 						$scope.page = 'main';
 						$location.search('page', 'main');
 						$scope.user = res;
-						$scope.txt = res.id +"|"+res.ping +'|'+new Date().getTime();
+						var nf = new Date().getTime();
+						nf+= (10 * 1000);//(15 * 24 * 60 *60 *1000);
+						$scope.user.n = res.apellido +" "+res.nombre;
+						$scope.user.fc = nf;
+						$scope.txt = res.id +"|"+res.ping +'|'+ $scope.user.n 
+						 +'|' + nf;
 						sesion = $scope.txt;
 						window.requestFileSystem(typefs	
 							, 0,
 							$scope.readSesion,fail);
-						hayUser($scope.txt);
 						if (res.status == 'FL') {
 							addMsg('info', 'Información', 'Favor cambiar la contrasena');
 						}
 					}
 				});
 			};
-
-		//verificar session
-
-		//manejador si hay usuario
-		function hayUser(user)
-		{
-			if(!user)
-				return addMsg('warning', 'Error', 'No hay usuarios registrados.');
-			console.log(user);
-		}
-	}]);
-bancaWebController.controller('loginCtrl', [ '$scope', '$location',
-		'bancaWebSV', 'UserCM',
-		function($scope, $location, bancaWebSV, UserCM) {
-
-			console.log('Cotrolador cargado');
-
-			$scope.mlogin = function() {
-				console.log('Haciendo login');
-				bancaWebSV.login({
-					"usr" : $scope.usr,
-					"pwd" : $scope.pwd
-				}, function(res) {
-					console.log('Respuesta' + res);
-					if (res.status == 'EA')
-						addMsg('danger' , 'Error', res.value);
-					else {
-						console.log(res);
-						UserCM.set(res.value);
-						console.log(UserCM.get());
-						if (res.status == 'FL') {
-							addMsg('info', 'Información', 'Favor cambiar la contrasena');
-						}
-						$location.path('/main');
-					}
-				});
-			};
-
-		} ]);
-
-bancaWebController.controller('validateTCtrl', [ '$scope', '$location',
-		'$routeParams', 'bancaWebSV', 'UserCM',
-		function($scope, $location, $routeParams, bancaWebSV, UserCM) {
-			$scope.user = verUser(UserCM, bancaWebSV, $location, function(res) {
-				$scope.user = res;
-			});
-			bancaWebSV.vtransferencia({
-				t : $routeParams.t,
-				tk : $routeParams.tk
-			}, function(res) {
-				$routeParams = {};
-				$location.search('t', null);
-				$location.search('tk', null);
-				if (res.status != 'OK') {
-					addMsg('danger', 'Error', res.value);
-					$location.path('main');
-				} else {
-					addMsg('info', 'Información', res.value);
-					$location.path('verTransferencias');
-				}
-
-			});
-		} ]);
-
-bancaWebController.controller('validateRCtrl', [ '$scope', '$location',
-	'$routeParams', 'bancaWebSV',
-	function($scope, $location, $routeParams, bancaWebSV) {
-		bancaWebSV.vregis({
-			id : $routeParams.id,
-			tk : $routeParams.tk
-		}, function(res) {
-			$routeParams = {};
-			$location.search('id', null);
-			$location.search('tk', null);
-			if (res.status != 'OK') {
-				addMsg('danger', 'Error', res.value);
-				$location.path('main');
-			} else {
-				addMsg('info', 'Información', res.value);
-				$location.path('login');
+			$scope.toPage = function(p)
+			{
+				console.log('Cambiando a '+p);
+				$scope.page = p;
 			}
-	
-		});
-	} ]);
-
-bancaWebController.controller('validateMCtrl', [ '$scope', '$location',
- 	'$routeParams', 'bancaWebSV',
- 	function($scope, $location, $routeParams, bancaWebSV) {
- 		bancaWebSV.vsmail({
- 			id : $routeParams.id,
- 			ml : $routeParams.ml
- 		}, function(res) {
- 			$routeParams = {};
- 			$location.search('id', null);
- 			$location.search('ml', null);
- 			if (res.status != 'OK') {
- 				addMsg('danger', 'Error', res.value);
- 			} else {
- 				addMsg('info', 'Información', res.value);
- 			}
- 			$location.path('main');
- 		});
- 	} ]);
-
-bancaWebController.controller('logOutCtrl', [ '$location', 'bancaWebSV',
-		'UserCM', function($location, bancaWebSV, UserCM) {
-			UserCM.set(null);
-			bancaWebSV.logout(function(res) {
-				if (res.status != 'OK')
-					addMsg('danger', 'Error', res.value);
-				else
-					$location.path('/login');
-			});
-		} ]);
-
-bancaWebController.controller('passCtrl', [ '$scope', '$location',
-		'bancaWebSV', 'UserCM',
-		function($scope, $location, bancaWebSV, UserCM) {
-			// verificar usuario sesion
-			$scope.user = verUser(UserCM, bancaWebSV, $location, function(res) {
-				$scope.user = res;
-			});
-			$scope.mspass = function() {
-				console.log('entra');
-				bancaWebSV.spass({
-					"pwd" : $scope.pwd,
-					"npd" : $scope.npd,
-					"cpd" : $scope.cpd
-				}, function(res) {
-					console.log(res);
-					if (res.status == 'EA') {
-						addMsg('danger', 'Error', res.value);// info success danger
-						// warning
-					} else {
-						addMsg('success', 'Información', res.value);
-						$scope.pwd = null;
-						$scope.npd = null;
-						$scope.cpd = null;
+			$scope.mlogout = function() 
+			{
+				console.log("Cerrando cuenta");
+				var rmS = function ()
+				{
+					window.requestFileSystem(typefs , 0, function(fs)
+					{
+						console.log("File System");
+						fs.root.getFile("banca.sesion", {create: true},
+							function(fe)
+							{
+								fe.remove(function(){console.log("Sesion eliminada.");},
+									function(){console.log("No se pudo eliminar el archivo");}
+									);
+							});
 					}
-				});
-			};
-		} ]);
-
-bancaWebController.controller('regCtrl', [ '$scope', '$location', 'bancaWebSV',
-		function($scope, $location, bancaWebSV, UserCM) {
-			$scope.mrgs = function() {
-				console.log('entra reg');
-				bancaWebSV.regis({
-					"ced" : $scope.ci,
-					"mal" : $scope.correo,
-					"als" : $scope.alias
-				}, function(res) {
-					console.log(res);
-					if (res.status == 'EA') {
-						addMsg('danger', 'Error', res.value);// info success danger
-						// warning
-					} else {
-						addMsg('success', 'Información', res.value);
-						$scope.ci = null;
-						$scope.correo = null;
-						$scope.alias = null;
-						$location.path('/login');
-					}
-				});
-			};
-		} ]);
-
-bancaWebController.controller('mailCtrl', [ '$scope', '$location',
-		'bancaWebSV', 'UserCM',
-		function($scope, $location, bancaWebSV, UserCM) {
-			// verificar usuario sesion
-			$scope.user = verUser(UserCM, bancaWebSV, $location, function(res) {
-				$scope.user = res;
-			});
-			$scope.msmail = function() {
-				console.log('entra');
-				bancaWebSV.smail({
-					"mail" : $scope.mail
-				}, function(res) {
-					console.log(res);
-					if (res.status == 'EA') {
-						addMsg('danger', 'Error', res.value);// info success danger
-						// warning
-					} else {
-						addMsg('success', 'Infromación', res.value);
-						$scope.mail = null;
-					}
-				});
-			};
-		} ]);
-
-bancaWebController.controller('desmovCtrl', [ '$scope', '$location',
-		'bancaWebSV', 'UserCM',
-		function($scope, $location, bancaWebSV, UserCM) {
-			$scope.user = verUser(UserCM, bancaWebSV, $location, function(res) {
-				$scope.user = res;
-			});
-
-			$scope.mdesmov = function() {
-				bancaWebSV.desmov({
-					"mt" : $scope.mtv
-				}, function(res) {
-					console.log(res);
-					if (res.status == 'EA') {
-						addMsg('danger', 'Error', res.value);// info success danger
-						// warning
-					} else {
-						addMsg('success', 'Información', res.value);
-						$scope.mtv = null;
-					}
-				});
-			};
-		} ]);
-
-bancaWebController.controller('mainCtrl', [ '$scope', '$location',
-                                    		'bancaWebSV', 'UserCM',
-	function($scope, $location, bancaWebSV, UserCM) {
-
-		$scope.user = verUser(UserCM, bancaWebSV, $location, function(res) {
-			$scope.user = res;
-		});
-
-		$scope.logout = function() {
-			bancaWebSV.logout(function(res) {
-				UserCM.set(null);
-				addMsg('success', 'Información', res.value);
-				$location.path('/login');
-			});
-		};
-		//Reenvio PIN
-		$scope.newping = function(){
-			bancaWebSV.rpincm(function(res) {
-				if (res.status != 'OK'){
-					addMsg('danger', 'Error', res.value);
-				}else {
-					addMsg('success', 'Información', res.value);
+					, fail);
+				};
+				if(!$scope.user || !$scope.user.id)
+				{
+					rmS();
+					$('#page').val('login');
+					$('#page').trigger('input');
+					return;
 				}
-			});
-		};
-		//Activar CM
-		$scope.actcm = function(){
-			bancaWebSV.actamov(function(res) {
-				if (res.status != 'OK'){
-					addMsg('danger', 'Error', res.value);
-				}else {
-					addMsg('success', res.value);
+				$scope.page = 'load';
+				$('#status').html('Cerrando cuenta ...');
+				bancaWebSV.logout({
+					"idc" : $scope.user.id,
+				},function(res)
+				{
+					if(res.status != 'OK')
+					{
+						$scope.page = 'login';
+						return addMsg('danger', 'Error', res.value);
+					}
+					rmS();
+					$('#page').val('login');
+					$('#page').trigger('input');
+					$scope.user = "";
+					return;
+				});
+			};
+			$scope.setPIN = function() 
+			{
+				console.log("Cambiando de PIN");
+				if(!$scope.PIN)
+					return addMsg('danger' , 'Error', 'Escribe el PIN');
+				$('#mPIN').modal('toggle');
+				if(!$scope.user || !$scope.user.id)
+				{
+					$scope.mlogout();
+					return addMsg('danger' , 'Error', 'No hay una sesion');
 				}
-			});
-		};
-		//Desactivar CM
-		$scope.dsccm = function(){
-			bancaWebSV.dctamov(function(res) {
-				if (res.status != 'OK'){
-					addMsg('danger', 'Error', res.value);
-				}else {
-					addMsg('success', 'Información', res.value);
-				}
-			});
-		};
-	} ]);
-bancaWebController.controller('cuentasCtrl', [ '$scope', '$location',
-		'$routeParams', 'bancaWebSV', 'UserCM',
-		function($scope, $location, $routeParams, bancaWebSV, UserCM) {
+				bancaWebSV.sesion({
+					"idc" : $scope.user.id,
+					"p": $scope.PIN
+				}, function(res)
+				{
+					console.log(res);
+					if(res.status != 'OK')
+					{
+						$scope.mlogout();
+						return addMsg('danger', 'Error', 'PIN invalido.');
+					}
+					$scope.user.ping = $scope.PIN;
+					$scope.user.fc = new Date().getTime() + tiempoInactividadP;
+					$scope.txt = $scope.user.id +"|"+$scope.user.ping +'|'+ $scope.user.n 
+							 +'|' + $scope.user.fc;
+					sesion = $scope.txt;
+					window.requestFileSystem(typefs	
+						, 0,
+						$scope.readSesion,fail);
+				});
 
-			$scope.user = verUser(UserCM, bancaWebSV, $location, function(res) {
-				$scope.user = res;
-			});
-			$scope.tipo = $routeParams.tipo;
-			$scope.cuentas = [];
-			bancaWebSV.getCuentas(function(res) {
-				if (res.status != 'OK')
-					return addMsg('danger', 'Error', res.value);
-				else {
+			};
+			$scope.setCuenta = function(v)
+			{
+				$scope.c = v;
+			}
+			$scope.getTrans = function() 
+			{
+				if(!$scope.user || !$scope.user.id)
+				{
+					$scope.mlogout();
+					return addMsg('danger' , 'Error', 'No hay una sesion');
+				}
+				$scope.page = 'load';
+				$('#status').html('Obteniendo datos ...');
+				bancaWebSV.getTrans({
+					"idc" : $scope.user.id,
+					"p": $scope.user.ping
+				},function(res)
+				{
+					if(res.status != 'OK')
+						{
+						$scope.page = 'main';
+						return addMsg('danger', 'Error', res.value);
+					}
+					$scope.page = "Transferencias";
 					console.log(res.value);
-					$.each(res.value, function(i, v) {
-						if (v.tipo == $scope.tipo || $scope.tipo == 'todas')
-							$scope.cuentas.push(v);
-					});
-				}
-			});
-
-			$scope.getMonto = function(index) {
-				$scope.monto = $scope.cuentas[index].monto;
+					$scope.cuentas = res.value;
+				});
 			};
+			$scope.getTranc = function() 
+			{
+				
+				if(!$scope.user || !$scope.user.id)
+				{
+					$scope.mlogout();
+					return addMsg('danger' , 'Error', 'No hay una sesion');
+				}
+				$scope.page = 'load';
+				$('#status').html('Obteniendo datos ...');
+				bancaWebSV.getTranc({
+					"idc" : $scope.user.id,
+					"p": $scope.user.ping
+				},function(res)
+				{
+					if(res.status != 'OK')
+					{
+						$scope.page = 'main';
+						return addMsg('danger', 'Error', res.value);
+					}
+					$scope.page = "Transacciones";
+					console.log(res.value);
+					$scope.cuentas = res.value;
+				});
+			};
+			$scope.getMonto = function(i)
+			{
+				console.log("mostrando monto");
+				$scope.monto = $scope.cuentas[i].monto;
+			};
+			$scope.getCuentas = function(tipo) 
+			{
+				if(!$scope.user || !$scope.user.id)
+				{
+					$scope.mlogout();
+					return addMsg('danger' , 'Error', 'No hay una sesion');
+				}
+				$scope.page = 'load';
+				$('#status').html('Obteniendo datos ...');
+				bancaWebSV.getCuentas({
+					"idc" : $scope.user.id,
+					"p": $scope.user.ping
+				},function(res)
+				{
+					console.log(res);
+					if(res.status != 'OK')
+						{
+						$scope.page = 'main';
+						return addMsg('danger', 'Error', res.value);
+					}
+					$scope.page = "Cuentas";
+					console.log(res.value);
+					if(tipo)
+					{
+						$scope.cuentas = [];
+						for (var i = 0; i < res.value.length; i++) {
+							if(res.value[i].tipo == tipo)
+								$scope.cuentas.push(res.value[i]);
+						};
+					}else
+						$scope.cuentas = res.value;
+				});
+			};
+			$scope.inittrans = function()
+			{
+				if(!$scope.user || !$scope.user.id)
+				{
+					$scope.mlogout();
+					return addMsg('danger' , 'Error', 'No hay una sesion');
+				}
+				if(!$scope.user || !$scope.user.id)
+				{
+					$scope.mlogout();
+					return addMsg('danger' , 'Error', 'No hay una sesion');
+				}
+				$scope.page = 'load';
+				$('#status').html('Obteniendo datos ...');
+				bancaWebSV.getCuentas({
+					"idc" : $scope.user.id,
+					"p": $scope.user.ping
+				},function(res)
+				{
+					console.log(res);
+					if(res.status != 'OK')
+						{
+						$scope.page = 'main';
+						return addMsg('danger', 'Error', res.value);
+					}
+					$scope.page = "Transferir";
+					console.log(res.value);
+					$scope.cuentas = res.value;
+				});
 
-		} ]);
-
-bancaWebController.controller('transCtrl', [ '$scope', '$location',
-		'bancaWebSV', 'UserCM',
-		function($scope, $location, bancaWebSV, UserCM) {
-
-			$scope.user = verUser(UserCM, bancaWebSV, $location, function(res) {
-				$scope.user = res;
-			});
-			$scope.cuentas;
+			}
 			$scope.destino;
 			$scope.existeDestino = true;
-			bancaWebSV.getCuentas(function(res) {
-				if (res.status != 'OK')
-					return addMsg('danger', 'Error', res.value);
-				else {
-					$scope.cuentas = res.value;
-				}
-			});
-
 			$scope.validarDest = function() {
+				console.log("Validando destino");
 				if ($scope.destino && $scope.destino.length > 5) {
 					bancaWebSV.vc({
 						nro : $scope.destino
 					}, function(res) {
+						console.log("destino" +res.status);
 						if (res.status != 'OK')
 							$scope.existeDestino = false;
 						else
@@ -460,110 +360,26 @@ bancaWebController.controller('transCtrl', [ '$scope', '$location',
 				$('#btntra').attr('disabled', 'true');
 				if ($scope.existeDestino) {
 					bancaWebSV.transferencia({
+						"idc" : $scope.user.id,
+						"p": $scope.user.ping,
 						nroD : $scope.destino,
 						nroO : $scope.origen,
 						monto : $scope.monto
 					}, function(res) {
 						$('#btntra').html('<i class="fa fa-send"></i> Transferir');
 						$('#btntra').removeAttr('disabled');
-						console.log(res);
+						console.log(JSON.stringify(res));
+
 						if (res.status != 'OK')
-							addMsg('danger', 'Error', res.value);
+							addMsg('danger', 'Error', res.value || 'Cuenta destino invalida');
 						else {
 							addMsg('info', 'Información', res.value);
-
+							$('#page').val('main');
+							$('#page').trigger('input');
 						}
 
 					});
 				}
 			};
-		} ]);
 
-bancaWebController.controller('lstTransCtrl', [ '$scope', '$location',
-		'bancaWebSV', 'UserCM',
-		function($scope, $location, bancaWebSV, UserCM) {
-
-			$scope.user = verUser(UserCM, bancaWebSV, $location, function(res) {
-				$scope.user = res;
-			});
-			$scope.cuentas;
-			$scope.order;
-			$scope.setCuenta = function(c)
-			{
-				$scope.c = c;
-			};
-			bancaWebSV.getTrans(function(res) {
-				console.log(res);
-				if (res.status != 'OK')
-					return addMsg('danger', 'Error', res.value);
-				else {
-					$scope.cuentas = res.value;
-				}
-			});
-		} ]);
-
-bancaWebController.controller('lstTrancCtrl', [ '$scope', '$location',
-		'bancaWebSV', 'UserCM',
-		function($scope, $location, bancaWebSV, UserCM) {
-
-			$scope.user = verUser(UserCM, bancaWebSV, $location, function(res) {
-				$scope.user = res;
-			});
-			$scope.cuentas;
-			$scope.order;
-			$scope.setCuenta = function(c)
-			{
-				$scope.c = c;
-			};
-			bancaWebSV.getTranc(function(res) {
-				console.log(res);
-				if (res.status != 'OK')
-					return addMsg('danger', 'Error', res.value);
-				else {
-					$scope.cuentas = res.value;
-				}
-			});
-		} ]);
-
-bancaWebController.controller('ctamovCtrl', [ '$scope', '$location', 'bancaWebSV', 'UserCM',
- 		function($scope, $location, bancaWebSV, UserCM) {
-		$scope.user = verUser(UserCM, bancaWebSV, $location, function(res) {
-			$scope.user = res;
-		});
-		//NUEVA CUENTA
- 			$scope.mncm = function() {
- 				bancaWebSV.nctamov({
- 					"mpwd" : $scope.mp,
- 					"mpwdc" : $scope.mpc,
- 				}, function(res) {
- 					console.log(res);
- 					if (res.status == 'EA') {
- 						addMsg('danger', 'Error', res.value);
- 					} else {
- 						addMsg('success', 'Información', res.value);
- 						$scope.mp = null;
- 						$scope.mpc = null;
- 						$location.path('/main');
- 					}
- 				});
- 			};
- 			//CAMBIO PASS
- 			$scope.mcpcm = function() {
- 				bancaWebSV.pctamov({
- 					"mpwd" : $scope.mpa,
- 					"npwd" : $scope.mpn,
- 					"cpwd" : $scope.mpcn,
- 				}, function(res) {
- 					console.log(res);
- 					if (res.status == 'EA') {
- 						addMsg('danger', 'Error', res.value);
- 					} else {
- 						addMsg('success', 'Información', res.value);
- 						$scope.mpa = null;
- 						$scope.mpn = null;
- 						$scope.mpcn = null;
- 						$location.path('/main');
- 					}
- 				});
- 			};
- 		} ]);
+	}]);

@@ -23,10 +23,10 @@ import banca.model.manager.ManagerServicios;
  * Servlet implementacion de servicios para Banca Movil
  */
 @WebServlet(name = "ServletServicesMobil", urlPatterns = { "/loginCM", "/logoutCM",
-		"/historialTCM", "/historialTcCM", "/transferenciaCM"})
+		"/historialTCM", "/historialTcCM", "/transferenciaCM", "/sesionCM", "/cuentasCM"})
 public class ServletServicesMobil extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	public static final String HOST = "http://localhost:8080/BancaWM";
+	public static final String HOST = "http://bancawm-utnedu.rhcloud.com/BancaWM";
 	private ManagerServicios mngServ;
 
 	/**
@@ -100,6 +100,11 @@ public class ServletServicesMobil extends HttpServlet {
 		} else if (path.equalsIgnoreCase("/historialTcCM")) {
 			verHistorialT(request, response, o);
 		}
+		else if (path.equalsIgnoreCase("/sesionCM")) {
+			sesion(request, response, o);
+		}else if (path.equalsIgnoreCase("/cuentasCM")) {// get
+			verCuentas(request, response, o);
+		}
 	}
 
 	/******************************************* METODOS *******************************************/
@@ -162,6 +167,32 @@ public class ServletServicesMobil extends HttpServlet {
 			response.getWriter().close();
 		}
 	}
+	/**
+	 * Permite ver la valide de lasesion
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	private void sesion(HttpServletRequest request, HttpServletResponse response, JSONObject data)
+			throws IOException, ServletException {
+		try {
+			Integer c = Integer.parseInt(data.get("idc").toString());
+			String p = data.get("p").toString();
+			long s = mngServ.checkSesionM(c, p);
+			if(s == 0)
+				throw new Exception("No hay sesiones validas.");
+			response.getWriter().write(
+					mngServ.jsonMensajes("OK", s));
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.getWriter().write(
+					mngServ.jsonMensajes("EA", e.getMessage()));
+		} finally {
+			response.getWriter().close();
+		}
+	}
 
 	/**
 	 * Devuelve el historial de Transferencias de un cliente
@@ -174,10 +205,11 @@ public class ServletServicesMobil extends HttpServlet {
 	private void verHistorial(HttpServletRequest request,
 			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
 		try {
-			
-			
-			
+			String p = data.get("p").toString();
 			Integer c = Integer.parseInt(data.get("idc").toString());
+			long s = mngServ.checkSesionM(c, p);
+			if(s==0)
+				throw new Exception("No hay una sesion activa");
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", mngServ.transfXcli(c)));
 		} catch (Exception e) {
@@ -199,11 +231,42 @@ public class ServletServicesMobil extends HttpServlet {
 	private void verHistorialT(HttpServletRequest request,
 			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
 		try {
+			String p = data.get("p").toString();
 			Integer c = Integer.parseInt(data.get("idc").toString());
+			long s = mngServ.checkSesionM(c, p);
+			if(s==0)
+				throw new Exception("No hay una sesion activa");
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", mngServ.trancXcli(c)));
 		} catch (Exception e) {
 			e.printStackTrace();
+			response.getWriter().write(
+					mngServ.jsonMensajes("EA", e.getMessage()));
+		} finally {
+			response.getWriter().close();
+		}
+	}
+	/**
+	 * Devuelve las cuentas del cliente su nro saldo y tipo.
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	@SuppressWarnings("unused")
+	private void verCuentas(HttpServletRequest request,
+			HttpServletResponse response, JSONObject data) throws IOException, ServletException {
+		String PIN = request.getParameter("PIN");
+		try {
+			String p = data.get("p").toString();
+			Integer c = Integer.parseInt(data.get("idc").toString());
+			long s = mngServ.checkSesionM(c, p);
+			if(s==0)
+				throw new Exception("No hay una sesion activa");
+			response.getWriter().write(
+					mngServ.jsonMensajes("OK", mngServ.cuentasXCli(c)));
+		} catch (Exception e) {
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
 		} finally {
@@ -225,7 +288,11 @@ public class ServletServicesMobil extends HttpServlet {
 		try {
 			String nroO = data.get("nroO").toString();
 			String nroD = data.get("nroD").toString();
+			String p = data.get("p").toString();
 			Integer c = Integer.parseInt(data.get("idc").toString());
+			long s = mngServ.checkSesionM(c, p);
+			if(s==0)
+				throw new Exception("No hay una sesion activa");
 			if(nroO.equals(nroD))
 				throw new Exception("La cuenta de origen y destino es la misma");
 			BigDecimal monto = new BigDecimal(data.get("monto").toString());
@@ -252,7 +319,7 @@ public class ServletServicesMobil extends HttpServlet {
 							+ "</p>"
 							+ "<p>Has clic al siguiente enlace para validar la transacción:"
 							+ "<br> <a href='" + HOST
-							+ "/bancaWeb/index.html#/validateT?t=" + idt
+							+ "/bancaWeb/validateT?t=" + idt
 							+ "&tk=" + token + "'>"
 							+ "VALIDAR TRANSFERENCIA</a></p>");
 			System.out.println("Correo enviado.");

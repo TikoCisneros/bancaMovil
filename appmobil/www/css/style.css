@@ -48,7 +48,7 @@ body
 .active
 {
 	overflow-y: hidden;
-	padding: 15px;
+	padding: 0px;
 	max-height: 500px; /* approximate max height */
 	transition-property: all;
 	transition-duration: .5s;
@@ -68,4 +68,8 @@ div div.container
 .icon-bar
 {
 	background-color: #067195;
+}
+.active .list-group
+{
+	margin: 0px;
 }

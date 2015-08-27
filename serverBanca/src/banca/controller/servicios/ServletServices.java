@@ -29,7 +29,7 @@ import banca.model.manager.ManagerServicios;
 		"/Vmail", "/nCM", "/pwdCM", "/rpinCM", "/aCM", "/dCM" })
 public class ServletServices extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	public static final String HOST = "http://localhost:8080/serverBanca";
+	public static final String HOST = "http://bancawm-utnedu.rhcloud.com/BancaWM";
 	private ManagerServicios mngServ;
 
 	/**

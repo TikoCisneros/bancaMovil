@@ -18,8 +18,8 @@
     under the License.
 -->
 <html>
-    <head>
-        <!--
+<head>
+<!--
         Customize this policy to fit your own app's needs. For more guidance, see:
             https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
         Some notes:
@@ -29,127 +29,348 @@
                 * Enable inline JS: add 'unsafe-inline' to default-src
         
         <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">-->
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-        <title>Banca Mobil</title>
-        <meta charset="utf-8" /> 
-<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-<link href="css/style.css" rel="stylesheet" type="text/css"/>
-<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-<link href="css/jquery.gritter.css" rel="stylesheet" type="text/css"/>
-    </head>
-    <body ng-controller="mobileCtrl">
-        <input id="page" type="text" ng-model="page" style="display:none"/>
-    <nav class="hide" style="background-color: #efefef;" ng-show="page != 'login'">
-       <div class="navbar-header" >
-            <button type="button" class="navbar-toggle collapsed"
-                data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
-                <span class="sr-only">Toggle navigation</span> <span
-                    class="icon-bar"></span> <span class="icon-bar"></span> <span
-                    class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="">
-                <img src="img/icon.png" width="40" style="margin-top:-10px;">
-                BM</a>
+<meta name="format-detection" content="telephone=no">
+<meta name="msapplication-tap-highlight" content="no">
+<meta name="viewport"
+    content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+<title>Banca Mobil</title>
+<meta charset="utf-8" />
+<link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link href="css/jquery.gritter.css" rel="stylesheet" type="text/css" />
+</head>
+<body ng-controller="mobileCtrl">
+    <input id="page" type="text" ng-model="page" style="display: none" />
+    <nav class="hide" style="background-color: #efefef;"
+        ng-hide="page == 'login' || page == 'load'">
+        <div class="navbar-header" ng-click="toPage('main')">
+            <a class="navbar-brand"> <img src="img/icon.png"
+                width="40" style="margin-top: -10px;"> BM</a>
         </div>
-         <div  style="top:0px;margin-top: 13px; position:absolute; text-align:center;width: 100%;font-size: 18px;">
-                <a href=""> {{page}}</a>
+        <div
+            style="top: 0px; margin-top: 13px; position: absolute; text-align: center; width: 100%; font-size: 18px;">
+            <a href=""> {{page}}</a>
         </div>
-        <div class="collapse navbar-collapse"
-            id="bs-example-navbar-collapse-2">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#/logout"><i class="fa fa-power-off"></i> Salir</a></li>
-            </ul>
+        <a ng-click="mlogout()"
+         style="top: 0px; margin-top: 13px;position: absolute;right: 10px;font-size: 20px;"><i class="fa fa-power-off"></i>
+                        </a>
         </div>
+    </nav>
+
+
+
+    <div id="msg"></div>
+    <div style="display:none">
+    {{page}}<br>
+    {{user.id}}<br>
+    {{user.ping}}<br>
+    {{user.fc | date: 'medium'}}
     </div>
-</nav>
-
-
-
-        <div id="msg"></div>{{page}}
     <div ng-show="page == 'load'">
-        <div style="position:relative;text-align:center;width:100%;margin-top:200px">
-            <i class="fa fa-gear fa-spin fa-3x" style="color:#757575; font-size:5em"></i><br>
-            <h5 id="status" style="font-size:1.8em;font-weight:200">Cargando ...</h5>
+        <div
+            style="position: relative; text-align: center; width: 100%; margin-top: 200px">
+            <i class="fa fa-gear fa-spin fa-3x"
+                style="color: #757575; font-size: 5em"></i><br>
+            <h5 id="status" style="font-size: 1.8em; font-weight: 200">Cargando
+                ...</h5>
         </div>
     </div>
+    
     <div id="log" class="hide" ng-show="page == 'login'">
         <div class="container">
-    <div class="panel pnlCenter col-md-4 col-md-offset-4
-     col-sm-10 col-sm-offset-1 col-xs-12" style="background-color: #efefef;">
-      <div class="panel-heading t-center">
-        <img src="img/icon.png" width="75px">
-        <h4 class="t-center" style="color: #067195;">BANCA MOBIL</h4></div>
-      <div class="panel-body">
-        <form name="frmLog" ng-submit="mlogin()">
-            <div class="form-group">
-                <input class="form-control" name="user" type="text" ng-model="usr" placeholder="Ingresa tu usuario" required>
-                <p class="help-block text-danger"
-                ng-show="frmLog.$dirty && frmLog.user.$errors.required">Este campo es requerido.</p>
+            <div
+                class="panel pnlCenter col-md-4 col-md-offset-4
+     col-sm-10 col-sm-offset-1 col-xs-12"
+                style="background-color: #efefef;">
+                <div class="panel-heading t-center">
+                    <img src="img/icon.png" width="75px">
+                    <h4 class="t-center" style="color: #067195;">BANCA MOBIL</h4>
+                </div>
+                <div class="panel-body">
+                    <form name="frmLog" ng-submit="mlogin()">
+                        <div class="form-group">
+                            <input class="form-control" name="user" type="text"
+                                ng-model="usr" placeholder="Ingresa tu usuario" required>
+                            <p class="help-block text-danger"
+                                ng-show="frmLog.$dirty && frmLog.user.$errors.required">Este
+                                campo es requerido.</p>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" name="pass" type="password"
+                                ng-model="pwd" required>
+                            <p class="help-block text-danger"
+                                ng-show="frmLog.$dirty && frmLog.pass.$errors.required">Este
+                                campo es requerido.</p>
+                        </div>
+                        <div class="form-group t-center">
+                            <button class="btn btn-success f-left" style="width: 100%;"
+                                type="submit" ng-disabled="frmLog.$invalid">Ingresar</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <input class="form-control" name="pass" type="password" ng-model="pwd" required>
-                <p class="help-block text-danger"
-                ng-show="frmLog.$dirty && frmLog.pass.$errors.required">Este campo es requerido.</p>
+        </div>
+    </div>
+
+    <div id="main" class="hide" ng-show="page == 'main'">
+        <div class="container">
+            <h3>Bienvenido {{user.n}}</h3>
+            <hr>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading" onclick="show(this)">
+                        <h3 class="panel-title t-center">
+                            <i class="fa fa-money lg"></i><br> Cuenta
+                        </h3>
+                    </div>
+                    <div class="panel-body inactive">
+                        <div class="list-group">
+                            <a class="list-group-item" ng-click="getCuentas('Ahorro')">
+                                Ver cuentas de ahorros</a> 
+                            <a class="list-group-item" ng-click="getCuentas('Corriente')">
+                                Ver cuentas corrientes</a> 
+                            <a class="list-group-item" ng-click="getCuentas()">Ver todas las cuentas</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group t-center">
-                <button class="btn btn-success f-left" style="width: 100%;" type="submit" ng-disabled="frmLog.$invalid">Ingresar</button>
+            <div class="col-md-3 col-sm-6 col-xs-12">
+                <div class="panel panel-success">
+                    <div class="panel-heading t-center" onclick="show(this)">
+                        <h3 class="panel-title">
+                            <i class="fa fa-bar-chart lg"></i><br> Transacciones
+                        </h3>
+                    </div>
+                    <div class="panel-body inactive">
+                        <div class="list-group">
+                            <a class="list-group-item" ng-click="inittrans()">Realizar Transferencia</a> 
+                            <a class="list-group-item" ng-click="getTrans()">
+                            Transferencias Bancarias</a> 
+                            <a class="list-group-item" ng-click="getTranc()">
+                            Transacciones Bancarias</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </form>
-      </div>
+
+        </div>
+    </div>
+    <div  id="Transferencias" class="hide" ng-show="page == 'Transferencias'">
+        <div class="container">
+<a  ng-click="toPage('main')" style="padding-left:10px;padding-top:10px;font-size:18px"> <i class="fa fa-undo"></i> Regresar</a>
+    <br>
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-default"
+        ng-repeat="c in cuentas"
+        ng-click="setCuenta(c)">Nro. {{c.cuenta}}</button>
+    </div>
+    <div >
+        <h4>Cuenta Nro: {{c.cuenta}}</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Origen</th>
+                    <th>Destino</th>
+                    <th>Monto</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="t in c.transf.reverse()">
+                    <th scope="row">{{t.idTransf}}</th>
+                    <td>{{t.fecha | date: 'short' }}</td>
+                    <td>{{t.corigen}}</td>
+                    <td>{{t.cdestino}}</td>
+                    <td>{{t.monto | currency: '$'}}</td>
+                    <td>{{t.estado}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    </div>
+    <div  id="Transacciones" class="hide" ng-show="page == 'Transacciones'">
+        <div class="container">
+<a  ng-click="toPage('main')" style="padding-left:10px;padding-top:10px;font-size:18px"> <i class="fa fa-undo"></i> Regresar</a>
+    
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-default"
+        ng-repeat="c in cuentas"
+        ng-click="setCuenta(c)">Nro. {{c.cuenta}}</button>
+    </div>
+    <div >
+        <h4>Cuenta Nro: {{c.cuenta}}</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Origen</th>
+                    <th>Destino</th>
+                    <th>Monto</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="t in c.transf.reverse()">
+                    <th scope="row">{{t.idTransf}}</th>
+                    <td>{{t.fecha | date: 'short' }}</td>
+                    <td>{{t.corigen}}</td>
+                    <td>{{t.cdestino}}</td>
+                    <td>{{t.monto | currency: '$'}}</td>
+                    <td>{{t.estado}}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
     </div>
 
-    <div id="main" class="hide"  ng-show="page == 'main'">
-        <div class="container">
-    <h3>Bienvenido {{user.apellido}}  {{user.nombre}}</h3>
-    <hr>
-    <div class="col-md-3 col-sm-6 col-xs-12">
-        <div class="panel panel-primary">
-            <div class="panel-heading" onclick="show(this)">
-                <h3 class="panel-title t-center"><i class="fa fa-money lg"></i><br>  Cuenta</h3>
-            </div>
-            <div class="panel-body inactive">
-                <div class="list-group">
-                  <a class="list-group-item" href="#/cuentas/Ahorros">Ver cuentas de ahorros</a>
-                  <a class="list-group-item" href="#/cuentas/Corriente">Ver cuentas corrientes</a>
-                  <a class="list-group-item" href="#/cuentas/todas">Ver todas las cuentas</a>
-                </div>
-            </div>
-        </div>
+    <div id="Cuentas" class="hide" ng-show="page == 'Cuentas'">
+<a  ng-click="toPage('main')" style="padding-left:10px;padding-top:10px;font-size:18px"> <i class="fa fa-undo"></i> Regresar</a>
+<br>
+<div class="container">
+    <h3 ng-show="!cuentas || cuentas.length == 0">No hay ninguna cuenta.</h3>
+    <div class="list-group">
+        <a class="list-group-item" ng-repeat="c in cuentas"> 
+            <h4 class="list-group-item-heading">Cuenta Nro. {{c.nro}}<br>
+            <small>{{c.tipo}}</small>
+            </h4>
+            <h4 class="list-group-item-text">
+                Monto:    <button class="btn btn-xs btn-default vMonto" 
+                ng-click="getMonto($index)" type="button"
+                    onclick="showMnt(this)">   Ver Monto</button> 
+                    <span class="monto">{{monto | currency: '$'}}</span>
+            </h4>
+        </a>
     </div>
-    <div class="col-md-3 col-sm-6 col-xs-12">
-        <div class="panel panel-success">
-            <div class="panel-heading t-center" onclick="show(this)">
-                <h3 class="panel-title"> <i class="fa fa-bar-chart lg"></i><br>  Transacciones</h3>
-            </div>
-            <div class="panel-body inactive">
-                <div class="list-group">
-                  <a class="list-group-item" href="#/transferencia">Realizar Transferencia</a>
-                  <a class="list-group-item" href="#/verTransferencias">Transferencias Bancarias</a>
-                  <a class="list-group-item" href="#/verTransacciones">Transacciones Bancarias</a>
-                </div>
-            </div>
-        </div>
+</div>
+<script>
+    function showMnt(elm)
+    {
+        $('.monto').fadeOut(0);
+        $('.vMonto').fadeIn(0);
+        $(elm).next('.monto').fadeIn('fast');
+        $(elm).fadeOut(0);  
+    }
+</script>
     </div>
 
+    <div id="Transferir" class="hide" ng-show="page == 'Transferir'">
+        <div class="container">
+    <a  ng-click="toPage('main')" style="padding-left:10px;padding-top:10px;font-size:18px"> <i class="fa fa-undo"></i> Regresar</a><br>
+    <form name="frmTransferencia" novalidate ng-submit="trans();">
+        <fieldset>
+            <legend>Nueva transferencia a {{destino}}</legend>
+            <div class="form-group row">
+                <label for="origen" class="col-lg-4 control-label">Mi
+                    cuenta: </label>
+                <div class="col-lg-10 col-sm-12">
+                    <select class="form-control" name="origen" ng-model="origen"
+                        placeholder="Escoje una cuenta" required>
+                        <option disabled selected="true">Escoje una cuenta</option>
+                        <option value="{{c.nro}}" ng-repeat="c in cuentas">{{c.nro
+                            +' - '+c.tipo}}</option>
+                    </select>
+                    <p class="help-block text-danger"
+                        ng-show="frmTransferencia.$dirty && frmTransferencia.origen.$errors.required">
+                        Este campo es requerido.</p>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="destino" class="col-lg-4 control-label">Nro
+                    cuenta destino: </label>
+                <div class="col-lg-10 col-sm-12">
+                    <input type="number" class="form-control" name="destino"
+                        ng-model="destino"
+                        placeholder="Ingresa la cuenta destino" required
+                        ng-pattern="/^\d+$/">
+                    <div>
+                        <p class="help-block text-danger"
+                            ng-show="frmTransferencia.$dirty && frmTransferencia.destino.$errors.required">
+                            Este campo es requerido.</p>
+                        <p class="help-block text-danger"
+                            ng-show="frmTransferencia.$dirty && frmTransferencia.destino.$errors.pattern">
+                            Ingresa solo números.</p>
+                        <p class="help-block text-danger" ng-show="!existeDestino"
+                            ng-show="frmTransferencia.$dirty && frmTransferencia.origen.$errors.required">
+                            El numero de cuenta es invalido o no existe.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="destino" class="col-lg-3 hidden-xs control-label"
+                    style="font-size: 60px;">Monto: </label>
+                <div class="col-lg-6 col-xs-12">
+                    <div class="input-group">
+                        <input type="number" class="form-control" name="monto"
+                            style="font-size: 60px; height: 90px;" ng-model="monto"
+                            placeholder="####" required
+                            ng-pattern="/^\s*-?\d+(\.\d{1,2})?\s*$/">
+                        <span class="input-group-addon">USD($)</span>
+                        <p class="help-block text-danger"
+                            ng-show="frmTransferencia.$dirty && frmTransferencia.monto.$errors.required">
+                            Este campo es requerido.</p>
+                        <p class="help-block text-danger"
+                            ng-show="frmTransferencia.$dirty && frmTransferencia.monto.$errors.pattern">
+                            El formato es invalido. Formato valido ####,##</p>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group row col-lg-12 f-right" style="font-size: 2em;">
+                <button id="btntra" class="btn btn-success btn-lg" style="width: 150px;"
+                    type="submit" ng-disabled="frmTransferencia.$invalid">
+                    <i class="fa fa-send"></i> Transferir
+                </button>
+            </div>
+        </fieldset>
+    </form>
+</div>
+    </div>
+
+        <div class="modal fade" id="mPIN" role="dialog" style="margin-top:15%;">
+      <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Ingresa tu PIN</h4>
+          </div>
+          <form name="frmPIN" ng-submit="setPIN()">
+          <div class="modal-body">
+            <p>Has estado inactivo por un tiempo por favor ingresa tu PIN.</p>
+                        <div class="form-group">
+                            <input class="form-control" name="pin" type="number"
+                                ng-model="PIN" placeholder="Ingresa tu PIN" required>
+                            <p class="help-block text-danger"
+                                ng-show="frmPIN.$dirty && frmPIN.pin.$errors.required">Este
+                                campo es requerido.</p>
+                        </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" type="submit">Aceptar</button>
+          </div>
+          </form>
+        </div>
+      </div>
     </div>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
         <script src="js/jquery.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="js/jquery.gritter.min.js"></script>
-    
-    <script src="js/angular.min.js" type="text/javascript"></script>
-    <script src="js/angular-resource.min.js" type="text/javascript"></script>
-    <script src="js/angular-route.js" type="text/javascript"></script>
-    
-    <script src="js/bootstrap.min.js" type="text/javascript"></script>
-    
-    <script src="app/app.service.js" type="text/javascript"></script>
-    <script src="app/app.controller.js" type="text/javascript"></script>
-    <script src="app/app.route.js" type="text/javascript"></script>
+        <script type="text/javascript" src="js/jquery.gritter.min.js"></script>
 
-    </body>
+        <script src="js/angular.min.js" type="text/javascript"></script>
+        <script src="js/angular-resource.min.js" type="text/javascript"></script>
+        <script src="js/angular-route.js" type="text/javascript"></script>
+
+        <script src="js/bootstrap.min.js" type="text/javascript"></script>
+
+        <script src="app/app.service.js" type="text/javascript"></script>
+        <script src="app/app.controller.js" type="text/javascript"></script>
+        <script src="app/app.route.js" type="text/javascript"></script>
+</body>
 </html>
