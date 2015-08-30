@@ -107,13 +107,24 @@ public class ManagerServicios {
 				throw new Exception("Usuario no registrado");
 			}
 			Cliente cli = listado.get(0);
-			//SI YA ESTA REGISTRADO
-			if(cli.getBloqueda()!=null){
-				throw new Exception("Cuenta ya registrada");
-			}
 			//Verificar Correo
 			if(!cli.getCorreo().equals(correo)){
 				throw new Exception("Los correos no coinciden");
+			}
+			//SI YA ESTA REGISTRADO
+			if(cli.getBloqueda()!=null){
+				if(cli.getBloqueda().equals(Cliente.NO_VERIFICADA))
+				{
+					Mailer.generateAndSendEmail(cli.getCorreo(), "Bienvenido a la Banca Virtual, Validaci&oacute;n de cuenta", 
+							"<h1>Validaci&oacute;n de transacci&oacute;n</h1>"+
+							"<p>Su alias es: "+cli.getAlias()+" Su contraseña es: "+cli.getCmPass()+"</p>"+
+							"<p>Ingrese al link para validar su cuenta</p>"+
+							"<a href='" + HOST + "/bancaWeb/index.html#/validateR?id="
+									+ cli.getIdCli() + "&tk=" + cli.getToken()+ "'>"
+									+ "VALIDAR CUENTA</a>");
+					throw new Exception("Se reenvio el correo, con tus datos de acceso.");
+				}
+				throw new Exception("Cuenta ya registrada");
 			}
 			//Verificar Alias
 			if(verificarAlias(alias)){
@@ -126,8 +137,8 @@ public class ManagerServicios {
 			String id = cli.getIdCli().toString();
 			cli.setPass(pass);cli.setAlias(alias);cli.setBloqueda(Cliente.NO_VERIFICADA);
 			mngDAO.actualizar(cli);
-			Mailer.generateAndSendEmail(correo, "Bienvenido a la Banca Virtual, Validación de cuenta", 
-					"<h1>Validación de transacción</h1>"+
+			Mailer.generateAndSendEmail(correo, "Bienvenido a la Banca Virtual, Validaci&oacute;n de cuenta", 
+					"<h1>Validaci&oacute;n de transacci&oacute;n</h1>"+
 					"<p>Su alias es: "+alias+" Su contraseña es: "+pass+"</p>"+
 					"<p>Ingrese al link para validar su cuenta</p>"+
 					"<a href='" + HOST + "/bancaWeb/index.html#/validateR?id="
@@ -379,7 +390,7 @@ public class ManagerServicios {
 		}
 		System.out.print("Monto maximo actual " + maxM);
 		if (maxM > Transferencia.MONTO_MAX)
-			throw new Exception("Has sobre pasado el límite de transacciones dirarias.");
+			throw new Exception("Has sobre pasado el l&iacute;mite de transacciones dirarias.");
 		Transferencia t = new Transferencia();
 		Cliente c = (Cliente) mngDAO.findById(Cliente.class, cliente);
 		t.setCliente(c);
@@ -400,7 +411,7 @@ public class ManagerServicios {
 		BigDecimal saldoA = co.getSaldo();
 		
 		if(saldoCO.doubleValue() - monto.doubleValue() < 0)
-			throw new Exception("No tienes suficiente saldo en tu cuenta para realizar esta transacción.");
+			throw new Exception("No tienes suficiente saldo en tu cuenta para realizar esta transacci&oacute;n.");
 		
 		saldoCD = saldoCD.add(monto);
 		saldoCD = saldoCD.setScale(2, RoundingMode.HALF_UP);
@@ -437,7 +448,7 @@ public class ManagerServicios {
 			Estadotrans es = (Estadotrans)mngDAO.findById(Estadotrans.class, Estadotrans.FALLIDA);
 			t.setEstadotran(es);
 			Historial ht = new Historial();
-			ht.setEstado(es.getEstado() + ": Caduco periodo de validación.");
+			ht.setEstado(es.getEstado() + ": Caduco periodo de validaci&oacute;n.");
 			Timestamp time = new Timestamp(new Date().getTime());
 			ht.setFecha(time);
 			ht.setMonto(t.getMonto());
@@ -448,7 +459,7 @@ public class ManagerServicios {
 			ht.setTipo("Transferencia");
 			mngDAO.insertar(ht);
 			mngDAO.actualizar(t);
-			throw new Exception("Lo sentimos pero el periodo de 24 horas de validación ha finalizado.");
+			throw new Exception("Lo sentimos pero el periodo de 24 horas de validaci&oacute;n ha finalizado.");
 		}
 		if(!token.equals(t.getToken()))
 		{
@@ -478,7 +489,7 @@ public class ManagerServicios {
 		
 		BigDecimal monto = t.getMonto();
 		if(saldoCO.doubleValue() - monto.doubleValue() < 0)
-			throw new Exception("No tienes suficiente saldo en tu cuenta para realizar esta transacción.");
+			throw new Exception("No tienes suficiente saldo en tu cuenta para realizar esta transacci&oacute;n.");
 		
 		saldoCD = saldoCD.add(monto);
 		saldoCD = saldoCD.setScale(2, RoundingMode.HALF_UP);
@@ -783,7 +794,7 @@ public class ManagerServicios {
 	public void crearCM(Integer idCli, String pass, String cpass) throws Exception{
 		Cliente c = findClienteById(idCli);
 		if(c.getCmMovil()!=null)
-			throw new Exception("Usted ya posee una cuenta móvil.");
+			throw new Exception("Usted ya posee una cuenta m&oacute;vil.");
 		if(!pass.equals(cpass))
 			throw new Exception("Las contraseñas deben ser las mismas.");
 		c.setCmMovil("S");c.setCmPass(pass);c.setCmBloqueo(Cliente.CMOBIL_ACTIVA);
@@ -797,11 +808,11 @@ public class ManagerServicios {
 	public void cambioPassCM(Integer idCli, String antPass, String nPass, String ncPass)throws Exception{
 		Cliente c = findClienteById(idCli);
 		if(c.getCmMovil()==null)
-			throw new Exception("Usted no posee una cuenta móvil.");
+			throw new Exception("Usted no posee una cuenta m&oacute;vil.");
 		if(!c.getCmPass().equals(antPass))
 			throw new Exception("Las contraseña anterior es incorrecta.");
 		if(!nPass.equals(ncPass))
-			throw new Exception("Las nueva contraseña como su confirmación deben ser las mismas.");
+			throw new Exception("Las nueva contraseña como su confirmaci&oacute;n deben ser las mismas.");
 		cerrarSesionM(idCli);//CIERRA LA SESION
 		c.setCmPass(nPass);
 		mngDAO.actualizar(c);
@@ -810,7 +821,7 @@ public class ManagerServicios {
 	public void cambioPinCM(Integer idCli) throws Exception{
 		Cliente c = findClienteById(idCli);
 		if(c.getCmMovil()==null)
-			throw new Exception("Usted no posee una cuenta móvil.");
+			throw new Exception("Usted no posee una cuenta m&oacute;vil.");
 		String ping = genPin();c.setCmPin(ping);
 		mngDAO.actualizar(c);
 		Mailer.generateAndSendEmail(c.getCorreo(), "Cambio de PIN", "Su nuevo ping secreto es "+ping+" .");	
@@ -819,21 +830,21 @@ public class ManagerServicios {
 	public void activarCM(Integer idCli) throws Exception{
 		Cliente c = findClienteById(idCli);
 		if(c.getCmMovil()==null)
-			throw new Exception("Usted no posee una cuenta móvil.");
+			throw new Exception("Usted no posee una cuenta m&oacute;vil.");
 		if(c.getCmBloqueo().equals(Cliente.CMOBIL_ACTIVA))
 			throw new Exception("Su cuenta ya se encuentra activa.");
-		c.setCmBloqueo(Cliente.CMOBIL_BLOQUEADA);
+		c.setCmBloqueo(Cliente.CMOBIL_ACTIVA);
 		mngDAO.actualizar(c);
 	}
 	
 	public void desactivarCM(Integer idCli) throws Exception{
 		Cliente c = findClienteById(idCli);
 		if(c.getCmMovil()==null)
-			throw new Exception("Usted no posee una cuenta móvil.");
+			throw new Exception("Usted no posee una cuenta m&oacute;vil.");
 		if(c.getCmBloqueo().equals(Cliente.CMOBIL_BLOQUEADA))
 			throw new Exception("Su cuenta ya se encuentra desactivada.");
 		cerrarSesionM(idCli);//CIERRA LA SESION
-		c.setCmBloqueo(Cliente.CMOBIL_ACTIVA);
+		c.setCmBloqueo(Cliente.CMOBIL_BLOQUEADA);
 		mngDAO.actualizar(c);
 	}
 	

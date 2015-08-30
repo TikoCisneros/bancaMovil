@@ -158,7 +158,7 @@ public class ServletServicesMobil extends HttpServlet {
 			Integer c = Integer.parseInt(data.get("idc").toString());
 			mngServ.cerrarSesionM(c);
 			response.getWriter().write(
-					mngServ.jsonMensajes("OK", "Sesión finalizada correctamente."));
+					mngServ.jsonMensajes("OK", "Sesi&oacute;n finalizada correctamente."));
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.getWriter().write(
@@ -309,15 +309,15 @@ public class ServletServicesMobil extends HttpServlet {
 				throw new Exception("El codigo de transferencia es nulo.");
 			Mailer.generateAndSendEmail(
 					cliente.getCorreo(),
-					"Validación de transacción",
-					"<h1>Validación de transacción</h1>"
+					"Validaci&oacute;n de transacci&oacute;n",
+					"<h1>Validaci&oacute;n de transacci&oacute;n</h1>"
 							+ "<p>Transferencia de "
 							+ monto.doubleValue()
 							+ "$."
 							+ "<br>a la cuenta Nro. "
 							+ nroD
 							+ "</p>"
-							+ "<p>Has clic al siguiente enlace para validar la transacción:"
+							+ "<p>Has clic al siguiente enlace para validar la transacci&oacute;n:"
 							+ "<br> <a href='" + HOST
 							+ "/bancaWeb/validateT?t=" + idt
 							+ "&tk=" + token + "'>"
@@ -326,7 +326,7 @@ public class ServletServicesMobil extends HttpServlet {
 			response.getWriter()
 					.write(mngServ
 							.jsonMensajes("OK",
-									"Se ha enviado un correo a tu cuenta registrada para validar la transacción."));
+									"Se ha enviado un correo a tu cuenta registrada para validar la transacci&oacute;n."));
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.getWriter().write(

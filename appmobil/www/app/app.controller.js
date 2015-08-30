@@ -6,7 +6,6 @@ function addMsg(tipo, titulo, mensaje) {
 		position : 'top-left'
 	});
 }
-var tiempoInactividad = 1 * 60 * 60 * 1000;
 var tiempoInactividadP = 30 * 1000;
 var bancaWebController = angular.module('bancaWebController', []);
 var sesion;
@@ -121,7 +120,7 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 						$location.search('page', 'main');
 						$scope.user = res;
 						var nf = new Date().getTime();
-						nf+= (10 * 1000);//(15 * 24 * 60 *60 *1000);
+						nf+= tiempoInactividadP;//(15 * 24 * 60 *60 *1000);
 						$scope.user.n = res.apellido +" "+res.nombre;
 						$scope.user.fc = nf;
 						$scope.txt = res.id +"|"+res.ping +'|'+ $scope.user.n 
@@ -131,7 +130,7 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 							, 0,
 							$scope.readSesion,fail);
 						if (res.status == 'FL') {
-							addMsg('info', 'Información', 'Favor cambiar la contrasena');
+							addMsg('info', 'Información', 'Favor cambiar el password.');
 						}
 					}
 				});
@@ -140,6 +139,7 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 			{
 				console.log('Cambiando a '+p);
 				$scope.page = p;
+				$location.search('page',p);
 			}
 			$scope.mlogout = function() 
 			{

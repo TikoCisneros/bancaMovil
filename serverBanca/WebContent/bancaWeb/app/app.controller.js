@@ -47,7 +47,7 @@ bancaWebController.controller('loginCtrl', [ '$scope', '$location',
 						UserCM.set(res.value);
 						console.log(UserCM.get());
 						if (res.status == 'FL') {
-							addMsg('info', 'Información', 'Favor cambiar la contrasena');
+							addMsg('info', 'Informaci&oacute;n', 'Favor cambiar la contrasena');
 						}
 						$location.path('/main');
 					}
@@ -73,7 +73,7 @@ bancaWebController.controller('validateTCtrl', [ '$scope', '$location',
 					addMsg('danger', 'Error', res.value);
 					$location.path('main');
 				} else {
-					addMsg('info', 'Información', res.value);
+					addMsg('info', 'Informaci&oacute;n', res.value);
 					$location.path('verTransferencias');
 				}
 
@@ -94,7 +94,7 @@ bancaWebController.controller('validateRCtrl', [ '$scope', '$location',
 				addMsg('danger', 'Error', res.value);
 				$location.path('main');
 			} else {
-				addMsg('info', 'Información', res.value);
+				addMsg('info', 'Informaci&oacute;n', res.value);
 				$location.path('login');
 			}
 	
@@ -114,7 +114,7 @@ bancaWebController.controller('validateMCtrl', [ '$scope', '$location',
  			if (res.status != 'OK') {
  				addMsg('danger', 'Error', res.value);
  			} else {
- 				addMsg('info', 'Información', res.value);
+ 				addMsg('info', 'Informaci&oacute;n', res.value);
  			}
  			$location.path('main');
  		});
@@ -150,7 +150,7 @@ bancaWebController.controller('passCtrl', [ '$scope', '$location',
 						addMsg('danger', 'Error', res.value);// info success danger
 						// warning
 					} else {
-						addMsg('success', 'Información', res.value);
+						addMsg('success', 'Informaci&oacute;n', res.value);
 						$scope.pwd = null;
 						$scope.npd = null;
 						$scope.cpd = null;
@@ -173,7 +173,7 @@ bancaWebController.controller('regCtrl', [ '$scope', '$location', 'bancaWebSV',
 						addMsg('danger', 'Error', res.value);// info success danger
 						// warning
 					} else {
-						addMsg('success', 'Información', res.value);
+						addMsg('success', 'Informaci&oacute;n', res.value);
 						$scope.ci = null;
 						$scope.correo = null;
 						$scope.alias = null;
@@ -200,7 +200,7 @@ bancaWebController.controller('mailCtrl', [ '$scope', '$location',
 						addMsg('danger', 'Error', res.value);// info success danger
 						// warning
 					} else {
-						addMsg('success', 'Infromación', res.value);
+						addMsg('success', 'Infromaci&oacute;n', res.value);
 						$scope.mail = null;
 					}
 				});
@@ -223,7 +223,7 @@ bancaWebController.controller('desmovCtrl', [ '$scope', '$location',
 						addMsg('danger', 'Error', res.value);// info success danger
 						// warning
 					} else {
-						addMsg('success', 'Información', res.value);
+						addMsg('success', 'Informaci&oacute;n', res.value);
 						$scope.mtv = null;
 					}
 				});
@@ -241,7 +241,7 @@ bancaWebController.controller('mainCtrl', [ '$scope', '$location',
 		$scope.logout = function() {
 			bancaWebSV.logout(function(res) {
 				UserCM.set(null);
-				addMsg('success', 'Información', res.value);
+				addMsg('success', 'Informaci&oacute;n', res.value);
 				$location.path('/login');
 			});
 		};
@@ -251,7 +251,7 @@ bancaWebController.controller('mainCtrl', [ '$scope', '$location',
 				if (res.status != 'OK'){
 					addMsg('danger', 'Error', res.value);
 				}else {
-					addMsg('success', 'Información', res.value);
+					addMsg('success', 'Informaci&oacute;n', res.value);
 				}
 			});
 		};
@@ -271,7 +271,7 @@ bancaWebController.controller('mainCtrl', [ '$scope', '$location',
 				if (res.status != 'OK'){
 					addMsg('danger', 'Error', res.value);
 				}else {
-					addMsg('success', 'Información', res.value);
+					addMsg('success', 'Informaci&oacute;n', res.value);
 				}
 			});
 		};
@@ -348,7 +348,7 @@ bancaWebController.controller('transCtrl', [ '$scope', '$location',
 						if (res.status != 'OK')
 							addMsg('danger', 'Error', res.value);
 						else {
-							addMsg('info', 'Información', res.value);
+							addMsg('info', 'Informaci&oacute;n', res.value);
 
 						}
 
@@ -418,7 +418,7 @@ bancaWebController.controller('ctamovCtrl', [ '$scope', '$location', 'bancaWebSV
  					if (res.status == 'EA') {
  						addMsg('danger', 'Error', res.value);
  					} else {
- 						addMsg('success', 'Información', res.value);
+ 						addMsg('success', 'Informaci&oacute;n', res.value);
  						$scope.mp = null;
  						$scope.mpc = null;
  						$location.path('/main');
@@ -436,7 +436,7 @@ bancaWebController.controller('ctamovCtrl', [ '$scope', '$location', 'bancaWebSV
  					if (res.status == 'EA') {
  						addMsg('danger', 'Error', res.value);
  					} else {
- 						addMsg('success', 'Información', res.value);
+ 						addMsg('success', 'Informaci&oacute;n', res.value);
  						$scope.mpa = null;
  						$scope.mpn = null;
  						$scope.mpcn = null;

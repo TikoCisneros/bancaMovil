@@ -362,8 +362,8 @@ public class ServletServices extends HttpServlet {
 					"SessionUser");
 			Mailer.generateAndSendEmail(
 					mail,
-					"Validación de Correo Electrónico",
-					"<h1>Validación de Correo Electrónico</h1>"
+					"Validaci&oacute;n de Correo Electr&oacute;nico",
+					"<h1>Validaci&oacute;n de Correo Electr&oacute;nico</h1>"
 							+ "<p>Has clic al siguiente enlace para validar su correo:"
 							+ "<br> <a href='" + HOST + "/bancaWeb/index.html#/validateM?id="
 							+ idusr + "&ml=" + mail + "'>"
@@ -387,7 +387,7 @@ public class ServletServices extends HttpServlet {
 			String mail = request.getParameter("ml");
 			mngServ.cambiarMail(usr, mail);
 			response.getWriter().write(
-					mngServ.jsonMensajes("OK", "Se validó y cambió su correo correctamente"));
+					mngServ.jsonMensajes("OK", "Se valid&oacute; y cambi&oacute; su correo correctamente"));
 		}  catch (Exception e) {
 			response.getWriter().write(
 					mngServ.jsonMensajes("EA", e.getMessage()));
@@ -501,15 +501,15 @@ public class ServletServices extends HttpServlet {
 				throw new Exception("El codigo de transferencia es nulo.");
 			Mailer.generateAndSendEmail(
 					cliente.getCorreo(),
-					"Validación de transacción",
-					"<h1>Validación de transacción</h1>"
+					"Validaci&oacute;n de transacci&oacute;n",
+					"<h1>Validaci&oacute;n de transacci&oacute;n</h1>"
 							+ "<p>Transferencia de "
 							+ monto.doubleValue()
 							+ "$."
 							+ "<br>a la cuenta Nro. "
 							+ nroD
 							+ "</p>"
-							+ "<p>Has clic al siguiente enlace para validar la transacción:"
+							+ "<p>Has clic al siguiente enlace para validar la transacci&oacute;n:"
 							+ "<br> <a href='" + HOST + "/bancaWeb/index.html#/validateT?t="
 							+ idt + "&tk=" + token + "'>"
 							+ "VALIDAR TRANSFERENCIA</a></p>");
@@ -517,7 +517,7 @@ public class ServletServices extends HttpServlet {
 			response.getWriter()
 					.write(mngServ
 							.jsonMensajes("OK",
-									"Se ha enviado un correo a tu cuenta registrada para validar la transacción."));
+									"Se ha enviado un correo a tu cuenta registrada para validar la transacci&oacute;n."));
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.getWriter().write(
@@ -655,7 +655,7 @@ public class ServletServices extends HttpServlet {
 			mngServ.crearCM(c, mpwd, mpwdc);
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK",
-							"Cuenta creada correctamente, revise su correo electrónico."));
+							"Cuenta creada correctamente, revise su correo electr&oacute;nico."));
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.getWriter().write(
