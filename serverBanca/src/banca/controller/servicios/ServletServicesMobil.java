@@ -182,7 +182,7 @@ public class ServletServicesMobil extends HttpServlet {
 			String p = data.get("p").toString();
 			long s = mngServ.checkSesionM(c, p);
 			if(s == 0)
-				throw new Exception("No hay sesiones validas.");
+				throw new Exception("NS");
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", s));
 		} catch (Exception e) {
@@ -209,7 +209,7 @@ public class ServletServicesMobil extends HttpServlet {
 			Integer c = Integer.parseInt(data.get("idc").toString());
 			long s = mngServ.checkSesionM(c, p);
 			if(s==0)
-				throw new Exception("No hay una sesion activa");
+				throw new Exception("NS");
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", mngServ.transfXcli(c)));
 		} catch (Exception e) {
@@ -235,7 +235,7 @@ public class ServletServicesMobil extends HttpServlet {
 			Integer c = Integer.parseInt(data.get("idc").toString());
 			long s = mngServ.checkSesionM(c, p);
 			if(s==0)
-				throw new Exception("No hay una sesion activa");
+				throw new Exception("NS");
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", mngServ.trancXcli(c)));
 		} catch (Exception e) {
@@ -263,7 +263,7 @@ public class ServletServicesMobil extends HttpServlet {
 			Integer c = Integer.parseInt(data.get("idc").toString());
 			long s = mngServ.checkSesionM(c, p);
 			if(s==0)
-				throw new Exception("No hay una sesion activa");
+				throw new Exception("NS");
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", mngServ.cuentasXCli(c)));
 		} catch (Exception e) {
@@ -292,7 +292,7 @@ public class ServletServicesMobil extends HttpServlet {
 			Integer c = Integer.parseInt(data.get("idc").toString());
 			long s = mngServ.checkSesionM(c, p);
 			if(s==0)
-				throw new Exception("No hay una sesion activa");
+				throw new Exception("NS");
 			if(nroO.equals(nroD))
 				throw new Exception("La cuenta de origen y destino es la misma");
 			BigDecimal monto = new BigDecimal(data.get("monto").toString());

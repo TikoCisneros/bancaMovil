@@ -117,7 +117,7 @@ public class ManagerServicios {
 				{
 					Mailer.generateAndSendEmail(cli.getCorreo(), "Bienvenido a la Banca Virtual, Validaci&oacute;n de cuenta", 
 							"<h1>Validaci&oacute;n de transacci&oacute;n</h1>"+
-							"<p>Su alias es: "+cli.getAlias()+" Su contraseña es: "+cli.getCmPass()+"</p>"+
+							"<p>Su alias es: "+cli.getAlias()+" Su contraseña es: "+cli.getPass()+"</p>"+
 							"<p>Ingrese al link para validar su cuenta</p>"+
 							"<a href='" + HOST + "/bancaWeb/index.html#/validateR?id="
 									+ cli.getIdCli() + "&tk=" + cli.getToken()+ "'>"
