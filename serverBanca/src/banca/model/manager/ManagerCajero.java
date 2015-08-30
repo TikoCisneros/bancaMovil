@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import banca.controller.servicios.Validar;
 import banca.model.dao.entities.Cliente;
 import banca.model.dao.entities.Contador;
 import banca.model.dao.entities.Cuenta;
@@ -75,7 +76,9 @@ public class ManagerCajero {
 	public void crearCliente(String nombre, String apellido, String ciRuc, String telefono, String correo, 
 			String direccion) throws Exception{
 		if(this.existeMAIL(correo))
-			throw new Exception("Tenemos registrado ese correo, use uno distinto.");		
+			throw new Exception("Tenemos registrado ese correo, use uno distinto.");	
+		if(!Validar.validacionCedula(ciRuc.substring(0, 10)))
+			throw new Exception("Cédula o RUC no válidos.");
 		Cliente cli = new Cliente();
 		cli.setNombre(nombre);cli.setApellido(apellido);cli.setCiRuc(ciRuc);
 		cli.setTelefono(telefono);cli.setCorreo(correo);cli.setDireccion(direccion);
