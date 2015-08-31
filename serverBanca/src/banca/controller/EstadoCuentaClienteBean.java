@@ -103,6 +103,16 @@ public class EstadoCuentaClienteBean implements Serializable {
 			idCliAct = 0;
 		}
 	}
+	
+	public void resetCW(Cliente cli){
+		try {
+			mngCajero.reseteoCuentaWeb(cli);
+			Mensaje.crearMensajeINFO("Se envió correctamente la clave provisional");
+		} catch (Exception e) {
+			e.printStackTrace();
+			Mensaje.crearMensajeERROR(e.getMessage());
+		}
+	}
 
 	public void clienteActual(int id) {
 		this.idCliAct = id;

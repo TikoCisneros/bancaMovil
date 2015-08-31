@@ -18,6 +18,7 @@ and open the template in the editor.
 		<p:tabView>
 			<p:tab title="Cuentas Activas">
 				<h:form>
+					<p:growl></p:growl>
 					<p:dataTable value="#{estadoCuentaClienteBean.clientesO}" var="c"
 						rows="8" paginator="true" emptyMessage="No existen datos"
 						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
@@ -38,7 +39,11 @@ and open the template in the editor.
 								action="#{estadoCuentaClienteBean.clienteActual(c.idCli)}"
 								onclick="PF('dlg1').show();" />
 						</p:column>
-						<p:column headerText="Cuenta Movil ">
+						<p:column headerText="Cuenta Web">
+							<p:commandButton icon=" ui-icon-mail-closed" update="@all"
+								action="#{estadoCuentaClienteBean.resetCW(c)}"/>
+						</p:column>
+						<!--p:column headerText="Cuenta Movil ">
 							<p:commandButton icon="ui-icon-close" value="Desactivar"
 								update="pnlMotivoCM" onclick="PF('dlg2').show();"
 								rendered="#{c.cmMovil eq 'O'}" />
@@ -46,7 +51,7 @@ and open the template in the editor.
 								action="#{estadoCuentaClienteBean.clienteActual(c.idCli)}"
 								rendered="#{c.cmMovil eq 'X'}" update="@all"
 								onclick="#{estadoCuentaClienteBean.activarCM(c.idCli)}" />
-						</p:column>
+						</p:column-->
 					</p:dataTable>
 				</h:form>
 			</p:tab>

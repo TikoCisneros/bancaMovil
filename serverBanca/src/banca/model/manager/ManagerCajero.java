@@ -5,8 +5,10 @@ import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
+import banca.controller.servicios.Mailer;
 import banca.controller.servicios.Validar;
 import banca.model.dao.entities.Cliente;
 import banca.model.dao.entities.Contador;
@@ -230,6 +232,26 @@ public class ManagerCajero {
 		mngDAO.actualizar(cont);
 		
 		return valor+num;
+	}
+	
+	/**
+	 * Genera un pass numerico unico
+	 * @return pass
+	 */
+	public String genPass(){
+		Random rnd = new Random();
+		Integer nrm = rnd.nextInt(9000000)+999999;
+		return nrm.toString();
+	}
+	
+	public void reseteoCuentaWeb(Cliente cli) throws Exception{
+		Cliente c = findClienteByID(cli.getIdCli());
+		c.setBloqueda(Cliente.SIN_CAMBIO_DATOS);
+		String pass = genPass();
+		c.setPass(pass);
+		mngDAO.actualizar(c);
+		Mailer.generateAndSendEmail(c.getCorreo(), "Reseteo de Pass", 
+				"Su cuenta posee la siguiente contraseña provisional: "+pass);
 	}
 	
 	/*********************************TRANSACCIONES*********************************/
