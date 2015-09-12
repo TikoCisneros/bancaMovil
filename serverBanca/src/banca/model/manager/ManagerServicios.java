@@ -16,6 +16,7 @@ import java.util.UUID;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import banca.controller.servicios.Funciones;
 import banca.controller.servicios.Mailer;
 import banca.model.dao.entities.Cliente;
 import banca.model.dao.entities.Cmsesion;
@@ -117,7 +118,7 @@ public class ManagerServicios {
 				{
 					Mailer.generateAndSendEmail(cli.getCorreo(), "Bienvenido a la Banca Virtual, Validaci&oacute;n de cuenta", 
 							"<h1>Validaci&oacute;n de transacci&oacute;n</h1>"+
-							"<p>Su alias es: "+cli.getAlias()+" Su contraseña es: "+cli.getPass()+"</p>"+
+							"<p>Su alias es: "+cli.getAlias()+" Su contraseña es: "+Funciones.Desencriptar(cli.getPass())+"</p>"+
 							"<p>Ingrese al link para validar su cuenta</p>"+
 							"<a href='" + HOST + "/bancaWeb/index.html#/validateR?id="
 									+ cli.getIdCli() + "&tk=" + cli.getToken()+ "'>"
@@ -135,7 +136,7 @@ public class ManagerServicios {
 			String pass = genPass();
 			String token = cli.getToken();
 			String id = cli.getIdCli().toString();
-			cli.setPass(pass);cli.setAlias(alias);cli.setBloqueda(Cliente.NO_VERIFICADA);
+			cli.setPass(Funciones.Encriptar(pass));cli.setAlias(alias);cli.setBloqueda(Cliente.NO_VERIFICADA);
 			mngDAO.actualizar(cli);
 			Mailer.generateAndSendEmail(correo, "Bienvenido a la Banca Virtual, Validaci&oacute;n de cuenta", 
 					"<h1>Validaci&oacute;n de transacci&oacute;n</h1>"+
@@ -191,7 +192,7 @@ public class ManagerServicios {
 				throw new Exception("No se encuentra el usuario.");
 			}
 			Cliente cli = listado.get(0);
-			if (cli.getPass().equals(pass)) {// MD5 PASS getMD5(pass)
+			if (cli.getPass().equals(Funciones.Encriptar(pass))) {// MD5 PASS getMD5(pass)
 				return cli;
 			} else {
 				throw new Exception("Usuario o contraseña invalidos");
@@ -264,14 +265,14 @@ public class ManagerServicios {
 			String cnfPass) throws Exception {
 		try {
 			Cliente c = (Cliente) mngDAO.findById(Cliente.class, id_cli);
-			if (!c.getPass().equals(actPass)) {
+			if (!c.getPass().equals(Funciones.Encriptar(actPass))) {
 				throw new Exception("Contrase&ntilde;a actual incorrecta");
 			}
 			if (!nPass.equals(cnfPass)) {
 				throw new Exception(
 						"La nueva contrase&ntilde;a como su confirmacion deben ser iguales");
 			}
-			c.setPass(nPass);// MD5 PASS getMD5(pass)
+			c.setPass(Funciones.Encriptar(nPass));// MD5 PASS getMD5(pass)
 			mngDAO.actualizar(c);
 		} catch (Exception e) {
 			throw e;
@@ -797,7 +798,7 @@ public class ManagerServicios {
 			throw new Exception("Usted ya posee una cuenta m&oacute;vil.");
 		if(!pass.equals(cpass))
 			throw new Exception("Las contraseñas deben ser las mismas.");
-		c.setCmMovil("S");c.setCmPass(pass);c.setCmBloqueo(Cliente.CMOBIL_ACTIVA);
+		c.setCmMovil("S");c.setCmPass(Funciones.Encriptar(pass));c.setCmBloqueo(Cliente.CMOBIL_ACTIVA);
 		String ping = genPin();c.setCmPin(ping);
 		mngDAO.actualizar(c);
 		Mailer.generateAndSendEmail(c.getCorreo(), "Cuenta Movil Activada", "Se ha activado su cuenta movil, "
@@ -814,7 +815,7 @@ public class ManagerServicios {
 		if(!nPass.equals(ncPass))
 			throw new Exception("Las nueva contraseña como su confirmaci&oacute;n deben ser las mismas.");
 		cerrarSesionM(idCli);//CIERRA LA SESION
-		c.setCmPass(nPass);
+		c.setCmPass(Funciones.Encriptar(nPass));
 		mngDAO.actualizar(c);
 	}
 	
@@ -859,7 +860,7 @@ public class ManagerServicios {
 				throw new Exception("No se encuentra el usuario.");
 			}
 			Cliente cli = listado.get(0);
-			if (cli.getCmPass().equals(pass)) {// MD5 PASS getMD5(pass)
+			if (cli.getCmPass().equals(Funciones.Encriptar(pass))) {// MD5 PASS getMD5(pass)
 				return cli;
 			} else {
 				throw new Exception("Usuario o contraseña invalidos");

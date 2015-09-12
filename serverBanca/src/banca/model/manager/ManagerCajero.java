@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import banca.controller.servicios.Funciones;
 import banca.controller.servicios.Mailer;
 import banca.controller.servicios.Validar;
 import banca.model.dao.entities.Cliente;
@@ -248,7 +249,7 @@ public class ManagerCajero {
 		Cliente c = findClienteByID(cli.getIdCli());
 		c.setBloqueda(Cliente.SIN_CAMBIO_DATOS);
 		String pass = genPass();
-		c.setPass(pass);
+		c.setPass(Funciones.Encriptar(pass));
 		mngDAO.actualizar(c);
 		Mailer.generateAndSendEmail(c.getCorreo(), "Reseteo de Pass", 
 				"Su cuenta posee la siguiente contraseña provisional: "+pass);
