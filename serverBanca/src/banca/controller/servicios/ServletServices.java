@@ -147,8 +147,10 @@ public class ServletServices extends HttpServlet {
 		String ci = data.get("ced").toString();
 		String mail = data.get("mal").toString();
 		String alias = data.get("als").toString();
+		String preg = data.get("pre").toString();
+		String resp = data.get("res").toString();
 		try {
-			mngServ.registroWeb(HOST, ci, mail, alias);
+			mngServ.registroWeb(HOST, ci, mail, alias, preg, resp);
 			response.getWriter().write(
 					mngServ.jsonMensajes("OK", "Registro correcto!, se envio un correo para validar su cuenta"));
 		} catch (Exception e) {

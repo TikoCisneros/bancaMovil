@@ -24,6 +24,8 @@ import banca.model.dao.entities.Contador;
 import banca.model.dao.entities.Cuenta;
 import banca.model.dao.entities.Estadotrans;
 import banca.model.dao.entities.Historial;
+import banca.model.dao.entities.Respuestas;
+import banca.model.dao.entities.RespuestasPK;
 import banca.model.dao.entities.Transacciones;
 import banca.model.dao.entities.Transferencia;
 
@@ -100,7 +102,7 @@ public class ManagerServicios {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public void registroWeb(String HOST, String ci, String correo, String alias) throws Exception{
+	public void registroWeb(String HOST, String ci, String correo, String alias, String pregunta, String respuesta) throws Exception{
 		try {
 			//Verificar CI
 			List<Cliente> listado = (List<Cliente>) mngDAO.findByParam(
@@ -132,13 +134,21 @@ public class ManagerServicios {
 			if(verificarAlias(alias)){
 				throw new Exception("Alias en uso, ingrese otro");
 			}
+			//Verificar Preguntas
+			if(pregunta==null || respuesta==null || pregunta.isEmpty() || respuesta.isEmpty())
+				throw new Exception("Seleccione y responda una pregunta de seguridad.");
 			System.out.println("Verificaciones completas");
 			//Ingresar cuenta con pass temporal y enviar correo con datos (link,pass,alias)
 			String pass = genPass();
 			String token = cli.getToken();
 			String id = cli.getIdCli().toString();
 			cli.setPass(Funciones.Encriptar(pass));cli.setAlias(alias);cli.setBloqueda(Cliente.NO_VERIFICADA);
+			RespuestasPK pk = new RespuestasPK();
+			pk.setIdCli(cli.getIdCli());pk.setIdPreg(Integer.parseInt(pregunta));
 			mngDAO.actualizar(cli);
+			Respuestas resp = new Respuestas();
+			resp.setId(pk);resp.setRespuesta(respuesta);
+			mngDAO.insertar(resp);
 			Mailer.generateAndSendEmail(correo, "Bienvenido a la Banca Virtual, Validaci&oacute;n de cuenta", 
 					"<h1>Validaci&oacute;n de transacci&oacute;n</h1>"+
 					"<p>Su alias es: "+alias+" Su contraseña es: "+pass+"</p>"+
