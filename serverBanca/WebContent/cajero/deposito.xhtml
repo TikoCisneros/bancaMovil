@@ -64,10 +64,28 @@ and open the template in the editor.
 				</p:panelGrid>
 				<br />
 				<p:commandButton value="Realizar Transacción" icon="ui-icon-disk"
-					action="#{transaccionBean.realizarDeposito()}" update="growl frmMonto">
+					onclick="PF('dlg1').show();" update="growl form3">
 				</p:commandButton>
 			</h:form>
 		</p:panelGrid>
+	<p:dialog widgetVar="dlg1" modal="true" header="Confirmar" width="300">
+		<h:form id="form3">
+			<p:panelGrid columns="2">
+				<h:outputText value="DEPOSITO " />
+				<h:outputText value="$ #{transaccionBean.monto}" />
+				<h:outputText value="CUENTA " />
+				<h:outputText value="#{transaccionBean.cuenta.nroCuenta}" />
+				<h:outputText value="PROPIETARIO " />
+				<h:outputText value="#{transaccionBean.cuenta.cliente.apellido} #{transaccionBean.cuenta.cliente.nombre}" />
+			</p:panelGrid>	
+			<br />
+			<br />
+			<p:commandButton value="Confirmar" icon="ui-icon-disk"
+				onclick="PF('dlg1').hide();" style="float:right"
+				action="#{transaccionBean.realizarDeposito()}" update="growl frmMonto">
+			</p:commandButton>	
+		</h:form>
+	</p:dialog>
 	</ui:define>
 </ui:composition>
 </html>

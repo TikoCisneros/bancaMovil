@@ -494,7 +494,7 @@ public class ServletServices extends HttpServlet {
 			if (monto.doubleValue() < 0)
 				throw new Exception("El monto es 0 o menor que 0.");
 			String idt = mngServ
-					.crearTransferencia(monto, nroO, nroD, c, token);
+					.crearTransferencia(monto, nroD, nroO, c, token);
 			System.out.println("Identificador de transferencia: " + idt
 					+ " token: " + token);
 			if (idt == null || idt == "")

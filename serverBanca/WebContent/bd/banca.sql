@@ -360,5 +360,9 @@ ALTER TABLE usuario
       ON UPDATE RESTRICT ON DELETE RESTRICT;
 
 /*****CONTADOR****/
-insert into contador values (1,'nrocc',1);
-insert into contador values (2,'nroca',1);
+CREATE SEQUENCE public.sec_contador
+   INCREMENT 1
+   START 1;
+
+ALTER TABLE contador
+   ALTER COLUMN id_contador SET DEFAULT nextval('sec_contador');

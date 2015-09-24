@@ -40,6 +40,7 @@
 					<th>Fecha</th>
 					<th>Saldo anterior</th>
 					<th>Monto</th>
+					<th>Saldo</th>
 					<th>Tipo</th>
 				</tr>
 			</thead>
@@ -49,7 +50,7 @@
 					<td>{{t.fecha | date: 'medium' }}</td>
 					<td>{{t.asaldo | currency: '$'}}</td>
 					<td>{{t.monto | currency: '$'}}</td>
-					<td>{{t.asaldo | currency: '$'}}</td>
+					<td>{{t.saldo | currency: '$'}}</td>
 					<td>{{t.tipo}}</td>
 				</tr>
 			</tbody>

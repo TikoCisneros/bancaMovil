@@ -126,7 +126,7 @@
                     </div>
                     <div class="panel-body inactive">
                         <div class="list-group">
-                            <a class="list-group-item" ng-click="getCuentas('Ahorro')">
+                            <a class="list-group-item" ng-click="getCuentas('Ahorros')">
                                 Ver cuentas de ahorros</a> 
                             <a class="list-group-item" ng-click="getCuentas('Corriente')">
                                 Ver cuentas corrientes</a> 
@@ -146,7 +146,7 @@
                         <div class="list-group">
                             <a class="list-group-item" ng-click="inittrans()">Realizar Transferencia</a> 
                             <a class="list-group-item" ng-click="getTrans()">
-                            Transferencias Bancarias</a> 
+                            Transferencias Electr&oacute;nicas</a> 
                             <a class="list-group-item" ng-click="getTranc()">
                             Transacciones Bancarias</a>
                         </div>
@@ -158,7 +158,7 @@
     </div>
     <div  id="Transferencias" class="hide" ng-show="page == 'Transferencias'">
         <div class="container">
-<a  ng-click="toPage('main')" style="padding-left:10px;padding-top:10px;font-size:18px"> <i class="fa fa-undo"></i> Regresar</a>
+<a  ng-click="toPage('main')" style="padding-left:10px;padding-top:10px;font-size:18px"> <i class="fa fa-undo"></i> Regresar</a><br>
     <br>
     <div class="btn-group" role="group">
         <button type="button" class="btn btn-default"
@@ -166,13 +166,12 @@
         ng-click="setCuenta(c)">Nro. {{c.cuenta}}</button>
     </div>
     <div >
-        <h4>Cuenta Nro: {{c.cuenta}}</h4>
+        <h4>Cuenta Origen Nro: {{c.cuenta}}</h4>
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Fecha</th>
-                    <th>Origen</th>
                     <th>Destino</th>
                     <th>Monto</th>
                     <th>Estado</th>
@@ -181,8 +180,7 @@
             <tbody>
                 <tr ng-repeat="t in c.transf.reverse()">
                     <th scope="row">{{t.idTransf}}</th>
-                    <td>{{t.fecha | date: 'short' }}</td>
-                    <td>{{t.corigen}}</td>
+                    <td>{{t.fecha | date: 'd/M/yy h:mm a' }}</td>
                     <td>{{t.cdestino}}</td>
                     <td>{{t.monto | currency: '$'}}</td>
                     <td>{{t.estado}}</td>
@@ -195,7 +193,7 @@
     </div>
     <div  id="Transacciones" class="hide" ng-show="page == 'Transacciones'">
         <div class="container">
-<a  ng-click="toPage('main')" style="padding-left:10px;padding-top:10px;font-size:18px"> <i class="fa fa-undo"></i> Regresar</a>
+<a  ng-click="toPage('main')" style="padding-left:10px;padding-top:10px;font-size:18px"> <i class="fa fa-undo"></i> Regresar</a><br>
     
     <div class="btn-group" role="group">
         <button type="button" class="btn btn-default"
@@ -203,26 +201,24 @@
         ng-click="setCuenta(c)">Nro. {{c.cuenta}}</button>
     </div>
     <div >
-        <h4>Cuenta Nro: {{c.cuenta}}</h4>
+        <h4>Cuenta Origen Nro: {{c.cuenta}}</h4>
         <table class="table table-striped">
             <thead>
                 <tr>
                     <th>#</th>
                     <th>Fecha</th>
-                    <th>Origen</th>
                     <th>Destino</th>
                     <th>Monto</th>
-                    <th>Estado</th>
+                    <th>Tipo</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="t in c.transf.reverse()">
+                <tr ng-repeat="t in c.tranc.reverse()">
                     <th scope="row">{{t.idTransf}}</th>
-                    <td>{{t.fecha | date: 'short' }}</td>
-                    <td>{{t.corigen}}</td>
+                    <td>{{t.fecha | date: 'd/M/yy h:mm a' }}</td>
                     <td>{{t.cdestino}}</td>
                     <td>{{t.monto | currency: '$'}}</td>
-                    <td>{{t.estado}}</td>
+                    <td>{{t.tipo}}</td>
                 </tr>
             </tbody>
         </table>
@@ -231,7 +227,7 @@
     </div>
 
     <div id="Cuentas" class="hide" ng-show="page == 'Cuentas'">
-<a  ng-click="toPage('main')" style="padding-left:10px;padding-top:10px;font-size:18px"> <i class="fa fa-undo"></i> Regresar</a>
+<a  ng-click="toPage('main')" style="padding-left:10px;padding-top:10px;font-size:18px"> <i class="fa fa-undo"></i> Regresar</a><br>
 <br>
 <div class="container">
     <h3 ng-show="!cuentas || cuentas.length == 0">No hay ninguna cuenta.</h3>

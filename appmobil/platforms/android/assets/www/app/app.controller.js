@@ -6,7 +6,6 @@ function addMsg(tipo, titulo, mensaje) {
 		position : 'top-left'
 	});
 }
-var tiempoInactividad = 1 * 60 * 60 * 1000;
 var tiempoInactividadP = 30 * 1000;
 var bancaWebController = angular.module('bancaWebController', []);
 var sesion;
@@ -116,12 +115,14 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 							$scope.page = 'login';
 						}
 					else {
+						$scope.usr = "";
+						$scope.pwd="";
 						res = res.value;
 						$scope.page = 'main';
 						$location.search('page', 'main');
 						$scope.user = res;
 						var nf = new Date().getTime();
-						nf+= (10 * 1000);//(15 * 24 * 60 *60 *1000);
+						nf+= tiempoInactividadP;//(15 * 24 * 60 *60 *1000);
 						$scope.user.n = res.apellido +" "+res.nombre;
 						$scope.user.fc = nf;
 						$scope.txt = res.id +"|"+res.ping +'|'+ $scope.user.n 
@@ -131,7 +132,7 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 							, 0,
 							$scope.readSesion,fail);
 						if (res.status == 'FL') {
-							addMsg('info', 'Información', 'Favor cambiar la contrasena');
+							addMsg('info', 'Información', 'Favor cambiar el password.');
 						}
 					}
 				});
@@ -140,6 +141,7 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 			{
 				console.log('Cambiando a '+p);
 				$scope.page = p;
+				$location.search('page',p);
 			}
 			$scope.mlogout = function() 
 			{
@@ -200,7 +202,6 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 					"p": $scope.PIN
 				}, function(res)
 				{
-					console.log(res);
 					if(res.status != 'OK')
 					{
 						$scope.mlogout();
@@ -223,6 +224,7 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 			}
 			$scope.getTrans = function() 
 			{
+				$scope.c = {};
 				if(!$scope.user || !$scope.user.id)
 				{
 					$scope.mlogout();
@@ -240,6 +242,11 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 						$scope.page = 'main';
 						return addMsg('danger', 'Error', res.value);
 					}
+					if(res.value == 'NS')
+						{
+						$scope.page = 'login';
+						return addMsg('danger', 'Error', 'No hay una sesión activa.');
+					}
 					$scope.page = "Transferencias";
 					console.log(res.value);
 					$scope.cuentas = res.value;
@@ -247,7 +254,7 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 			};
 			$scope.getTranc = function() 
 			{
-				
+				$scope.c = {};				
 				if(!$scope.user || !$scope.user.id)
 				{
 					$scope.mlogout();
@@ -265,6 +272,11 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 						$scope.page = 'main';
 						return addMsg('danger', 'Error', res.value);
 					}
+					if(res.value == 'NS')
+						{
+						$scope.page = 'login';
+						return addMsg('danger', 'Error', 'No hay una sesión activa.');
+					}
 					$scope.page = "Transacciones";
 					console.log(res.value);
 					$scope.cuentas = res.value;
@@ -277,6 +289,7 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 			};
 			$scope.getCuentas = function(tipo) 
 			{
+				$scope.monto = null;
 				if(!$scope.user || !$scope.user.id)
 				{
 					$scope.mlogout();
@@ -294,6 +307,11 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 						{
 						$scope.page = 'main';
 						return addMsg('danger', 'Error', res.value);
+					}
+					if(res.value == 'NS')
+						{
+						$scope.page = 'login';
+						return addMsg('danger', 'Error', 'No hay una sesión activa.');
 					}
 					$scope.page = "Cuentas";
 					console.log(res.value);
@@ -332,6 +350,11 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 						{
 						$scope.page = 'main';
 						return addMsg('danger', 'Error', res.value);
+					}
+					if(res.value == 'NS')
+						{
+						$scope.page = 'login';
+						return addMsg('danger', 'Error', 'No hay una sesión activa.');
 					}
 					$scope.page = "Transferir";
 					console.log(res.value);

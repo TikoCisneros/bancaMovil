@@ -44,3 +44,16 @@ body
 {
 	cursor:pointer;
 }
+
+.ui-keyboard
+{
+	width:600px !important;
+	font-size:10px !important;
+	position: relative ! important;
+	z-index:100;
+}
+.ui-keyboard-space
+{
+	width: 50%;
+    height: 30px;
+}

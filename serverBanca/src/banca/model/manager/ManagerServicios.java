@@ -20,6 +20,7 @@ import banca.controller.servicios.Funciones;
 import banca.controller.servicios.Mailer;
 import banca.model.dao.entities.Cliente;
 import banca.model.dao.entities.Cmsesion;
+import banca.model.dao.entities.Contador;
 import banca.model.dao.entities.Cuenta;
 import banca.model.dao.entities.Estadotrans;
 import banca.model.dao.entities.Historial;
@@ -192,10 +193,33 @@ public class ManagerServicios {
 				throw new Exception("No se encuentra el usuario.");
 			}
 			Cliente cli = listado.get(0);
+			Contador c;
+			List<Contador> lst = (List<Contador> )mngDAO.findWhere
+					(Contador.class,"o.contador = "+cli.getIdCli(), "");
+			
+			if(!lst.isEmpty())
+				c = lst.get(0);
+			else
+			{
+				c = new Contador();
+				c.setContador(cli.getIdCli().toString());
+				c.setValor(new BigDecimal(0));
+			}
 			if (cli.getPass().equals(Funciones.Encriptar(pass))) {// MD5 PASS getMD5(pass)
+				c.setValor(new BigDecimal(0));	
+				mngDAO.actualizar(c);
 				return cli;
 			} else {
-				throw new Exception("Usuario o contraseña invalidos");
+				if(c.getValor().doubleValue() == 3)
+				{
+					cli.setBloqueda(Cliente.BLOQUEADA);
+					cli.setMotivo("Número de intentos exedidos en login.");
+					mngDAO.actualizar(cli);
+					throw new Exception("Has exedido el límite de intentos, tu cuenta ha sido bloqueada.");
+				}
+				c.setValor(new BigDecimal(c.getValor().doubleValue() + 1));	
+				mngDAO.actualizar(c);
+				throw new Exception("Usuario o contraseña invalidos, Intento "+c.getValor().toString());
 			}
 		} catch (Exception e) {
 			throw e;
@@ -860,10 +884,32 @@ public class ManagerServicios {
 				throw new Exception("No se encuentra el usuario.");
 			}
 			Cliente cli = listado.get(0);
+			Contador c;
+			List<Contador> lst = (List<Contador> )mngDAO.findWhere
+					(Contador.class,"o.contador = "+cli.getIdCli()+"M", "");
+			if(!lst.isEmpty())
+				c = lst.get(0);
+			else
+			{
+				c = new Contador();
+				c.setContador(cli.getIdCli().toString());
+				c.setValor(new BigDecimal(0));
+			}
 			if (cli.getCmPass().equals(Funciones.Encriptar(pass))) {// MD5 PASS getMD5(pass)
+				c.setValor(new BigDecimal(0));	
+				mngDAO.actualizar(c);
 				return cli;
 			} else {
-				throw new Exception("Usuario o contraseña invalidos");
+				if(c.getValor().doubleValue() == 3)
+				{
+					cli.setBloqueda(Cliente.BLOQUEADA);
+					cli.setMotivo("Número de intentos exedidos en login.");
+					mngDAO.actualizar(cli);
+					throw new Exception("Has exedido el límite de intentos, tu cuenta ha sido bloqueada.");
+				}
+				c.setValor(new BigDecimal(c.getValor().doubleValue() + 1));	
+				mngDAO.actualizar(c);
+				throw new Exception("Usuario o contraseña invalidos. Intento "+c.getValor().toString());
 			}
 		} catch (Exception e) {
 			throw e;

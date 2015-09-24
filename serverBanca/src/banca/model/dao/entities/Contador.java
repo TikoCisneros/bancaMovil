@@ -1,7 +1,9 @@
 package banca.model.dao.entities;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.math.BigDecimal;
 
 
@@ -14,7 +16,10 @@ import java.math.BigDecimal;
 public class Contador implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	
 	@Id
+	@SequenceGenerator(name="CONTADOR_GENERATOR", sequenceName="SEC_CONTADOR", allocationSize=1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="CONTADOR_GENERATOR")
 	@Column(name="id_contador")
 	private Integer idContador;
 

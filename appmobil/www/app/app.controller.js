@@ -115,6 +115,8 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 							$scope.page = 'login';
 						}
 					else {
+						$scope.usr = "";
+						$scope.pwd="";
 						res = res.value;
 						$scope.page = 'main';
 						$location.search('page', 'main');
@@ -200,7 +202,6 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 					"p": $scope.PIN
 				}, function(res)
 				{
-					console.log(res);
 					if(res.status != 'OK')
 					{
 						$scope.mlogout();
@@ -223,6 +224,7 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 			}
 			$scope.getTrans = function() 
 			{
+				$scope.c = {};
 				if(!$scope.user || !$scope.user.id)
 				{
 					$scope.mlogout();
@@ -240,6 +242,11 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 						$scope.page = 'main';
 						return addMsg('danger', 'Error', res.value);
 					}
+					if(res.value == 'NS')
+						{
+						$scope.page = 'login';
+						return addMsg('danger', 'Error', 'No hay una sesión activa.');
+					}
 					$scope.page = "Transferencias";
 					console.log(res.value);
 					$scope.cuentas = res.value;
@@ -247,7 +254,7 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 			};
 			$scope.getTranc = function() 
 			{
-				
+				$scope.c = {};				
 				if(!$scope.user || !$scope.user.id)
 				{
 					$scope.mlogout();
@@ -265,6 +272,11 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 						$scope.page = 'main';
 						return addMsg('danger', 'Error', res.value);
 					}
+					if(res.value == 'NS')
+						{
+						$scope.page = 'login';
+						return addMsg('danger', 'Error', 'No hay una sesión activa.');
+					}
 					$scope.page = "Transacciones";
 					console.log(res.value);
 					$scope.cuentas = res.value;
@@ -277,6 +289,7 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 			};
 			$scope.getCuentas = function(tipo) 
 			{
+				$scope.monto = null;
 				if(!$scope.user || !$scope.user.id)
 				{
 					$scope.mlogout();
@@ -294,6 +307,11 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 						{
 						$scope.page = 'main';
 						return addMsg('danger', 'Error', res.value);
+					}
+					if(res.value == 'NS')
+						{
+						$scope.page = 'login';
+						return addMsg('danger', 'Error', 'No hay una sesión activa.');
 					}
 					$scope.page = "Cuentas";
 					console.log(res.value);
@@ -332,6 +350,11 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 						{
 						$scope.page = 'main';
 						return addMsg('danger', 'Error', res.value);
+					}
+					if(res.value == 'NS')
+						{
+						$scope.page = 'login';
+						return addMsg('danger', 'Error', 'No hay una sesión activa.');
 					}
 					$scope.page = "Transferir";
 					console.log(res.value);

@@ -302,7 +302,7 @@ public class ServletServicesMobil extends HttpServlet {
 			if (monto.doubleValue() < 0)
 				throw new Exception("El monto es 0 o menor que 0.");
 			String idt = mngServ
-					.crearTransferencia(monto, nroO, nroD, c, token);
+					.crearTransferencia(monto, nroD, nroO, c, token);
 			System.out.println("Identificador de transferencia: " + idt
 					+ " token: " + token);
 			if (idt == null || idt == "")
@@ -319,7 +319,7 @@ public class ServletServicesMobil extends HttpServlet {
 							+ "</p>"
 							+ "<p>Has clic al siguiente enlace para validar la transacci&oacute;n:"
 							+ "<br> <a href='" + HOST
-							+ "/bancaWeb/validateT?t=" + idt
+							+ "/VTransferencia?t=" + idt
 							+ "&tk=" + token + "'>"
 							+ "VALIDAR TRANSFERENCIA</a></p>");
 			System.out.println("Correo enviado.");
