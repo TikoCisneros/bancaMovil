@@ -161,12 +161,15 @@ bancaWebController.controller('passCtrl', [ '$scope', '$location',
 
 bancaWebController.controller('regCtrl', [ '$scope', '$location', 'bancaWebSV',
 		function($scope, $location, bancaWebSV, UserCM) {
+			$scope.preg = '1';
 			$scope.mrgs = function() {
 				console.log('entra reg');
 				bancaWebSV.regis({
 					"ced" : $scope.ci,
 					"mal" : $scope.correo,
-					"als" : $scope.alias
+					"als" : $scope.alias,
+					"pre" : $scope.preg,
+					"res" : $scope.resp
 				}, function(res) {
 					console.log(res);
 					if (res.status == 'EA') {
@@ -177,6 +180,8 @@ bancaWebController.controller('regCtrl', [ '$scope', '$location', 'bancaWebSV',
 						$scope.ci = null;
 						$scope.correo = null;
 						$scope.alias = null;
+						$scope.preg = 1;
+						$scope.resp = null;
 						$location.path('/login');
 					}
 				});

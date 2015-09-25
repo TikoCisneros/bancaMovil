@@ -1,0 +1,6 @@
+INSERT INTO preguntas(id_preg, pregunta) VALUES (default, 'Color favorito');
+INSERT INTO preguntas(id_preg, pregunta) VALUES (default, 'Lugar de nacimiento de la Madre');
+INSERT INTO preguntas(id_preg, pregunta) VALUES (default, 'Personaje histórico favorito');
+INSERT INTO preguntas(id_preg, pregunta) VALUES (default, 'Primer nombre de tu mejor amigo de la infancia');
+INSERT INTO preguntas(id_preg, pregunta) VALUES (default, 'Nombre de mascota favorita');
+INSERT INTO preguntas(id_preg, pregunta) VALUES (default, 'Modelo de tu primer auto');
