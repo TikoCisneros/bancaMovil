@@ -395,6 +395,11 @@ bancaWebController.controller('mobileCtrl', [ '$scope', '$location',
 
 						if (res.status != 'OK')
 							addMsg('danger', 'Error', res.value || 'Cuenta destino invalida');
+						else if(res.value == 'NS')
+						{
+							$scope.page = 'login';
+							return addMsg('danger', 'Error', 'No hay una sesión activa.');
+						}
 						else {
 							addMsg('info', 'Información', res.value);
 							$('#page').val('main');

@@ -51,7 +51,9 @@
 					<h:outputText value="#{reg.cliente.nombre}"></h:outputText>
 				</p:column>
 				<p:column  headerText="SALDO ACTUAL">
-					<h:outputText value="#{reg.saldo}"></h:outputText>
+					<h:outputText value="#{reg.saldo}">
+					<f:convertNumber maxFractionDigits="2" />
+					</h:outputText>
 				</p:column>	
 			</p:dataTable>
 		</p:panel>
